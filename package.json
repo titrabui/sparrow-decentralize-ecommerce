@@ -1,0 +1,11 @@
+{
+  "name": "decentralize-ecommerce",
+  "version": "1.0.0",
+  "license": "ISC",
+  "scripts": {
+    "postinstall": "cd sc && yarn",
+    "sc-compile": "cd sc && npx hardhat compile",
+    "sc-node": "cd sc && npx hardhat node",
+    "sc-deploy": "cd sc && npx hardhat run --network localhost scripts/deploy.js"
+  }
+}
