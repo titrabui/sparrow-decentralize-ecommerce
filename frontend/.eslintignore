@@ -1,0 +1,7 @@
+node_modules/
+
+src/utils/constants.ts
+
+config-overrides.js
+
+src/utils/protobuf/bundle.js
