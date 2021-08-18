@@ -83,7 +83,8 @@ const ImageWrapper = styled.div`
 `;
 
 const StyledRow = styled(Row)`
-  margin-top: 15px !important;
+  margin-top: 30px !important;
+  padding-top: 20px;
   justify-content: space-between;
 `;
 
@@ -95,39 +96,12 @@ const Title = styled(Text)`
 
 const Container = styled.div`
   width: 100%;
-  height: 108px;
+  height: 115px;
   background: linear-gradient(45deg, #8736bd 0%, #38e5f2 99.99%);
   .ant-row {
     width: 1200px;
     margin: 0 auto;
   }
-  position: absolute;
-  bottom: 0;
 `;
-
-// const TabContainer = styled.ul`
-//   display: flex;
-//   align-items: center;
-//   height: 100%;
-//   margin-bottom: 0 !important;
-//   justify-content: flex-end;
-//   margin-top: 50px;
-// `;
-
-// const Tab = styled(NavLink)<any>`
-//   list-style-type: none;
-//   color: #3e5b87;
-//   font-size: 18px;
-//   cursor: pointer;
-//   height: 100%;
-//   width: 150px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-end;
-//   font-weight: bold;
-//   &:hover {
-//     font-weight: bold;
-//   }
-// `;
 
 export default Footer;
