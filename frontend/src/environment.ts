@@ -1,0 +1,3 @@
+// SC address
+const SC_MARKET_CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS || '';
+export default SC_MARKET_CONTRACT_ADDRESS;
