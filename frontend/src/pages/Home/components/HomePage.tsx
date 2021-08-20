@@ -1,11 +1,12 @@
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Row } from 'antd';
 import React from 'react';
-import MainContainer from 'ui/MainContainer';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import Box from 'ui/Box';
 import Card from 'ui/Card';
-import styled from 'styled-components';
-import { Row } from 'antd';
+import MainContainer from 'ui/MainContainer';
 import { Text } from 'ui/Typography';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import Banner from './Banner';
 
 const HomePage: React.FC = () => (
@@ -14,7 +15,9 @@ const HomePage: React.FC = () => (
       <Banner />
       <CardContainer>
         <Row>
-          <Card />
+          <Link to={`/detail/${2}`}>
+            <Card />
+          </Link>
           <Card />
           <Card />
           <Card />
