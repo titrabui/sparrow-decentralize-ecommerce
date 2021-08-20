@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
-const ButtonOder = () => {
+const ButtonOrder = () => {
   const RenderTotal = styled.div`
     text-align: center;
     height: 50px;
@@ -79,6 +79,7 @@ const AddToCard = styled.button`
   border-radius: 10px;
   background-color: #7b61ff;
   text-decoration: none;
+  box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
     background-color: #a5a6f6;
     border: 1px solid #6c6cff;
@@ -93,10 +94,11 @@ const Buy = styled.button`
   border-radius: 10px;
   background-color: orange;
   text-decoration: none;
+  box-shadow: 3px 5px 5px #e5b190;
   &:active {
     background-color: #a5a6f6;
     border: 1px solid #6c6cff;
   }
 `;
 
-export default ButtonOder;
+export default ButtonOrder;

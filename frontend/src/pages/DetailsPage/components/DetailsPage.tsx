@@ -5,7 +5,7 @@ import Box from 'ui/Box';
 import MainContainer from 'ui/MainContainer';
 import { Text } from 'ui/Typography';
 import ButtonColor from './ButtonColor';
-import ButtonOder from './ButtonOrder';
+import ButtonOrder from './ButtonOrder';
 import ButtonSize from './ButtonSize';
 import { Detail, Item, Name, Price, RenderTextList } from './Info';
 
@@ -49,7 +49,7 @@ const DetailsPage: React.FC = () => {
             <ButtonSize text='XL' />
             <ButtonSize text='XXL' />
           </SizeContainer>
-          <ButtonOder />
+          <ButtonOrder />
         </ProductInfo>
       </StyledBox>
     </MainContainer>
