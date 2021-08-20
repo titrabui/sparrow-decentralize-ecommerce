@@ -1,18 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import p2 from 'assets/images/p2.png';
 import styled from 'styled-components';
+import { Radio } from 'antd';
 import { Text } from './Typography';
 
-const Card: React.FC = () => (
-  <Container>
-    <img src={p2} alt='x' width='75%' />
-    <TextContainer>
-      <Name>Summer Fighting T-shirt 01 </Name>
-      <Detail>Detail Product </Detail>
-      <Price>ETH &nbsp; 00.65 </Price>
-    </TextContainer>
-  </Container>
-);
+const Card: React.FC = () => {
+  const [value, setValue] = useState(1);
+
+  const onChange = (e: any) => {
+    setValue(e.target.value);
+  };
+  return (
+    <Container>
+      <img src={p2} alt='x' width='85%' />
+      <TextContainer>
+        <Name>Shipping Container 01 </Name>
+        <Detail>Detail Product </Detail>
+        <Price>ETH &nbsp; 00.65 </Price>
+      </TextContainer>
+      <StyledRadio onChange={onChange} value={value}>
+        <Radio value={1} className='purple' />
+        <Radio value={2} className='gray' />
+        <Radio value={3} className='orange' />
+      </StyledRadio>
+    </Container>
+  );
+};
+
+const StyledRadio = styled(Radio.Group)`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  right: 15px;
+  .ant-radio-wrapper {
+    height: 27px;
+  }
+  .ant-radio-inner {
+    width: 20px;
+    height: 20px;
+    border-color: white;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  .orange .ant-radio-inner {
+    background-color: #e86c13;
+  }
+  .purple .ant-radio-inner {
+    background-color: #7b61ff;
+  }
+  .gray .ant-radio-inner {
+    background-color: #ebebeb;
+  }
+  .ant-radio-inner::after {
+    display: none;
+  }
+  .ant-radio:hover .ant-radio-inner,
+  .ant-radio-input:focus + .ant-radio-inner {
+    border-color: white;
+    width: 24px;
+    height: 24px;
+  }
+`;
 
 const TextContainer = styled.div`
   position: absolute;
@@ -40,7 +90,7 @@ const Price = styled(Text)`
 `;
 
 const Container = styled.div`
-  width: 300px;
+  width: 290px;
   margin: 0 10px;
   height: 368px;
   background: radial-gradient(
@@ -58,7 +108,7 @@ const Container = styled.div`
   position: relative;
   img {
     position: absolute;
-    top: 20px;
+    top: 50px;
   }
 `;
 
