@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import HomePage from 'pages/Home';
 import Cart from 'pages/Cart';
+import Purchases from 'pages/Purchases';
 
 import { FunctionComponent } from 'react';
 
@@ -15,7 +16,8 @@ type RouteType = {
  */
 export enum routesEnum {
   home = '/',
-  cart = '/cart'
+  cart = '/cart',
+  purchases = '/purchases'
 }
 
 const privateRoutes: RouteType[] = [];
@@ -28,6 +30,11 @@ const publicRoutes: RouteType[] = [
   {
     path: routesEnum.cart,
     component: Cart,
+    exact: true
+  },
+  {
+    path: routesEnum.purchases,
+    component: Purchases,
     exact: true
   }
 ];
