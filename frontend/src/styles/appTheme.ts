@@ -9,7 +9,7 @@ export const lightTheme = {
   warning: '#FAAD14',
   error: '#FF4D4F',
   notification: '#FF4D4F',
-  accent: '#3E5B87',
+  accent: '#e86c13',
   backdrop: 'rgba(0, 0, 0, 0.5)',
   disabled: '#DBDBDB',
   textDisabled: '#707070',
@@ -22,7 +22,7 @@ export const lightTheme = {
   darkBlue: '#3E5B87',
   lightBlueBorder: '#D6E4FF',
   mediumBlue: '#3E5B87',
-  action: '#D6E4FF',
+  action: '#a5a6f6',
   highlight: '#FE4382'
 };
 

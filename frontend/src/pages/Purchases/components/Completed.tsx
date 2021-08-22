@@ -112,6 +112,7 @@ const CheckAll = styled.div`
   }
   .ant-typography {
     margin: 0 20px;
+    color:black;
   }
   .ant-typography:first-child {
     margin: 0 20px 0 0;
@@ -131,10 +132,10 @@ const Container = styled(Box)`
 
 const StyledButton = styled(Button)`
   height: 32px;
-  color: black;
+  color: white;
   font-weight: bold;
   background: #a5a6f6;
-  border: 1px solid #6c6cff;
+  border: none;
   box-sizing: border-box;
   border-radius: 8px;
   margin: 0 30px 0;

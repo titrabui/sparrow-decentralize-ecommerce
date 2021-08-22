@@ -45,7 +45,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
           I Agree with <Link to='/'>Term and Use</Link> and <Link to='/'>Refund Policy</Link>
         </Text>
         <ButtonContainer>
-          <CancelButton $bgType='warning' onClick={() => setOpenModal(false)}>
+          <CancelButton $color='black' onClick={() => setOpenModal(false)}>
             Cancel
           </CancelButton>
           <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
@@ -71,10 +71,10 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
 const SubmitButton = styled(Button)`
   border-radius: 8px;
   margin: 0 5px;
-  color: black;
+  color: white;
   font-weight: bold;
   background: #a5a6f6;
-  border: 1px solid #6c6cff;
+  border: none;
   box-sizing: border-box;
   border-radius: 8px;
 `;
@@ -83,7 +83,6 @@ const CancelButton = styled(Button)`
   margin: 0 5px;
   color: black;
   font-weight: bold;
-  border: 1px solid #999999;
 `;
 
 const ButtonContainer = styled.div`

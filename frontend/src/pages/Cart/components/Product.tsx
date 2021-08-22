@@ -140,7 +140,7 @@ const SizeButton = styled(Button)`
   color: black;
   font-weight: bold;
   background: #a5a6f6;
-  border: 1px solid #6c6cff;
+  border: none;
   box-sizing: border-box;
   border-radius: 8px;
   margin: 0 30px 0 15px;
@@ -152,7 +152,7 @@ const ColorButton = styled(Button)`
   color: #4f4f4fcc;
   font-weight: 400;
   background: #a5a6f6;
-  border: 1px solid #6c6cff;
+  border: none;
   box-sizing: border-box;
   border-radius: 8px;
   display: flex;
