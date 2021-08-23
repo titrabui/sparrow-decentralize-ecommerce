@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
-import p2 from 'assets/images/p2.png';
-import styled from 'styled-components';
 import { Radio } from 'antd';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Text } from './Typography';
 
-const Card: React.FC = () => {
+export interface ContainerInfo {
+  id?: number;
+  code?: string;
+  name?: string;
+  detail?: string;
+  brand?: string;
+  status?: string;
+  price?: string;
+  img?: any;
+}
+
+const Card: React.FC<ContainerInfo> = (container: ContainerInfo) => {
   const [value, setValue] = useState(1);
+  const { name, detail, price, img } = container;
 
   const onChange = (e: any) => {
     setValue(e.target.value);
   };
+  
   return (
     <Container>
-      <img src={p2} alt='x' width='85%' />
+      <img src={img} alt='x' width='85%' />
       <TextContainer>
-        <Name>Shipping Container 01 </Name>
-        <Detail>Detail Product </Detail>
-        <Price>ETH &nbsp; 00.65 </Price>
+        <Name>{name}</Name>
+        <Detail>{detail} </Detail>
+        <Price>ETH &nbsp; {price} </Price>
       </TextContainer>
       <StyledRadio onChange={onChange} value={value}>
         <Radio value={1} className='purple' />

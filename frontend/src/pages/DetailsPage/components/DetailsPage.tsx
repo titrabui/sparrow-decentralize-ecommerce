@@ -1,53 +1,45 @@
-import p2 from 'assets/images/p2.png';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
 import MainContainer from 'ui/MainContainer';
+import spaces from 'ui/spaces';
 import { Text } from 'ui/Typography';
 import ButtonColor from './ButtonColor';
 import ButtonOrder from './ButtonOrder';
 import ButtonSize from './ButtonSize';
 import { Detail, Item, Name, Price, RenderTextList } from './Info';
 
-const data = {
-  name: 'Summer Fighting T-shirt 01',
-  detail: 'Detail Product...',
-  brand: 'Napa',
-  code: 'NP001',
-  status: 'Available',
-  price: '00.65',
-  color: 'orange',
-  colorText: 'Orange'
-};
-
 const DetailsPage: React.FC = () => {
-  const { name, detail, brand, code, status, price } = data;
+  const param: any = useParams();
+
+  const container: any = spaces.find((co: any) => co.id.toString() === param.id);
   return (
     <MainContainer mt='60px'>
       <StyledBox w='990px' m='1% 0 0 22%'>
         <Item>
-          <img src={p2} alt='x' width='100%' />
+          <img src={container.img} alt='x' width='100%' />
         </Item>
         <ProductInfo>
-          <Name>{name}</Name>
-          <Detail>{detail}</Detail>
-          <RenderTextList name='Brand' value={brand} />
-          <RenderTextList name='Product Code' value={code} />
-          <RenderTextList name='Status' value={status} />
-          <Price>ETH &nbsp; {price} </Price>
+          <Name>{container.name}</Name>
+          <Detail>{container.detail}</Detail>
+          <RenderTextList name='Brand' value={container.brand} />
+          <RenderTextList name='Product Code' value={container.code} />
+          <RenderTextList name='Status' value={container.status} />
+          <Price>ETH &nbsp; {container.price} </Price>
           <ColorContainer>
             <StyledText>Color</StyledText>
-            <ButtonColor color='#fba500' colorText='Orange' />
+            <ButtonColor color='#e86c13' colorText='Orange' />
             <ButtonColor color='#ebebeb' colorText='White' />
             <ButtonColor color='#7b61ff' colorText='Violet' />
           </ColorContainer>
           <SizeContainer>
             <StyledText>Size</StyledText>
-            <ButtonSize text='X' />
-            <ButtonSize text='M' />
-            <ButtonSize text='L' />
-            <ButtonSize text='XL' />
-            <ButtonSize text='XXL' />
+            <ButtonSize text='10ft' />
+            <ButtonSize text='15ft' />
+            <ButtonSize text='20ft' />
+            <ButtonSize text='25ft' />
+            <ButtonSize text='30ft' />
           </SizeContainer>
           <ButtonOrder />
         </ProductInfo>
