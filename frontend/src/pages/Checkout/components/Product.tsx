@@ -3,21 +3,22 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
+import { Checkbox } from 'antd';
 import p2 from 'assets/images/p2.png';
+import Input from 'ui/Input';
 
-interface IReturnRefundProductProps {
+interface IProductProps {
   data: any;
   handleChangeAmount: (id: number, amount: number) => void;
   handleChangeCheck: (id: number, checked: boolean) => void;
 }
 
-const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
-  props: IReturnRefundProductProps
-) => {
+const Product: React.FC<IProductProps> = (props: IProductProps) => {
   const { data, handleChangeAmount, handleChangeCheck } = props;
 
   return (
     <Container>
+      <Checkbox checked={data.checked} onChange={() => handleChangeCheck(data.id, !data.checked)} />
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
@@ -42,10 +43,15 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+        <AddPlusButton onClick={() => handleChangeAmount(data.id, data.amount - 1)}>
+          -
+        </AddPlusButton>
+        <StyledInput value={data.amount} />
+        <AddPlusButton onClick={() => handleChangeAmount(data.id, data.amount + 1)}>
+          +
+        </AddPlusButton>
       </Amount>
       <Price>
-        <Status>{data.status === 'wait' ? 'Refund Request Processing' : 'Refund Completed'}</Status>
         <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
       </Price>
     </Container>
@@ -54,32 +60,35 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
 const Price = styled.div`
   position: relative;
-  top: -45px;
-  width: 230px;
+  top: -55px;
+  width: 100px;
 `;
 
 const PriceText = styled(Text)`
   font-size: 24px;
   color: #e86c13;
-  display: block;
-  text-align: right;
 `;
 
-const Status = styled(Text)`
-  font-size: 18px;
-  color: #e86c13;
-  display: block;
-  text-align: right;
-`;
-const AddPlusButton = styled(Button)`
-  box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
-  font-size: 16px;
-  width: 150px;
+const StyledInput = styled(Input)`
+  background: #ffffff;
+  border: 1px solid #b5adb0;
+  box-sizing: border-box;
+  border-radius: 12px;
+  width: 64px;
+  height: 40px;
   margin: 0 10px;
+  text-align: center;
+`;
+
+const AddPlusButton = styled(Button)`
+  width: 38px;
+  height: 32px;
+  background: #ffffff;
+  box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px;
 `;
 
 const Amount = styled.div`
@@ -192,4 +201,4 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default ReturnRefundProduct;
+export default Product;

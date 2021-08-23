@@ -43,7 +43,6 @@ const SubcribeContainer = styled.div`
 const StyledButton = styled(Button)`
   background: #e86c13;
   border: 3px solid #ffffff;
-  border-radius: 8px;
   color: white;
   height: auto;
   &:hover {
@@ -56,7 +55,6 @@ const StyledButton = styled(Button)`
 const StyledInput = styled(Input)`
   width: 290px;
   height: 32px;
-  border-radius: 8px;
 `;
 
 const RightCol = styled(Col)`

@@ -69,20 +69,15 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
   );
 };
 const SubmitButton = styled(Button)`
-  border-radius: 8px;
   margin: 0 5px;
   color: white;
-  font-weight: bold;
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
 `;
 const CancelButton = styled(Button)`
-  border-radius: 8px;
   margin: 0 5px;
   color: black;
-  font-weight: bold;
 `;
 
 const ButtonContainer = styled.div`

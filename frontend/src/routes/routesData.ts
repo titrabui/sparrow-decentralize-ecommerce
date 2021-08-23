@@ -3,8 +3,8 @@ import Cart from 'pages/Cart';
 import DetailsPage from 'pages/DetailsPage/components/DetailsPage';
 import HomePage from 'pages/Home';
 import Purchases from 'pages/Purchases';
+import Checkout from 'pages/Checkout';
 import { FunctionComponent } from 'react';
-
 
 type RouteType = {
   path: string;
@@ -18,6 +18,7 @@ type RouteType = {
 export enum routesEnum {
   home = '/',
   cart = '/cart',
+  checkout = '/checkout',
   detail = '/detail/:id',
   purchases = '/purchases'
 }
@@ -42,6 +43,11 @@ const publicRoutes: RouteType[] = [
   {
     path: routesEnum.purchases,
     component: Purchases,
+    exact: true
+  },
+  {
+    path: routesEnum.checkout,
+    component: Checkout,
     exact: true
   }
 ];
