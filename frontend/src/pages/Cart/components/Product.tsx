@@ -85,12 +85,11 @@ const AddPlusButton = styled(Button)`
   height: 32px;
   background: #ffffff;
   box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
-  border-radius: 8px;
   font-size: 20px;
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  color:black;
 `;
 
 const Amount = styled.div`
@@ -111,7 +110,6 @@ const Shipping = styled.div`
 `;
 
 const ShippingTitle = styled(Text)`
-  font-weight: bold;
   color: black;
   width: 140px;
   font-size: 14px;
@@ -138,11 +136,9 @@ const SizeButton = styled(Button)`
   width: 60px;
   height: 32px;
   color: black;
-  font-weight: bold;
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   margin: 0 30px 0 15px;
 `;
 
@@ -154,7 +150,6 @@ const ColorButton = styled(Button)`
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -40,7 +40,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent' $color='white'>Rate</AddPlusButton>
+        <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
       </Amount>
       <Price>
         <Status>Completed</Status>
@@ -71,11 +71,9 @@ const Status = styled(Text)`
 `;
 const AddPlusButton = styled(Button)`
   box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
-  border-radius: 8px;
   font-size: 16px;
   width: 150px;
   margin: 0 10px;
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -127,11 +125,9 @@ const SizeButton = styled(Button)`
   width: 60px;
   height: 32px;
   color: black;
-  font-weight: bold;
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   margin: 0 30px 0 15px;
 `;
 
@@ -143,7 +139,6 @@ const ColorButton = styled(Button)`
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;

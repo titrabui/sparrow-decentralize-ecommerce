@@ -47,12 +47,12 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         {data.status === 'wait' ? (
           <>
             {' '}
-            <AddPlusButton $bgType='accent' $color='white'>Change Address</AddPlusButton>
+            <AddPlusButton $bgType='accent'>Change Address</AddPlusButton>
             <AddPlusButton $color='black'>Cancel Order</AddPlusButton>
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent' $color='white'>Order Received</AddPlusButton>
+            <AddPlusButton $bgType='accent'>Order Received</AddPlusButton>
             <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
               Request Refund
             </AddPlusButton>
@@ -88,7 +88,6 @@ const Status = styled(Text)`
 `;
 const AddPlusButton = styled(Button)`
   box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
-  border-radius: 8px;
   font-size: 16px;
   width: 150px;
   margin: 0 10px;
@@ -96,7 +95,7 @@ const AddPlusButton = styled(Button)`
   align-items: center;
   justify-content: center;
   padding: 15px;
-  font-weight:bold;
+  font-weight: bold;
 `;
 
 const Amount = styled.div`
@@ -144,11 +143,9 @@ const SizeButton = styled(Button)`
   width: 60px;
   height: 32px;
   color: black;
-  font-weight: bold;
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   margin: 0 30px 0 15px;
 `;
 
@@ -160,7 +157,6 @@ const ColorButton = styled(Button)`
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;

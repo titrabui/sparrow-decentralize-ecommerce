@@ -17,10 +17,10 @@ type ModifiedButtonProps = Partial<ButtonProps> & {
 const Button = styled(AntdButton)<ModifiedButtonProps>`
   width: ${(p) => p.$w && p.$w};
   height: ${(p) => p.$h && p.$h};
-
+  border-radius: 8px;
   background-color: ${(p) => p.$bgType && p.theme[p.$bgType]};
-  font-weight: ${(p) => p.$fontWeight && p.$fontWeight};
-  color: ${(p) => p.$color && p.$color};
+  font-weight: ${(p) => (p.$fontWeight ? p.$fontWeight : 'bold')};
+  color: ${(p) => (p.$color ? p.$color : 'white')};
   border-color: ${(p) => (p.$borderColor && p.$borderColor) || (p.$bgType && p.theme[p.$bgType])};
   font-size: ${(p) => p.$fontSize && p.$fontSize};
 
