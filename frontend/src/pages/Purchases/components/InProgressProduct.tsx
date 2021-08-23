@@ -1,24 +1,25 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { Checkbox } from 'antd';
 import p2 from 'assets/images/p2.png';
 import Input from 'ui/Input';
+import RefundModal from './RefundModal';
 
-interface IProductProps {
+interface IInProgressProductProps {
   data: any;
   handleChangeAmount: (id: number, amount: number) => void;
   handleChangeCheck: (id: number, checked: boolean) => void;
 }
 
-const Product: React.FC<IProductProps> = (props: IProductProps) => {
+const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgressProductProps) => {
   const { data, handleChangeAmount, handleChangeCheck } = props;
-
+  const [openModal, setOpenModal] = useState(false);
   return (
     <Container>
-      <Checkbox checked={data.checked} onChange={() => handleChangeCheck(data.id, !data.checked)} />
+      <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
@@ -43,15 +44,23 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton onClick={() => handleChangeAmount(data.id, data.amount - 1)}>
-          -
-        </AddPlusButton>
-        <StyledInput value={data.amount} />
-        <AddPlusButton onClick={() => handleChangeAmount(data.id, data.amount + 1)}>
-          +
-        </AddPlusButton>
+        {data.status === 'wait' ? (
+          <>
+            {' '}
+            <AddPlusButton $bgType='accent' $color='white'>Change Address</AddPlusButton>
+            <AddPlusButton $color='black'>Cancel Order</AddPlusButton>
+          </>
+        ) : (
+          <>
+            <AddPlusButton $bgType='accent' $color='white'>Order Received</AddPlusButton>
+            <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
+              Request Refund
+            </AddPlusButton>
+          </>
+        )}
       </Amount>
       <Price>
+        <Status>{data.status === 'wait' ? 'Wait for seller to confirm' : 'Shipping'}</Status>
         <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
       </Price>
     </Container>
@@ -60,37 +69,34 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
 
 const Price = styled.div`
   position: relative;
-  top: -55px;
-  width: 100px;
+  top: -45px;
+  width: 210px;
 `;
 
 const PriceText = styled(Text)`
   font-size: 24px;
   color: #e86c13;
+  display: block;
+  text-align: right;
 `;
 
-const StyledInput = styled(Input)`
-  background: #ffffff;
-  border: 1px solid #b5adb0;
-  box-sizing: border-box;
-  border-radius: 12px;
-  width: 64px;
-  height: 40px;
-  margin: 0 10px;
-  text-align: center;
+const Status = styled(Text)`
+  font-size: 18px;
+  color: #e86c13;
+  display: block;
+  text-align: right;
 `;
-
 const AddPlusButton = styled(Button)`
-  width: 38px;
-  height: 32px;
-  background: #ffffff;
   box-shadow: 0px 4px 12px rgba(41, 43, 50, 0.04);
   border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 16px;
+  width: 150px;
+  margin: 0 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 15px;
+  font-weight:bold;
 `;
 
 const Amount = styled.div`
@@ -206,4 +212,4 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default Product;
+export default InProgressProduct;
