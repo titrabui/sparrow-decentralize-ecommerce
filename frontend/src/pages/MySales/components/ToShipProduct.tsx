@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import p2 from 'assets/images/p2.png';
+import RefundModal from './RefundModal';
 
-interface IReturnRefundProductProps {
+interface IToShipProductProps {
   data: any;
 }
 
-const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
-  props: IReturnRefundProductProps
-) => {
+const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
   const { data } = props;
-
+  const [openModal, setOpenModal] = useState(false);
   return (
     <Container>
+      <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
@@ -44,11 +44,11 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+        <AddPlusButton $bgType='accent'>Confirm</AddPlusButton>
       </Amount>
       <Price>
-        <Status>{data.status === 'wait' ? 'Refund Request Processing' : 'Refund Completed'}</Status>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        <Status>Wait for seller to confirm</Status>
+        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
       </Price>
     </Container>
   );
@@ -56,8 +56,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
 const Price = styled.div`
   position: relative;
-  width: 230px;
-  margin-top:5px;
+  width: 210px;
 `;
 
 const PriceText = styled(Text)`
@@ -82,18 +81,19 @@ const AddPlusButton = styled(Button)`
   align-items: center;
   justify-content: center;
   padding: 15px;
+  font-weight: bold;
 `;
 
 const Amount = styled.div`
   display: flex;
-  margin-top: 15px;
+  margin-top: 5px;
   align-items: center;
   position: relative;
 `;
 
 const Shipping = styled.div`
   display: flex;
-  width: 300px;
+  width: 350px;
   .ant-typography {
     display: block;
   }
@@ -174,8 +174,8 @@ const Container = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 140px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   background: radial-gradient(
     50% 50% at 50% 50%,
     rgba(255, 255, 255, 0.25) 0%,
@@ -193,4 +193,4 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default ReturnRefundProduct;
+export default ToShipProduct;

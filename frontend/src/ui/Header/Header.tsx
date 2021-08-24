@@ -23,6 +23,9 @@ const CommonHeader: React.FC = () => {
             <Tab data-active={location.pathname === routesEnum.purchases} to={routesEnum.purchases}>
               Purchases
             </Tab>
+            <Tab data-active={location.pathname === routesEnum.mySales} to={routesEnum.mySales}>
+              My Sales
+            </Tab>
             <Tab to={routesEnum.home}>Contact</Tab>
           </TabContainer>
         </Col>

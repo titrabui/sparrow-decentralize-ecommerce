@@ -15,7 +15,6 @@ interface IInProgressProps {
 const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const [checkAll, setCheckAll] = useState(false);
 
   useEffect(() => {
     setData([
@@ -50,31 +49,6 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
     setTotal(total);
   }, [data, setTotal]);
 
-  const handleChangeAmount = (id: number, amount: number) => {
-    const validatedAmount = amount > 0 ? amount : 0;
-    const newData = data.map((item: any) => {
-      if (item.id === id) return { ...item, amount: validatedAmount };
-      return item;
-    });
-    setData(newData);
-  };
-
-  const handleChangeCheck = (id: number, checked: boolean) => {
-    const newData = data.map((item: any) => {
-      if (item.id === id) return { ...item, checked };
-      return item;
-    });
-    const isCheckedAll = newData.reduce((prev: any, curr: any) => prev && curr.checked, true);
-    setCheckAll(isCheckedAll);
-    setData(newData);
-  };
-
-  const handleCheckAll = (checked: boolean) => {
-    const newData = data.map((item: any) => ({ ...item, checked }));
-    setData(newData);
-    setCheckAll(checked);
-  };
-
   return (
     <Container w='1200px' h='400px'>
       <CheckAll>
@@ -88,12 +62,7 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
       </CheckAll>
 
       {data.map((item: any) => (
-        <InProgressProduct
-          data={item}
-          key={item?.id}
-          handleChangeAmount={handleChangeAmount}
-          handleChangeCheck={handleChangeCheck}
-        />
+        <InProgressProduct data={item} key={item?.id} />
       ))}
     </Container>
   );

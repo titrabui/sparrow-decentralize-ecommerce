@@ -4,6 +4,7 @@ import DetailsPage from 'pages/DetailsPage/components/DetailsPage';
 import HomePage from 'pages/Home';
 import Purchases from 'pages/Purchases';
 import Checkout from 'pages/Checkout';
+import MySales from 'pages/MySales';
 import { FunctionComponent } from 'react';
 
 type RouteType = {
@@ -20,7 +21,8 @@ export enum routesEnum {
   cart = '/cart',
   checkout = '/checkout',
   detail = '/detail/:id',
-  purchases = '/purchases'
+  purchases = '/purchases',
+  mySales = '/mySales'
 }
 
 const privateRoutes: RouteType[] = [];
@@ -48,6 +50,11 @@ const publicRoutes: RouteType[] = [
   {
     path: routesEnum.checkout,
     component: Checkout,
+    exact: true
+  },
+  {
+    path: routesEnum.mySales,
+    component: MySales,
     exact: true
   }
 ];

@@ -7,12 +7,10 @@ import p2 from 'assets/images/p2.png';
 
 interface ICompletedProductProps {
   data: any;
-  handleChangeAmount: (id: number, amount: number) => void;
-  handleChangeCheck: (id: number, checked: boolean) => void;
 }
 
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
-  const { data, handleChangeAmount, handleChangeCheck } = props;
+  const { data } = props;
 
   return (
     <Container>
@@ -38,6 +36,10 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
           <ShippingTitle>Shipping Address:</ShippingTitle>
           <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
         </Shipping>
+        <Shipping>
+          <ShippingTitle>Order ID</ShippingTitle>
+          <ShippingAddress $color='black'>AC20210800001</ShippingAddress>
+        </Shipping>
       </Content>
       <Amount>
         <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
@@ -52,8 +54,8 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
 
 const Price = styled.div`
   position: relative;
-  top: -45px;
   width: 230px;
+  margin-top:5px;
 `;
 
 const PriceText = styled(Text)`
@@ -85,7 +87,6 @@ const Amount = styled.div`
   margin-top: 15px;
   align-items: center;
   position: relative;
-  top: -65px;
 `;
 
 const Shipping = styled.div`
@@ -163,7 +164,7 @@ const Content = styled.div`
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   justify-content: space-between;
   position: relative;
