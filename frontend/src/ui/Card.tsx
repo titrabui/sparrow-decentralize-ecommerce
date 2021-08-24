@@ -24,7 +24,7 @@ const Card: React.FC<ContainerInfo> = (container: ContainerInfo) => {
   
   return (
     <Container>
-      <img src={img} alt='x' width='85%' />
+      <img src={img} alt='x' width='65%' />
       <TextContainer>
         <Name>{name}</Name>
         <Detail>{detail} </Detail>
