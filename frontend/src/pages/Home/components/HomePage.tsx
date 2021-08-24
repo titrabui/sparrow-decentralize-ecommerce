@@ -7,6 +7,7 @@ import Box from 'ui/Box';
 import Card from 'ui/Card';
 import MainContainer from 'ui/MainContainer';
 import { Text } from 'ui/Typography';
+import spaces from 'utils/spaces';
 import Banner from './Banner';
 
 const HomePage: React.FC = () => (
@@ -15,19 +16,20 @@ const HomePage: React.FC = () => (
       <Banner />
       <CardContainer>
         <Row>
-          <Link to={`/detail/${2}`}>
-            <Card />
-          </Link>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {spaces.slice(0,6).map((container: any) => (
+            <Link key={container.id} id={container.id} to={`/detail/${container.id}`}>
+              <Card
+                id={container.id}
+                name={container.name}
+                detail={container.detail}
+                price={container.price}
+                img={container.img}
+              />
+            </Link>
+          ))}
         </Row>
         <StyledText>
-          <LeftOutlined />{' '}
-          Best Seller Product{' '}
-          <RightOutlined />
+          <LeftOutlined /> Best Seller Product <RightOutlined />
         </StyledText>
       </CardContainer>
     </StyledBox>
