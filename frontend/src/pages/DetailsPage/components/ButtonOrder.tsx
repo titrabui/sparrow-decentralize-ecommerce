@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
-const ButtonOrder = () => {
+const ButtonOrder: React.FC = () => {
+  
   const RenderTotal = styled.div`
     text-align: center;
     height: 50px;
@@ -22,16 +24,18 @@ const ButtonOrder = () => {
         <StyleText $color='#b5adb0'>-</StyleText>
       </Button>
       <RenderTotal>
-        <StyleText $color='#b5adb0'>10</StyleText>
+        <StyleText $color='#b5adb0'>1</StyleText>
       </RenderTotal>
       <Button>
         <StyleText $color='#000'>+</StyleText>
       </Button>
-      <Buy>
-        <Text strong $color='#fff' $size='15px'>
-          BUY
-        </Text>
-      </Buy>
+      <Link to='/cart'>
+        <Buy>
+          <Text strong $color='#fff' $size='15px'>
+            BUY
+          </Text>
+        </Buy>
+      </Link>
       <AddToCard>
         <Text strong $color='#fff' $size='15px'>
           ADD TO CARD
@@ -82,7 +86,6 @@ const AddToCard = styled.button`
   box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
     background-color: #a5a6f6;
-    border: 1px solid #6c6cff;
   }
 `;
 
@@ -92,12 +95,11 @@ const Buy = styled.button`
   border: 2px;
   margin: 5px 0 0 10px;
   border-radius: 10px;
-  background-color: orange;
+  background-color: #e86c13;
   text-decoration: none;
   box-shadow: 3px 5px 5px #e5b190;
   &:active {
-    background-color: #a5a6f6;
-    border: 1px solid #6c6cff;
+    background-color: orange;
   }
 `;
 
