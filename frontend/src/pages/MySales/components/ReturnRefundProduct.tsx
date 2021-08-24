@@ -13,7 +13,20 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
   const { data } = props;
-
+  const renderStatus = () => {
+    switch (data.status) {
+      case 'wait':
+        return <Status $color='#e86c13'>Wait for Confirmation</Status>;
+      case 'reject':
+        return <Status $color='red'>Refund Reject</Status>;
+      case 'confirm':
+        return <Status $color='green'>Confirmed</Status>;
+      case 'complete':
+        return <Status $color='#e86c13'>Refund Completed</Status>;
+      default:
+        return '';
+    }
+  };
   return (
     <Container>
       <ImageWrapper>
@@ -44,11 +57,12 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+        <AddPlusButton $bgType='error'>Reject</AddPlusButton>
+        <AddPlusButton $color='black'>Confirm</AddPlusButton>
       </Amount>
       <Price>
-        <Status>{data.status === 'wait' ? 'Refund Request Processing' : 'Refund Completed'}</Status>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        {renderStatus()}
+        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
       </Price>
     </Container>
   );
@@ -69,7 +83,6 @@ const PriceText = styled(Text)`
 
 const Status = styled(Text)`
   font-size: 18px;
-  color: #e86c13;
   display: block;
   text-align: right;
 `;
@@ -86,7 +99,7 @@ const AddPlusButton = styled(Button)`
 
 const Amount = styled.div`
   display: flex;
-  margin-top: 15px;
+  margin-top: 10px;
   align-items: center;
   position: relative;
 `;

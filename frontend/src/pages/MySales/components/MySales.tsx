@@ -2,29 +2,34 @@ import React, { useState } from 'react';
 import MainContainer from 'ui/MainContainer';
 import Box from 'ui/Box';
 import styled from 'styled-components';
-import { Text } from 'ui/Typography';
 import { Collapse } from 'antd';
-import InProgress from './InProgress';
-import Completed from './Completed';
+import { Text } from 'ui/Typography';
+import ToShip from './ToShip';
+import Shipping from './Shipping';
 import ReturnRefund from './ReturnRefund';
+import Completed from './Completed';
 
 const { Panel } = Collapse;
-const Purchases: React.FC = () => {
+const MySales: React.FC = () => {
   const [, setTotal] = useState(0);
   return (
     <MainContainer mt='60px'>
-      <PageName> Purchases</PageName>
+      <PageName>My Sales</PageName>
       <StyledBox w='1200px' m='auto'>
         <StyledCollapse defaultActiveKey={['1']}>
-          <Panel header='In-Progress Order' key='1'>
+          <Panel header='To Ship' key='1'>
             {' '}
-            <InProgress setTotal={setTotal} />
+            <ToShip setTotal={setTotal} />
           </Panel>
-          <Panel header='Completed Order  ' key='2'>
+          <Panel header='Shipping' key='2'>
+            {' '}
+            <Shipping setTotal={setTotal} />
+          </Panel>
+          <Panel header='Completed' key='3'>
             {' '}
             <Completed setTotal={setTotal} />
           </Panel>
-          <Panel header='Returned/Refund' key='3'>
+          <Panel header='Return/Refund' key='4'>
             {' '}
             <ReturnRefund setTotal={setTotal} />
           </Panel>
@@ -63,4 +68,4 @@ const StyledCollapse = styled(Collapse)`
   }
 `;
 
-export default Purchases;
+export default MySales;

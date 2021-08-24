@@ -16,6 +16,7 @@ const DetailsPage: React.FC = () => {
   const container: any = spaces.find((co: any) => co.id.toString() === param.id);
   return (
     <MainContainer mt='60px'>
+      <PageName>Product Detail</PageName>
       <StyledBox w='990px' m='1% 0 0 22%'>
         <Item>
           <img src={container.img} alt='x' width='80%' />
@@ -48,6 +49,15 @@ const DetailsPage: React.FC = () => {
   );
 };
 
+const PageName = styled(Text)`
+  font-size: 24px;
+  color: black;
+  display: block;
+  font-weight: bold;
+  width: 1200px;
+  margin: 20px auto 40px;
+`;
+
 const StyledBox = styled(Box)`
   width: 1000px;
   height: 500;
@@ -57,7 +67,6 @@ const StyledBox = styled(Box)`
 const StyledText = styled(Text)`
   font-size: 15px;
   font-weight: bold;
-  font-color: #4f4f4f;
   margin-top: 7px;
 `;
 // const ProductContainer = styled.div`

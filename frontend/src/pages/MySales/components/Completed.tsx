@@ -5,14 +5,13 @@ import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
-import Search from 'antd/lib/transfer/search';
-import ReturnRefundProduct from './ReturnRefundProduct';
+import CompletedProduct from './CompletedProduct';
 
-interface IReturnRefundProps {
+interface ICompletedProps {
   setTotal: (total: number) => void;
 }
 
-const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
+const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
 
@@ -20,7 +19,7 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
     setData([
       {
         id: 1,
-        name: 'Shipping Container 01 ',
+        name: 'Completed Container 01 ',
         price: 0.65,
         size: '20ft',
         color: 'White',
@@ -30,9 +29,9 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
       },
       {
         id: 2,
-        name: 'Shipping Container 01 ',
+        name: 'Completed Container 01 ',
         price: 0.65,
-        size: '40ft',
+        size: '20ft',
         color: 'White',
         addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
         amount: 1,
@@ -51,30 +50,26 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
 
   return (
     <Container w='1200px' h='400px'>
-      <CheckAll>
-        <Text>Item Name</Text>
-        <Search />
+      <FilterContainer>
         <Text>Order Date</Text>
         <DatePicker />
         <Text>to</Text>
         <DatePicker />
         <StyledButton>Search</StyledButton>
-      </CheckAll>
+      </FilterContainer>
 
       {data.map((item: any) => (
-        <ReturnRefundProduct
-          data={item}
-          key={item?.id}
-        />
+        <CompletedProduct data={item} key={item?.id} />
       ))}
     </Container>
   );
 };
 
-const CheckAll = styled.div`
+const FilterContainer = styled.div`
   width: 100%;
   padding: 20px;
   border-bottom: 1px solid rgba(79, 79, 79, 0.2);
+  text-align: right;
   .ant-input {
     width: 300px;
     border-radius: 8px;
@@ -108,9 +103,9 @@ const StyledButton = styled(Button)`
   background: #a5a6f6;
   border: none;
   box-sizing: border-box;
-  margin: 0 30px 0;
+  margin-left: 30px;
   padding: 0 20px;
   font-size: 16px;
 `;
 
-export default ReturnRefund;
+export default Completed;

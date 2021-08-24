@@ -10,12 +10,10 @@ import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
   data: any;
-  handleChangeAmount: (id: number, amount: number) => void;
-  handleChangeCheck: (id: number, checked: boolean) => void;
 }
 
 const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgressProductProps) => {
-  const { data, handleChangeAmount, handleChangeCheck } = props;
+  const { data } = props;
   const [openModal, setOpenModal] = useState(false);
   return (
     <Container>
@@ -41,6 +39,10 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
           <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+        </Shipping>
+        <Shipping>
+          <ShippingTitle>Order ID</ShippingTitle>
+          <ShippingAddress $color='black'>AC20210800001</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -69,8 +71,8 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
 
 const Price = styled.div`
   position: relative;
-  top: -45px;
   width: 210px;
+  margin-top:5px;
 `;
 
 const PriceText = styled(Text)`
@@ -100,10 +102,9 @@ const AddPlusButton = styled(Button)`
 
 const Amount = styled.div`
   display: flex;
-  margin-top: 15px;
+  margin-top: 10px;
   align-items: center;
   position: relative;
-  top: -65px;
 `;
 
 const Shipping = styled.div`
@@ -181,7 +182,7 @@ const Content = styled.div`
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   justify-content: space-between;
   position: relative;

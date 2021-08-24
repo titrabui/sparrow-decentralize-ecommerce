@@ -58,6 +58,10 @@ const GlobalStyles = createGlobalStyle<{ theme: ThemeTypes }>`
     margin-left: 2px;
   }
 
+  .ant-picker {
+    border-radius:8px;
+  }
+
 `;
 
 export default GlobalStyles;

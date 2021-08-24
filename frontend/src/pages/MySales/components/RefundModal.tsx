@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Modal from 'ui/Modal';
 import Button from 'ui/Button';
 import styled from 'styled-components';
-import { Checkbox, Radio } from 'antd';
+import { Checkbox, Input, Radio } from 'antd';
 import { Text } from 'ui/Typography';
 import { Link } from 'react-router-dom';
 
+const { TextArea } = Input;
 interface IModalProps {
   setOpenModal: any;
   visible: boolean;
@@ -13,6 +14,7 @@ interface IModalProps {
 const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
   const { setOpenModal, visible } = props;
   const [completed, setCompleted] = useState(false);
+  const [other, setOther] = useState(false);
 
   const handleSubmit = () => {
     setCompleted(true);
@@ -28,6 +30,16 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
         <CheckBoxContainer>
           <Checkbox /> <Text>Damage while shipping</Text>
         </CheckBoxContainer>
+        <CheckBoxContainer>
+          <Checkbox
+            checked={other}
+            onChange={(e: any) => {
+              setOther(e.target.checked);
+            }}
+          />
+          <Text>Others</Text>
+        </CheckBoxContainer>
+        <StyledTextArea placeholder='Why are you requesting a refund?' disabled={!other} />
         <StyledRadio value={1} />
         <Text>
           I Agree with <Link to='/'>Term and Use</Link> and <Link to='/'>Refund Policy</Link>
@@ -99,6 +111,9 @@ const CheckBoxContainer = styled.div`
   align-items: center;
 `;
 
+const StyledTextArea = styled(TextArea)`
+  margin-top: 20px;
+`;
 const StyledModal = styled(Modal)`
   .ant-modal-footer {
     display: none;
