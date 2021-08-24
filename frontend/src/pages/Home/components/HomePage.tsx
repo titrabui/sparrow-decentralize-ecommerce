@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import Box from 'ui/Box';
 import Card from 'ui/Card';
 import MainContainer from 'ui/MainContainer';
-import spaces from 'ui/spaces';
 import { Text } from 'ui/Typography';
+import spaces from 'utils/spaces';
 import Banner from './Banner';
 
 const HomePage: React.FC = () => (

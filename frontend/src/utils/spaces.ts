@@ -1,5 +1,7 @@
 import img1 from 'assets/images/container/p1.png';
 import img10 from 'assets/images/container/p10.png';
+import img11 from 'assets/images/container/p11.png';
+import img12 from 'assets/images/container/p12.png';
 import img2 from 'assets/images/container/p2.png';
 import img3 from 'assets/images/container/p3.png';
 import img4 from 'assets/images/container/p4.png';
@@ -8,8 +10,6 @@ import img6 from 'assets/images/container/p6.png';
 import img7 from 'assets/images/container/p7.png';
 import img8 from 'assets/images/container/p8.png';
 import img9 from 'assets/images/container/p9.png';
-// import img11 from 'assets/images/container/p11.png';
-// import img12 from 'assets/images/container/p12.png';
 
 const spaces = [
   {
@@ -64,7 +64,6 @@ const spaces = [
   },
   {
     id: 6,
-    brandId: 3,
     name: 'Container Architectural',
     detail: 'Detail Product...',
     brand: 'Napa',
@@ -75,16 +74,13 @@ const spaces = [
   },
   {
     id: 7,
-    brandId: 3,
     name: 'Summer Fighting 008',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP007',
     status: 'Available',
-    price: '00.85',
+    price: '00.74',
     img: img7,
-    color: 'orange',
-    colorText: 'Orange'
   },
   {
     id: 8,
@@ -98,7 +94,6 @@ const spaces = [
   },
   {
     id: 9,
-    brandId: 3,
     name: 'Summer Fighting 010',
     detail: 'Detail Product...',
     brand: 'Napa',
@@ -106,39 +101,37 @@ const spaces = [
     status: 'Available',
     price: '00.85',
     img: img9,
-    color: 'orange',
-    colorText: 'Orange'
   },
   {
     id: 10,
-    name: 'Summer Fighting 001',
+    name: 'Summer Fighting 011',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP010',
     status: 'Available',
-    price: '00.85',
+    price: '00.66',
     img: img10
   },
-//   {
-//     id: 11,
-//     name: 'Summer Fighting 011',
-//     detail: 'Detail Product...',
-//     brand: 'Napa',
-//     code: 'NP011',
-//     status: 'Available',
-//     price: '00.85',
-//     img: img11
-//   },
-//   {
-//     id: 12,
-//     name: 'Summer Fighting 012',
-//     detail: 'Detail Product...',
-//     brand: 'Napa',
-//     code: 'NP012',
-//     status: 'Available',
-//     price: '00.85',
-//     img: img12
-//   }
+  {
+    id: 11,
+    name: 'Summer Fighting 012',
+    detail: 'Detail Product...',
+    brand: 'Napa',
+    code: 'NP011',
+    status: 'Available',
+    price: '00.95',
+    img: img11
+  },
+  {
+    id: 12,
+    name: 'Summer Fighting 001',
+    detail: 'Detail Product...',
+    brand: 'Napa',
+    code: 'NP012',
+    status: 'Available',
+    price: '00.75',
+    img: img12
+  }
 ];
 
 export default spaces;

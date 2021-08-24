@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
 import MainContainer from 'ui/MainContainer';
-import spaces from 'ui/spaces';
 import { Text } from 'ui/Typography';
+import spaces from 'utils/spaces';
 import ButtonColor from './ButtonColor';
 import ButtonOrder from './ButtonOrder';
 import ButtonSize from './ButtonSize';
@@ -18,7 +18,7 @@ const DetailsPage: React.FC = () => {
     <MainContainer mt='60px'>
       <StyledBox w='990px' m='1% 0 0 22%'>
         <Item>
-          <img src={container.img} alt='x' width='100%' />
+          <img src={container.img} alt='x' width='80%' />
         </Item>
         <ProductInfo>
           <Name>{container.name}</Name>
