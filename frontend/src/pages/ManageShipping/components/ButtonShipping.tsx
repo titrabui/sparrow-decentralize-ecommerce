@@ -32,7 +32,7 @@ const StyleButtonSearch = styled(Button)`
     background: #7b61ff;
   }
   &:active {
-    background: #a5a6f6;
+    background: #7b61ff;
   }
 `;
 

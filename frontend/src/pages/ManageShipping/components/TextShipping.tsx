@@ -26,8 +26,10 @@ const Container = styled.div`
 `;
 
 const StyleText = styled(Text)`
-  margin-left: 20px;
+  margin-left: 35px;
+  margin-top:20px;
   font-weight: bold;
+  display: block;
 `;
 
 export default TextShipping

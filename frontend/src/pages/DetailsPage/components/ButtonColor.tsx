@@ -33,11 +33,11 @@ const StyleButton = styled(Button)`
   display: flex;
   background: #e3eeff;
   &:hover {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
     border: 2px solid #6c6cff;
   }
   &:focus {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
     border: 2px solid #6c6cff;
   }
 `;

@@ -53,7 +53,7 @@ const StyleButton = styled(Button)`
   border-radius: 10px;
   background: #fff;
   &:active {
-    background: #a5a6f6;
+    background-color: #7b61ff;
   }
 `;
 
@@ -66,11 +66,7 @@ const AddToCard = styled(Button)`
   background: #7b61ff;
   box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
-    background: #a5a6f6;
-  }
-  &:hover,
-  &:focus {
-    background: #7b61ff;
+    background-color: #7b61ff;
   }
 `;
 

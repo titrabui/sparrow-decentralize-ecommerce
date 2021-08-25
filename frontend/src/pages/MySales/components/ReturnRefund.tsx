@@ -138,7 +138,7 @@ const Container = styled(Box)`
 const StyledButton = styled(Button)`
   height: 32px;
   color: white;
-  background: #a5a6f6;
+  background: #7b61ff;
   border: none;
   box-sizing: border-box;
   margin-left: 30px;

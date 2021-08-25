@@ -11,7 +11,7 @@ const PendingTable: React.FC = () => {
       orderDate: `03/07/2021`,
       status: 'Ready to Pickup',
       oderId: `89752${i}`,
-      parcelType: 'California USA',
+      parcelType: 'California USA'
     });
   }
   return (
@@ -26,6 +26,7 @@ const Container = styled.div`
   height: auto;
   margin: auto;
   border: 1px solid #dbdbdc;
+  margin-top: 10px;
 `;
 
 const StyleTable = styled(Table)`

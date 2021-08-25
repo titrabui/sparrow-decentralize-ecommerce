@@ -27,6 +27,7 @@ const Container = styled.div`
   height: auto;
   margin: auto;
   border: 1px solid #dbdbdc;
+  margin-top: 10px;
 `;
 
 const StyleTable = styled(Table)`
