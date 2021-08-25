@@ -1,6 +1,7 @@
 import { Table } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'ui/Typography';
 
 const CompleteTable: React.FC = () => {
   const data = [];
@@ -11,7 +12,6 @@ const CompleteTable: React.FC = () => {
       status: 'Ready to Pickup',
       oderId: `89752${i}`,
       parcelType: 'California USA',
-      viewMore: 'View More',
       confirmShipping: 'Package Damage'
     });
   }
@@ -56,7 +56,12 @@ const columns = [
   },
   {
     title: 'View More',
-    dataIndex: 'viewMore'
+    dataIndex: 'viewMore',
+    render: () => (
+      <Link $color='#40a9ff' href='http'>
+        View More
+      </Link>
+    )
   },
   {
     title: '',

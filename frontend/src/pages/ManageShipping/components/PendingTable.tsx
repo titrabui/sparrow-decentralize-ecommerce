@@ -1,6 +1,7 @@
 import { Table } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'ui/Typography';
 
 const PendingTable: React.FC = () => {
   const data = [];
@@ -11,8 +12,6 @@ const PendingTable: React.FC = () => {
       status: 'Ready to Pickup',
       oderId: `89752${i}`,
       parcelType: 'California USA',
-      viewMore: 'View More',
-      confirmShipping: 'Confirm / Reject'
     });
   }
   return (
@@ -56,11 +55,27 @@ const columns = [
   },
   {
     title: 'View More',
-    dataIndex: 'viewMore'
+    dataIndex: 'viewMore',
+    render: () => (
+      <Link $color='#40a9ff' href='http'>
+        View More
+      </Link>
+    )
   },
   {
     title: 'Confirm Shipping',
-    dataIndex: 'confirmShipping'
+    dataIndex: 'confirmShipping',
+    render: () => (
+      <div style={{ fontWeight: 'bold' }}>
+        <Link $color='#4cd038' href='http'>
+          Confirm
+        </Link>
+        {' | '}
+        <Link $color='#ff5e5e' href='http'>
+          Reject
+        </Link>
+      </div>
+    )
   }
 ];
 

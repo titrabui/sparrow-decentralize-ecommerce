@@ -37,8 +37,7 @@ const StyleButtonSearch = styled(Button)`
 `;
 
 const StyleButtonExport = styled(Button)`
-  margin-top: 12px;
-  margin-left: 20px;
+  margin: 12px 0 0 20px;
   height: 30px;
   width: 100px;
   box-shadow: 2px 2px 3px #b1b1fc;
