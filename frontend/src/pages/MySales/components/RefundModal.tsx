@@ -71,7 +71,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
 const SubmitButton = styled(Button)`
   margin: 0 5px;
   color: white;
-  background: #a5a6f6;
+  background: #7b61ff;
   border: none;
   box-sizing: border-box;
 `;

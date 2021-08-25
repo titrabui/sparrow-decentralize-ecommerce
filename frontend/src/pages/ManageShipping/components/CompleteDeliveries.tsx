@@ -9,7 +9,7 @@ import DropdownShipping from './DropdownShipping';
 const CompleteDeliveries: React.FC = () => (
   <Container>
     <Title>
-      <Text ml='20px' strong $size='17px' $color='#fff'>
+      <Text ml='20px' strong $size='17px'>
         Complete Deliveries
       </Text>
     </Title>
@@ -27,17 +27,19 @@ const CompleteDeliveries: React.FC = () => (
 );
 
 const Container = styled.div`
-  width: 100 %;
+  width: 100%;
   height: 600px;
-  margin-top: 30px;
+  margin-top: 10px;
   background-color: #f4f8ff;
   border-top: 1px solid #dbdbdc;
 `;
 
 const Title = styled.div`
   width: 100%;
-  height: 30px;
-  background: linear-gradient(45deg, #8736bd 0%, #38e5f2 99.99%);
+  color: black;
+  padding: 15px 0 15px 18px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #dbdbdc;
 `;
 
 const Filter = styled.div`

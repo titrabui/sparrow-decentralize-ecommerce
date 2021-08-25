@@ -19,14 +19,15 @@ const CommonHeader: React.FC = () => {
             <Tab data-active={location.pathname === routesEnum.home} to={routesEnum.home}>
               Home
             </Tab>
-            <Tab to={routesEnum.home}>Product</Tab>
             <Tab data-active={location.pathname === routesEnum.purchases} to={routesEnum.purchases}>
               Purchases
             </Tab>
             <Tab data-active={location.pathname === routesEnum.mySales} to={routesEnum.mySales}>
               My Sales
             </Tab>
-            <Tab to={routesEnum.home}>Contact</Tab>
+            <Tab data-active={location.pathname === routesEnum.shipping} to={routesEnum.shipping}>
+              Shipping
+            </Tab>
           </TabContainer>
         </Col>
         <Col span={8}>
