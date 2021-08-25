@@ -1,31 +1,30 @@
+import { Button } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
+import { Text } from 'ui/Typography';
 
 const ButtonSize = (props: any) => {
   const { text } = props;
 
   const RenderButton = () => (
-    <Button>
-      <StyleText>
-        {text}
-      </ StyleText>
-    </Button>
+    <StyleButton>
+      <StyleText>{text}</StyleText>
+    </StyleButton>
   );
 
   return <RenderButton />;
 };
 
-const StyleText = styled.p`
-  font-size: 15px;
+const StyleText = styled(Text)`
+  font-size: 13px;
   font-weight: bold;
-  position: relative;
-  padding-top: 7px;
+  margin-top: 4px;
 `;
 
-const Button = styled.button`
+const StyleButton = styled(Button)`
   text-align: center;
   height: 40px;
-  width: 45px;
+  width: 52px;
   border: 2px;
   margin-left: 10px;
   border-radius: 10px;

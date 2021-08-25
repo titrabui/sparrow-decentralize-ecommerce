@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
@@ -6,44 +7,31 @@ const ButtonColor = (props: any) => {
   const { color, colorText } = props;
 
   const RenderButton: React.FC = () => (
-    <Button>
+    <StyleButton>
       <RenderCircleColor />
-      <Text m='5px 0 0 7px' $color='#6c6f72' $size='15px'>
+      <Text m='3px 0 0 5px' $color='#6c6f72' $size='15px'>
         {colorText}
       </Text>
-    </Button>
+    </StyleButton>
   );
 
-  const RenderCircleColor = () => {
-    const CircleColor = styled.div`
-      position: absolute;
-      margin: 2px 0 0 2px;
-      background-color: ${color};
-      display: block;
-      height: 21px;
-      width: 21px;
-      border-radius: 50%;
-    `;
-
-    return (
-      <Circle>
-        <CircleColor />
-      </Circle>
-    );
-  };
+  const RenderCircleColor = () => (
+    <Circle>
+      <CircleColor style={{ background: color }} />
+    </Circle>
+  );
 
   return <RenderButton />;
 };
 
-const Button = styled.button`
+const StyleButton = styled(Button)`
   height: 40px;
-  width: 110px;
-  border: 2px;
+  width: 115px;
+  border: none;
   margin-left: 10px;
   border-radius: 10px;
   display: flex;
-  background-color: #e3eeff;
-  text-decoration: none;
+  background: #e3eeff;
   &:hover {
     background-color: #a5a6f6;
     border: 2px solid #6c6cff;
@@ -54,12 +42,21 @@ const Button = styled.button`
   }
 `;
 
+const CircleColor = styled.div`
+  position: absolute;
+  margin: 2px 0 0 2px;
+  display: block;
+  height: 19px;
+  width: 19px;
+  border-radius: 50%;
+`;
+
 const Circle = styled.div`
-  margin: 5px 0 0 5px;
+  margin: 1px 0 0 0;
   background-color: #ffff;
   display: block;
-  height: 25px;
-  width: 25px;
+  height: 22px;
+  width: 22px;
   border-radius: 50%;
   box-shadow: 1px 1px #c7d1e0;
 `;
