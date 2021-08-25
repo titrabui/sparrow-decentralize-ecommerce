@@ -3,47 +3,31 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
-const ButtonOrder: React.FC = () => {
-  
-  const RenderTotal = styled.div`
-    text-align: center;
-    height: 50px;
-    width: 60px;
-    border: 2px;
-    margin-right: 10px;
-    padding-top: 15px;
-    border-radius: 15px;
-    background-color: #fff;
-    text-decoration: none;
-    border: 1px solid #b5adb0;
-  `;
-
-  return (
-    <Container>
-      <Button>
-        <StyleText $color='#b5adb0'>-</StyleText>
-      </Button>
-      <RenderTotal>
-        <StyleText $color='#b5adb0'>1</StyleText>
-      </RenderTotal>
-      <Button>
-        <StyleText $color='#000'>+</StyleText>
-      </Button>
-      <Link to='/cart'>
-        <Buy>
-          <Text strong $color='#fff' $size='15px'>
-            BUY
-          </Text>
-        </Buy>
-      </Link>
-      <AddToCard>
+const ButtonOrder: React.FC = () => (
+  <Container>
+    <Button>
+      <StyleText $color='#b5adb0'>-</StyleText>
+    </Button>
+    <Total>
+      <StyleText $color='#b5adb0'>1</StyleText>
+    </Total>
+    <Button>
+      <StyleText $color='#000'>+</StyleText>
+    </Button>
+    <Link to='/cart'>
+      <Buy>
         <Text strong $color='#fff' $size='15px'>
-          ADD TO CARD
+          BUY
         </Text>
-      </AddToCard>
-    </Container>
-  );
-};
+      </Buy>
+    </Link>
+    <AddToCard>
+      <Text strong $color='#fff' $size='15px'>
+        ADD TO CARD
+      </Text>
+    </AddToCard>
+  </Container>
+);
 
 const Container = styled.div`
   margin-top: 10px;
@@ -101,6 +85,19 @@ const Buy = styled.button`
   &:active {
     background-color: orange;
   }
+`;
+
+const Total = styled.div`
+  text-align: center;
+  height: 50px;
+  width: 60px;
+  border: 2px;
+  margin-right: 10px;
+  padding-top: 15px;
+  border-radius: 15px;
+  background-color: #fff;
+  text-decoration: none;
+  border: 1px solid #b5adb0;
 `;
 
 export default ButtonOrder;

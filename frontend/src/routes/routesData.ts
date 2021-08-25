@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import Cart from 'pages/Cart';
+import Checkout from 'pages/Checkout';
 import DetailsPage from 'pages/DetailsPage/components/DetailsPage';
 import HomePage from 'pages/Home';
-import Purchases from 'pages/Purchases';
-import Checkout from 'pages/Checkout';
+import ManageShipping from 'pages/ManageShipping';
 import MySales from 'pages/MySales';
+import Purchases from 'pages/Purchases';
 import { FunctionComponent } from 'react';
 
 type RouteType = {
@@ -22,7 +23,8 @@ export enum routesEnum {
   checkout = '/checkout',
   detail = '/detail/:id',
   purchases = '/purchases',
-  mySales = '/mySales'
+  mySales = '/mySales',
+  shipping = '/shipping'
 }
 
 const privateRoutes: RouteType[] = [];
@@ -56,6 +58,12 @@ const publicRoutes: RouteType[] = [
     path: routesEnum.mySales,
     component: MySales,
     exact: true
+  },
+  {
+    path: routesEnum.shipping,
+    component: ManageShipping,
+    exact: true
   }
 ];
 export { privateRoutes, publicRoutes };
+
