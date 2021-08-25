@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -5,15 +6,15 @@ import { Text } from 'ui/Typography';
 
 const ButtonOrder: React.FC = () => (
   <Container>
-    <Button>
+    <StyleButton>
       <StyleText $color='#b5adb0'>-</StyleText>
-    </Button>
+    </StyleButton>
     <Total>
       <StyleText $color='#b5adb0'>1</StyleText>
     </Total>
-    <Button>
+    <StyleButton>
       <StyleText $color='#000'>+</StyleText>
-    </Button>
+    </StyleButton>
     <Link to='/cart'>
       <Buy>
         <Text strong $color='#fff' $size='15px'>
@@ -40,50 +41,54 @@ const Container = styled.div`
 const StyleText = styled(Text)`
   font-size: 15px;
   font-weight: bold;
-  position: relative;
-  padding-top: 5px;
 `;
 
-const Button = styled.button`
+const StyleButton = styled(Button)`
   text-align: center;
   height: 35px;
   width: 35px;
-  border: 2px;
+  border: none;
   margin-right: 10px;
   margin-top: 8px;
   border-radius: 10px;
-  background-color: #fff;
-  text-decoration: none;
+  background: #fff;
   &:active {
-    background-color: #a5a6f6;
+    background: #a5a6f6;
   }
 `;
 
-const AddToCard = styled.button`
+const AddToCard = styled(Button)`
   height: 40px;
   width: 150px;
-  border: 2px;
+  border: none;
   margin: 5px 0 0 10px;
   border-radius: 10px;
-  background-color: #7b61ff;
-  text-decoration: none;
+  background: #7b61ff;
   box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
-    background-color: #a5a6f6;
+    background: #a5a6f6;
+  }
+  &:hover,
+  &:focus {
+    background: #7b61ff;
   }
 `;
 
-const Buy = styled.button`
+const Buy = styled(Button)`
   height: 40px;
   width: 150px;
-  border: 2px;
+  border: none;
   margin: 5px 0 0 10px;
   border-radius: 10px;
-  background-color: #e86c13;
+  background: #e86c13;
   text-decoration: none;
   box-shadow: 3px 5px 5px #e5b190;
   &:active {
     background-color: orange;
+  }
+  &:hover,
+  &:focus {
+    background-color: #e86c13;
   }
 `;
 
