@@ -55,7 +55,7 @@ const Button = styled.button`
   background-color: #fff;
   text-decoration: none;
   &:active {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
   }
 `;
 
@@ -69,7 +69,7 @@ const AddToCard = styled.button`
   text-decoration: none;
   box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
   }
 `;
 

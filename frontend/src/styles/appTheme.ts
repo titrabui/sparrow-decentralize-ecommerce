@@ -22,7 +22,7 @@ export const lightTheme = {
   darkBlue: '#3E5B87',
   lightBlueBorder: '#D6E4FF',
   mediumBlue: '#3E5B87',
-  action: '#a5a6f6',
+  action: '#7b61ff',
   highlight: '#FE4382'
 };
 

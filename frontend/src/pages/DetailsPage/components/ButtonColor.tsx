@@ -45,11 +45,11 @@ const Button = styled.button`
   background-color: #e3eeff;
   text-decoration: none;
   &:hover {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
     border: 2px solid #6c6cff;
   }
   &:focus {
-    background-color: #a5a6f6;
+    background-color: #7b61ff;
     border: 2px solid #6c6cff;
   }
 `;
