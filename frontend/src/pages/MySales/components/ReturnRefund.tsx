@@ -5,6 +5,8 @@ import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker, Select } from 'antd';
+import request from 'utils/request';
+import { ORDER_STATUS } from 'utils/constants';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 const { Option } = Select;
@@ -18,48 +20,15 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
   const [data, setData] = useState([] as any);
 
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'wait'
-      },
-      {
-        id: 2,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '40ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'confirm'
-      },
-      {
-        id: 3,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '40ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'reject'
-      },
-      {
-        id: 4,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '40ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'complete'
+    const fetchOrderRefund = async () => {
+      const resultErrProduct = await request.getData(`/orders/${ORDER_STATUS.REFUNDED_PRODUCT_ERROR}`, {})
+      const resultErrShipping = await request.getData(`/orders/${ORDER_STATUS.REFUNDED_SHIPPING_ERROR}`, {})
+      if (resultErrProduct && resultErrProduct.status === 200 && resultErrShipping && resultErrShipping.status === 200) {
+        const result = resultErrProduct.data.concat(resultErrShipping.data);
+        setData(result);
       }
-    ]);
+    }
+    fetchOrderRefund();
   }, []);
 
   useEffect(() => {

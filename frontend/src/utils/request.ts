@@ -18,6 +18,10 @@ const request = {
   postData(action: string, data?: any) {
     const url = `${process.env.REACT_APP_API_URL_DEV || 'http://localhost:3001'}` + action;
     return instance.post(url, data);
+  },
+  putData(action: string, data?: any) {
+    const url = `${process.env.REACT_APP_API_URL_DEV || 'http://localhost:3001'}` + action;
+    return instance.put(url, data);
   }
 };
 

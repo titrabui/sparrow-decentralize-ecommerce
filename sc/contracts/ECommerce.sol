@@ -199,6 +199,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
     // Step 2 => order status: READY_TO_PICKUP
     function sellerConfirmOrder(string memory _orderId) external {
         (, , , OrderStatus _status, , , , ) = getOrderInfo(_orderId);
+        require(_status != OrderStatus.READY_TO_PICKUP, "Order has been confirm before");
         require(_status == OrderStatus.PAID, "Order has not paid yet");
         orderBook[_orderId].seller = _msgSender();
         orderBook[_orderId].status = OrderStatus.READY_TO_PICKUP;

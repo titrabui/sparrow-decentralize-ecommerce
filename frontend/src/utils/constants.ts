@@ -9,3 +9,13 @@ export const NETWORK_CHAIN_IDS = {
   kovan: 42,
   localhost: 1337
 };
+
+export const ORDER_STATUS = {
+  PAID: 0,
+  READY_TO_PICKUP: 1,
+  CONFIRMED_PICKUP: 2,
+  SHIPPED: 3,
+  RECEIVED: 4,
+  REFUNDED_PRODUCT_ERROR: 5,
+  REFUNDED_SHIPPING_ERROR: 6
+}

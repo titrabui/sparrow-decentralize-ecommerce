@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import p2 from 'assets/images/p2.png';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
+import { notification } from 'antd';
+import { ORDER_STATUS } from 'utils/constants';
+import request from 'utils/request';
 import RefundModal from './RefundModal';
 
 interface IToShipProductProps {
@@ -13,6 +18,29 @@ interface IToShipProductProps {
 const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
+  const { account, connector, library } = useWallet();
+
+  const handleConfirmOrder = async (orderId: string) => {
+    if (connector) {
+      const contract = await getContract(connector);
+      await contract.methods
+        .sellerConfirmOrder(orderId)
+        .send({
+          from: account,
+          type: '0x2'
+        }).on('receipt', async () => {
+          notification.success({
+            description: 'Order has been confirmed successfully!',
+            message: 'Success'
+          });
+
+          request.putData('/orders/update-order-status', {
+            id: orderId,
+            status: ORDER_STATUS.READY_TO_PICKUP
+          });
+        });
+    }
+  }
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
@@ -44,7 +72,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent'>Confirm</AddPlusButton>
+        <AddPlusButton $bgType='accent' onClick={() => handleConfirmOrder(data.id)}>Confirm</AddPlusButton>
       </Amount>
       <Price>
         <Status>Wait for seller to confirm</Status>

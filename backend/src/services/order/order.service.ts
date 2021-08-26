@@ -15,6 +15,15 @@ export class OrderService {
     return await this.orderRepo.create(historyData);
   }
 
+  async getAllOrders(status: number) {
+    let allOrders = await this.orderRepo.getAll();
+    const orders = allOrders.filter(item => {
+      return item.status == status;
+    });
+
+    return orders;
+  }
+
   async getOrderById(orderId: string) {
     let orders = await this.orderRepo.getAll();
     const order = orders.filter(item => {
@@ -32,7 +41,8 @@ export class OrderService {
     let order = orders.filter(item => {
       return item.id === data.id;
     });
-    if (order) {
+
+    if (order.length > 0) {
       let myOrder = order[0];
       myOrder.status = data.status;
       await this.orderRepo.updateOrderStatus(myOrder);

@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Post, Body,  Patch } from '@nestjs/common';
-import { IOrder } from 'src/models/order/order.interface';
+import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
+import { IOrder, IUpdateOrderStatus } from 'src/models/order/order.interface';
 import { OrderService } from 'src/services/order/order.service';
 
 @Controller('orders')
@@ -14,6 +14,11 @@ export class OrdersController {
     return await this.orderService.getMyPurchased(address);
   }
 
+  @Get('/:status/:address')
+  async getOrders(@Param('status') status: number): Promise<IOrder[]> {
+    return await this.orderService.getAllOrders(status);
+  }
+
   @Post('/create')
   async create(@Body() order: IOrder) {
     return await this.orderService.createOrder(order);
@@ -24,8 +29,8 @@ export class OrdersController {
     return await this.orderService.getOrderById(orderId);
   }
 
-  @Patch('/update-order-status')
-  async updateOrderStatus(@Body() data: any) {
+  @Put('/update-order-status')
+  async updateOrderStatus(@Body() data: IUpdateOrderStatus) {
     return await this.orderService.updateOrderStatus(data);
   }
 }
