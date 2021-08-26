@@ -145,12 +145,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     mapping(string => Order) private orderBook;
 
-    event Ordered(
-        string _orderId,
-        address _seller,
-        address _buyer,
-        uint256 indexed _totalMoney
-    );
+    event Ordered(string _orderId, address _buyer, uint256 indexed _totalMoney);
     event SellerConfirmOrder(string _orderId, OrderStatus _finalStatus);
     event Staked(
         string _orderId,
@@ -179,7 +174,6 @@ contract ECommerce is Ownable, ReentrancyGuard {
     // create an order
     function createOrder(
         string memory _orderId,
-        address _seller,
         uint256 _quantity,
         uint256 _price,
         uint256 _shippingFee
@@ -190,7 +184,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         );
         orderBook[_orderId] = Order(
             _orderId,
-            payable(_seller),
+            payable(address(0)),
             _msgSender(),
             payable(address(0)),
             OrderStatus.PAID,
@@ -199,16 +193,14 @@ contract ECommerce is Ownable, ReentrancyGuard {
             _shippingFee,
             0
         );
-        emit Ordered(_orderId, _seller, _msgSender(), msg.value);
+        emit Ordered(_orderId, _msgSender(), msg.value);
     }
 
     // Step 2 => order status: READY_TO_PICKUP
     function sellerConfirmOrder(string memory _orderId) external {
-        (address _seller, , , OrderStatus _status, , , , ) = getOrderInfo(
-            _orderId
-        );
+        (, , , OrderStatus _status, , , , ) = getOrderInfo(_orderId);
         require(_status == OrderStatus.PAID, "Order has not paid yet");
-        require(_seller == _msgSender(), "Invalid seller");
+        orderBook[_orderId].seller = _msgSender();
         orderBook[_orderId].status = OrderStatus.READY_TO_PICKUP;
         emit SellerConfirmOrder(_orderId, OrderStatus.READY_TO_PICKUP);
     }
