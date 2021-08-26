@@ -5,6 +5,8 @@ import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
+import request from 'utils/request';
+import { ORDER_STATUS } from 'utils/constants';
 import ShippingProduct from './ShippingProduct';
 
 interface IShippingProps {
@@ -16,29 +18,15 @@ const Shipping: React.FC<IShippingProps> = (props: IShippingProps) => {
   const [data, setData] = useState([] as any);
 
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'wait'
-      },
-      {
-        id: 2,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'ship'
+    const fetchOrderConfirmed = async () => {
+      const result = await request.getData(`/orders/${ORDER_STATUS.CONFIRMED_PICKUP}`, {})
+      if (result && result.status === 200) {
+        setData(result.data)
       }
-    ]);
+    }
+    fetchOrderConfirmed();
   }, []);
+
 
   useEffect(() => {
     const total = data.reduce(

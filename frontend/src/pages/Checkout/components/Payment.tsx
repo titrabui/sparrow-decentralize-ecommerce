@@ -9,6 +9,7 @@ import { Checkbox, notification, Radio } from 'antd';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
+import { ORDER_STATUS } from 'utils/constants';
 
 interface IPaymentProps {
   setStep: any;
@@ -64,11 +65,12 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
       shippingAddress: renderAddress(),
       billingAddress: type === 0 ? renderAddress() : billingAddress,
       productId: id,
-      productname: name,
+      name,
       quantity: amount,
       price: Number(price),
       shippingFee,
-      totalAmount
+      totalAmount,
+      status: ORDER_STATUS.PAID
     });
     setStep(4);
   };
