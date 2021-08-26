@@ -50,7 +50,7 @@ export class OrderService {
     return this.latestBlockRepo.get();
   }
 
-  // async syncLatestBlock(blockNumber: number) {
-  //   return this.latestBlockRepo.sync(blockNumber);
-  // }
+  async syncLatestBlock(blockNumber: number) {
+    return this.latestBlockRepo.sync(blockNumber);
+  }
 }

@@ -6,32 +6,34 @@ export class OrderMap {
     const eventValues = event.returnValues;
     const orderDto = {
       type: SC_ECOMMERCE_EVENT_MAPPER[event.event],
-      spaceId: eventValues.spaceId,
-      from: orderData.from,
       txn: event.transactionHash
     };
 
     switch (event.event) {
-      case 'Assign':
-      case 'SpaceTransfer':
+      case 'SellerConfirmOrder':
+        // orderDto.
+        break;
+
+      case 'Staked':
         // orderDto.to = eventValues.to;
         break;
 
-      case 'SpaceOffered':
-        // orderDto.amount = web3Utils.fromWei(eventValues.minValue, 'ether');
-        // orderDto.to = eventValues.toAddress;
-        break;
 
-      case 'SpaceBidEntered':
-      case 'SpaceBidWithdrawn':
-        // orderDto.amount = web3Utils.fromWei(eventValues.value, 'ether');
-        break;
-
-      case 'SpaceBought':
+      case 'Shipped':
         // orderDto.amount = web3Utils.fromWei(eventValues.value, 'ether');
         // orderDto.from = eventValues.fromAddress;
         // orderDto.to = eventValues.toAddress;
         break;
+
+      case 'ReceiveOrder':
+        // orderDto.amount = web3Utils.fromWei(eventValues.minValue, 'ether');
+        // orderDto.to = eventValues.toAddress;
+        break;
+
+      case 'ShipperCancelOrder':
+        // orderDto.amount = web3Utils.fromWei(eventValues.value, 'ether');
+        break;
+
 
       default:
         break;

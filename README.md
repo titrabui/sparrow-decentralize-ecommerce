@@ -12,5 +12,8 @@
 ## Deploy sc
 `yarn sc-deploy`
 
+## Start server
+`yarn start:server-dev`
+
 ## Start front end
-`yarn start:dev`
+`yarn start:web-dev`

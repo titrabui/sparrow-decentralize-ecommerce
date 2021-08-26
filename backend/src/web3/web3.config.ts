@@ -31,31 +31,9 @@ export class Web3Config {
 
   constructor(
     private readonly config: ConfigService
-  ) {}
+  ) { }
 
   async init() {
-    try {
-      const web3 = new Web3(
-        new Web3.providers.WebsocketProvider(
-          this.config.get('WEB3_WEBSOCKET_URL'),
-          WEB3_SOCKET_PROVIDER_OPTIONS
-        ),
-      );
-
-      const contract = new web3.eth.Contract(
-        CryptoSpaceContract.abi,
-        this.config.get('WEB3_CONTRACT_ADDRESS')
-      );
-
-      const latestBlock = await web3.eth.getBlockNumber();
-
-      return { web3, contract, latestBlock };
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
-  async initEcommerceConfig() {
     try {
       const web3 = new Web3(
         new Web3.providers.WebsocketProvider(
