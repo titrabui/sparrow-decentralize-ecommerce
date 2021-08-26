@@ -14,7 +14,7 @@ export class OrdersController {
     return await this.orderService.getMyPurchased(address);
   }
 
-  @Get('/:status/:address')
+  @Get('/:status')
   async getOrders(@Param('status') status: number): Promise<IOrder[]> {
     return await this.orderService.getAllOrders(status);
   }
