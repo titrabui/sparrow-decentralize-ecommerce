@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
 const ButtonColor = (props: any) => {
-  const { color, colorText } = props;
+  const { color, colorText, onClick, active } = props;
 
   const RenderButton: React.FC = () => (
-    <StyleButton>
+    <StyleButton onClick={onClick} className={active ? 'active' : ''}>
       <RenderCircleColor />
       <Text m='3px 0 0 5px' $color='#6c6f72' $size='15px'>
         {colorText}
@@ -32,6 +32,12 @@ const StyleButton = styled(Button)`
   border-radius: 10px;
   display: flex;
   background: #e3eeff;
+  &.active {
+    background-color: #7b61ff;
+    .ant-typography {
+      color: white;
+    }
+  }
   &:hover {
     background-color: #7b61ff;
     border: 2px solid #6c6cff;

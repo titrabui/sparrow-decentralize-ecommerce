@@ -12,6 +12,5 @@ export const getContract = async (connector: any) => {
   // TODO: Get network address whenever JSON file change
   // const contractAddress = contract.networks[1622807330980].address;
   const contractAddress = SC_CONTRACT_ADDRESS;
-  console.log({contractAddress})
   return new web3.eth.Contract(contractAbi, contractAddress);
 };

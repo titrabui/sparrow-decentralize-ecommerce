@@ -9,14 +9,16 @@ import MainContainer from 'ui/MainContainer';
 import { Text } from 'ui/Typography';
 import spaces from 'utils/spaces';
 import Banner from './Banner';
+import BecomeMember from './BecomeMember';
 
 const HomePage: React.FC = () => (
   <MainContainer mt='60px'>
     <StyledBox w='1200px' m='auto'>
       <Banner />
+      <BecomeMember />
       <CardContainer>
         <Row>
-          {spaces.slice(0,6).map((container: any) => (
+          {spaces.slice(0, 6).map((container: any) => (
             <Link key={container.id} id={container.id} to={`/detail/${container.id}`}>
               <Card
                 id={container.id}
@@ -45,12 +47,12 @@ const StyledText = styled(Text)`
   position: absolute;
   top: 400px;
   left: -90px;
-  display:flex;
+  display: flex;
   align-items: center;
   .anticon {
-    font-size:14px;
-    font-weight:bold;
-    margin:0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 10px;
   }
 `;
 const StyledBox = styled(Box)`
@@ -59,13 +61,13 @@ const StyledBox = styled(Box)`
 `;
 const CardContainer = styled.div`
   position: absolute;
-  top: 270px;
+  top: 320px;
   width: 1200px;
   display: flex;
   justify-content: center;
   .ant-row {
     justify-content: space-evenly;
-    width:1120px;
+    width: 1120px;
   }
 `;
 

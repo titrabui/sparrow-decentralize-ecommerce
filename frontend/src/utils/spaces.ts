@@ -19,7 +19,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP001',
     status: 'Available',
-    price: '00.34',
+    price: '10',
     img: img1
   },
   {
@@ -29,7 +29,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP002',
     status: 'Available',
-    price: '00.89',
+    price: '20',
     img: img2
   },
   {
@@ -39,7 +39,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP003',
     status: 'Available',
-    price: '00.88',
+    price: '35',
     img: img3
   },
   {
@@ -49,7 +49,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP004',
     status: 'Available',
-    price: '00.64',
+    price: '44',
     img: img4
   },
   {
@@ -59,7 +59,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP005',
     status: 'Available',
-    price: '00.65',
+    price: '45',
     img: img5
   },
   {
@@ -69,7 +69,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP006',
     status: 'Available',
-    price: '00.85',
+    price: '27',
     img: img6
   },
   {
@@ -79,8 +79,8 @@ const spaces = [
     brand: 'Napa',
     code: 'NP007',
     status: 'Available',
-    price: '00.74',
-    img: img7,
+    price: '32',
+    img: img7
   },
   {
     id: 8,
@@ -89,7 +89,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP008',
     status: 'Available',
-    price: '00.85',
+    price: '33',
     img: img8
   },
   {
@@ -99,8 +99,8 @@ const spaces = [
     brand: 'Napa',
     code: 'NP009',
     status: 'Available',
-    price: '00.85',
-    img: img9,
+    price: '21',
+    img: img9
   },
   {
     id: 10,
@@ -109,7 +109,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP010',
     status: 'Available',
-    price: '00.66',
+    price: '11',
     img: img10
   },
   {
@@ -119,7 +119,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP011',
     status: 'Available',
-    price: '00.95',
+    price: '8',
     img: img11
   },
   {
@@ -129,7 +129,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP012',
     status: 'Available',
-    price: '00.75',
+    price: '17',
     img: img12
   }
 ];

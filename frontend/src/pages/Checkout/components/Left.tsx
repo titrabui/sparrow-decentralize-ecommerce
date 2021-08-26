@@ -12,10 +12,12 @@ interface ILeftProps {
   setTotal: (total: number) => void;
   step: number;
   setStep: (step: number) => void;
+  setCheckoutData: any;
+  checkoutData: any;
 }
 
 const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
-  const { setTotal, step, setStep } = props;
+  const { setTotal, step, setStep, setCheckoutData, checkoutData } = props;
   const [data, setData] = useState([] as any);
   useEffect(() => {
     setData([
@@ -50,10 +52,24 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
 
   return (
     <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '500px'}>
-      {step === 1 && <CustomerInfo setStep={setStep} />}
-      {step === 2 && <ShippingMethod setStep={setStep} />}
-      {step === 3 && <Payment setStep={setStep} />}
-      {step === 4 && <Completed />}
+      {step === 1 && (
+        <CustomerInfo
+          setStep={setStep}
+          setCheckoutData={setCheckoutData}
+          checkoutData={checkoutData}
+        />
+      )}
+      {step === 2 && (
+        <ShippingMethod
+          setStep={setStep}
+          setCheckoutData={setCheckoutData}
+          checkoutData={checkoutData}
+        />
+      )}
+      {step === 3 && (
+        <Payment setStep={setStep} setCheckoutData={setCheckoutData} checkoutData={checkoutData} />
+      )}
+      {step === 4 && <Completed checkoutData={checkoutData} />}
     </Container>
   );
 };

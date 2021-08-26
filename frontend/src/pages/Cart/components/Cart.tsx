@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainContainer from 'ui/MainContainer';
 import Box from 'ui/Box';
 import styled from 'styled-components';
@@ -8,12 +8,22 @@ import Left from './Left';
 
 const Cart: React.FC = () => {
   const [total, setTotal] = useState(0);
+  const [data, setData] = useState([] as any);
+
+  useEffect(() => {
+    const cart = localStorage.getItem('cart');
+    if (cart) {
+      const parseCart = JSON.parse(cart);
+      setData(parseCart);
+    }
+  }, []);
+
   return (
     <MainContainer mt='60px'>
       <PageName>Cart</PageName>
       <StyledBox w='1200px' m='auto'>
-        <Left setTotal={setTotal} />
-        <Right total={total} />
+        <Left setTotal={setTotal} data={data} setData={setData} />
+        <Right total={total} data={data} />
       </StyledBox>
     </MainContainer>
   );

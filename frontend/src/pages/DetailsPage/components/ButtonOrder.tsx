@@ -4,31 +4,51 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
-const ButtonOrder: React.FC = () => (
-  <Container>
-    <StyleButton>
-      <StyleText $color='#b5adb0'>-</StyleText>
-    </StyleButton>
-    <Total>
-      <StyleText $color='#b5adb0'>1</StyleText>
-    </Total>
-    <StyleButton>
-      <StyleText $color='#000'>+</StyleText>
-    </StyleButton>
-    <Link to='/cart'>
-      <Buy>
+interface IButtonOrderProps {
+  handleChangeAmount: any;
+  container: any;
+  data: any;
+}
+
+const ButtonOrder: React.FC<IButtonOrderProps> = (props: IButtonOrderProps) => {
+  const { handleChangeAmount, container, data } = props;
+  const { amount } = data;
+
+  const handleBuy = () => {
+    localStorage.setItem('cart', JSON.stringify([{ ...container, ...data }]));
+  };
+  const handleAdd = () => {
+    handleChangeAmount(amount + 1);
+  };
+  const handleSub = () => {
+    handleChangeAmount(amount - 1);
+  };
+  return (
+    <Container>
+      <StyleButton onClick={() => handleSub()}>
+        <StyleText $color='#000'>-</StyleText>
+      </StyleButton>
+      <Total>
+        <StyleText $color='#000'>{amount}</StyleText>
+      </Total>
+      <StyleButton onClick={() => handleAdd()}>
+        <StyleText $color='#000'>+</StyleText>
+      </StyleButton>
+      <Link to='/cart'>
+        <Buy onClick={handleBuy}>
+          <Text strong $color='#fff' $size='15px'>
+            BUY
+          </Text>
+        </Buy>
+      </Link>
+      <AddToCard onClick={handleBuy}>
         <Text strong $color='#fff' $size='15px'>
-          BUY
+          ADD TO CARD
         </Text>
-      </Buy>
-    </Link>
-    <AddToCard>
-      <Text strong $color='#fff' $size='15px'>
-        ADD TO CARD
-      </Text>
-    </AddToCard>
-  </Container>
-);
+      </AddToCard>
+    </Container>
+  );
+};
 
 const Container = styled.div`
   margin-top: 10px;
