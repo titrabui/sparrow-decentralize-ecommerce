@@ -8,38 +8,97 @@ import { Radio } from 'antd';
 
 interface IShippingMethodProps {
   setStep: any;
+  setCheckoutData: any;
+  checkoutData: any;
 }
 const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodProps) => {
-  const { setStep } = props;
+  const { setStep, setCheckoutData, checkoutData } = props;
+  const { firstName, lastName, address, country, state, shippingMethod } = checkoutData;
 
+  const renderAddress = () => {
+    const renderText = (value: string) => {
+      if (value) return `${value},`;
+      return '';
+    };
+    return `${renderText(`${firstName} ${lastName}`)} ${renderText(address)} ${renderText(
+      country
+    )} ${renderText(state)} `;
+  };
+
+  const handleSelectShippingMethod = (method: string) => {
+    let shippingFee = 0;
+    switch (method) {
+      case 'UPS Ground':
+        shippingFee = 0.001;
+        break;
+      case 'UPS 3 Day Select':
+        shippingFee = 0.002;
+        break;
+      case 'UPS 2nd Day Air':
+        shippingFee = 0.003;
+        break;
+      case 'UPS Next Day Air':
+        shippingFee = 0.005;
+        break;
+      default:
+        shippingFee = 0;
+        break;
+    }
+    setCheckoutData({ ...checkoutData, shippingFee, shippingMethod: method });
+  };
   return (
     <Container>
       <Address>
         <TextContainer>
           {' '}
           <Text strong>Shipping Address</Text>
-          <Text>368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang</Text>
+          <Text $color='black'>{renderAddress()}</Text>
         </TextContainer>
-        <Text $color='#1890ff' strong onClick={() => {}}>
-          Edit
-        </Text>
       </Address>
       <Method>
         <Title>Shipping Method</Title>
         <RadioContainer>
-          <Radio>UPS Ground</Radio>
+          <Radio
+            checked={shippingMethod === 'UPS Ground'}
+            onClick={() => {
+              handleSelectShippingMethod('UPS Ground');
+            }}
+          >
+            UPS Ground
+          </Radio>
           <Text strong>0.001 ETH</Text>
         </RadioContainer>
         <RadioContainer>
-          <Radio>UPS 3 Day Select</Radio>
+          <Radio
+            checked={shippingMethod === 'UPS 3 Day Select'}
+            onClick={() => {
+              handleSelectShippingMethod('UPS 3 Day Select');
+            }}
+          >
+            UPS 3 Day Select
+          </Radio>
           <Text strong>0.002 ETH</Text>
         </RadioContainer>
         <RadioContainer>
-          <Radio>UPS 2nd Day Air</Radio>
+          <Radio
+            checked={shippingMethod === 'UPS 2nd Day Air'}
+            onClick={() => {
+              handleSelectShippingMethod('UPS 2nd Day Air');
+            }}
+          >
+            UPS 2nd Day Air
+          </Radio>
           <Text strong> 0.003 ETH</Text>
         </RadioContainer>
         <RadioContainer>
-          <Radio>UPS Next Day Air</Radio>
+          <Radio
+            checked={shippingMethod === 'UPS Next Day Air'}
+            onClick={() => {
+              handleSelectShippingMethod('UPS Next Day Air');
+            }}
+          >
+            UPS Next Day Air
+          </Radio>
           <Text strong>0.005 ETH</Text>
         </RadioContainer>
       </Method>

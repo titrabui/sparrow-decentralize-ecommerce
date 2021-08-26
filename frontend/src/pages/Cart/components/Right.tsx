@@ -3,23 +3,28 @@ import styled from 'styled-components';
 import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 interface IRightProps {
   total: number;
+  data: any;
 }
 
 const Right: React.FC<IRightProps> = (props: IRightProps) => {
-  const { total } = props;
+  const { total, data } = props;
+  const history = useHistory();
+  const cart = localStorage.getItem('cart');
 
+  const handleCheckout = () => {
+    if (cart) {
+      localStorage.setItem('cart', JSON.stringify(data));
+      history.push('/checkout');
+    }
+  };
   return (
-    <Container w='1200px' h='400px'>
-      <Address>
-        <AddressTitle>Shipping Address</AddressTitle>
-        <AddressContent>368 Tran Hung Dao, An Hai Tay, Sơn Tra, Da Nang</AddressContent>
-      </Address>
+    <Container w='1200px' h='300px'>
       <Summary>
-        <SummaryTitle>ORDER SUMMARY (02 Items)</SummaryTitle>
+        <SummaryTitle>ORDER SUMMARY ({cart ? 1 : 0} Items)</SummaryTitle>
         <SummaryContent>
           Subtotal :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
@@ -43,9 +48,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
             {' '}
             {total.toFixed(2)} ETH
           </Text>
-          <StyledButton>
-            <Link to='/checkout'>CHECK OUT</Link>
-          </StyledButton>
+          {cart && <StyledButton onClick={handleCheckout}>CHECK OUT</StyledButton>}
         </CheckoutContent>
       </Checkout>
     </Container>
@@ -74,7 +77,7 @@ const Container = styled(Box)`
   border-radius: 24px;
   position: relative;
   width: 280px;
-  height: 450px;
+  height: 350px;
 `;
 
 const Summary = styled.div`
@@ -112,24 +115,24 @@ const CheckoutContent = styled.div`
   align-items: center;
 `;
 
-const Address = styled.div`
-  margin: 20px 0;
-  border-bottom: 1px solid rgba(79, 79, 79, 0.2);
-  padding: 0 0 20px 30px;
-`;
+// const Address = styled.div`
+//   margin: 20px 0;
+//   border-bottom: 1px solid rgba(79, 79, 79, 0.2);
+//   padding: 0 0 20px 30px;
+// `;
 
-const AddressTitle = styled(Text)`
-  font-size: 14px;
-  font-weight: bold;
-  color: #4f4f4f;
-  display: block;
-`;
+// const AddressTitle = styled(Text)`
+//   font-size: 14px;
+//   font-weight: bold;
+//   color: #4f4f4f;
+//   display: block;
+// `;
 
-const AddressContent = styled(Text)`
-  font-size: 14px;
-  color: #4f4f4fcc;
-  width: 200px;
-  display: block; ;
-`;
+// const AddressContent = styled(Text)`
+//   font-size: 14px;
+//   color: #4f4f4fcc;
+//   width: 200px;
+//   display: block; ;
+// `;
 
 export default Right;

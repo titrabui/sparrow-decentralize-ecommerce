@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
 const ButtonSize = (props: any) => {
-  const { text } = props;
+  const { text, onClick, active } = props;
 
   const RenderButton = () => (
-    <StyleButton>
+    <StyleButton onClick={onClick} className={active ? 'active' : ''}>
       <StyleText>{text}</StyleText>
     </StyleButton>
   );
@@ -31,6 +31,12 @@ const StyleButton = styled(Button)`
   background-color: #e3eeff;
   text-decoration: none;
   border: 1px solid #d9d9ff;
+  &.active {
+    background-color: #7b61ff;
+    .ant-typography {
+      color: white;
+    }
+  }
   &:hover {
     background-color: #7b61ff;
     border: 2px solid #6c6cff;

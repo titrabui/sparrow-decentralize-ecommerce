@@ -4,23 +4,19 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { Checkbox } from 'antd';
-import p2 from 'assets/images/p2.png';
 import Input from 'ui/Input';
 
 interface IProductProps {
   data: any;
   handleChangeAmount: (id: number, amount: number) => void;
-  handleChangeCheck: (id: number, checked: boolean) => void;
 }
 
 const Product: React.FC<IProductProps> = (props: IProductProps) => {
-  const { data, handleChangeAmount, handleChangeCheck } = props;
-
+  const { data, handleChangeAmount } = props;
   return (
     <Container>
-      <Checkbox checked={data.checked} onChange={() => handleChangeCheck(data.id, !data.checked)} />
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={data.img} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{data.name}</Name>
@@ -28,19 +24,15 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{data.size}ft</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color className={data.color} /> {data.color}
           </ColorButton>
         </SizeAndColor>
-        <Shipping>
-          <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
-        </Shipping>
       </Content>
       <Amount>
         <AddPlusButton onClick={() => handleChangeAmount(data.id, data.amount - 1)}>
@@ -60,8 +52,8 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
 
 const Price = styled.div`
   position: relative;
-  top: -55px;
   width: 100px;
+  margin-top: 10px;
 `;
 
 const PriceText = styled(Text)`
@@ -89,47 +81,34 @@ const AddPlusButton = styled(Button)`
   display: flex;
   align-items: center;
   justify-content: center;
-  color:black;
+  color: black;
 `;
 
 const Amount = styled.div`
   display: flex;
-  margin-top: 15px;
+  margin-top: 10px;
   align-items: center;
   position: relative;
-  top: -65px;
-`;
-
-const Shipping = styled.div`
-  display: flex;
-  width: 300px;
-  .ant-typography {
-    display: block;
-  }
-  margin-top: 15px;
-`;
-
-const ShippingTitle = styled(Text)`
-  color: black;
-  width: 140px;
-  font-size: 14px;
-`;
-
-const ShippingAddress = styled(Text)`
-  width: 180px;
-  font-size: 14px;
 `;
 
 const Color = styled.div`
   display: inline-block;
   width: 20px;
   height: 20px;
-  background: #ebebeb;
   border: 2px solid #ffffff;
   box-sizing: border-box;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -143,7 +122,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;
@@ -152,7 +131,7 @@ const ColorButton = styled(Button)`
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0 30px 0 15px;
 `;
 
@@ -174,7 +153,7 @@ const Content = styled.div`
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   justify-content: space-between;
   position: relative;
@@ -182,8 +161,8 @@ const Container = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 140px;
-  height: 150px;
+  width: 130px;
+  height: 120px;
   background: radial-gradient(
     50% 50% at 50% 50%,
     rgba(255, 255, 255, 0.25) 0%,

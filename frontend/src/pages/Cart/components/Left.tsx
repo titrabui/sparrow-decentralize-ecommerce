@@ -2,46 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
+import { Text } from 'ui/Typography';
 import { Checkbox } from 'antd';
 import Product from './Product';
 
 interface ILeftProps {
-  setTotal: (total: number) => void;
+  setTotal: any;
+  data: any;
+  setData: any;
 }
 
 const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
-  const { setTotal } = props;
-  const [data, setData] = useState([] as any);
-  const [checkAll, setCheckAll] = useState(false);
+  const { setTotal, data, setData } = props;
 
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1
-      },
-      {
-        id: 2,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1
-      }
-    ]);
-  }, []);
-
-  useEffect(() => {
-    const total = data.reduce(
-      (prev: any, curr: any) => (curr.checked ? prev + curr?.price * curr?.amount : prev),
-      0
-    );
+    const total = data.reduce((prev: any, curr: any) => prev + curr?.price * curr?.amount, 0);
     setTotal(total);
   }, [data, setTotal]);
 
@@ -54,40 +29,29 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
     setData(newData);
   };
 
-  const handleChangeCheck = (id: number, checked: boolean) => {
-    const newData = data.map((item: any) => {
-      if (item.id === id) return { ...item, checked };
-      return item;
-    });
-    const isCheckedAll = newData.reduce((prev: any, curr: any) => prev && curr.checked, true);
-    setCheckAll(isCheckedAll);
-    setData(newData);
-  };
-
-  const handleCheckAll = (checked: boolean) => {
-    const newData = data.map((item: any) => ({ ...item, checked }));
-    setData(newData);
-    setCheckAll(checked);
-  };
-
   return (
     <Container w='1200px' h='400px'>
-      <CheckAll>
-        {' '}
-        <Checkbox checked={checkAll} onChange={() => handleCheckAll(!checkAll)} />
-      </CheckAll>
-
-      {data.map((item: any) => (
-        <Product
-          data={item}
-          key={item?.id}
-          handleChangeAmount={handleChangeAmount}
-          handleChangeCheck={handleChangeCheck}
-        />
-      ))}
+      {data.length > 0 ? (
+        <>
+          {data.map((item: any) => (
+            <Product data={item} key={item?.id} handleChangeAmount={handleChangeAmount} />
+          ))}
+        </>
+      ) : (
+        <EmptyText>There is nothing in your shopping cart. </EmptyText>
+      )}
     </Container>
   );
 };
+
+const EmptyText = styled(Text)`
+  font-size: 20px;
+  color: black;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+`;
 
 const CheckAll = styled.div`
   width: 100%;

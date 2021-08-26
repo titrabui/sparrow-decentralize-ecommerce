@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
@@ -12,8 +13,25 @@ import { Detail, Item, Name, Price, RenderTextList } from './Info';
 
 const DetailsPage: React.FC = () => {
   const param: any = useParams();
-
   const container: any = spaces.find((co: any) => co.id.toString() === param.id);
+
+  const [data, setData] = useState({
+    color: '',
+    size: '',
+    amount: 0
+  });
+
+  const handleSelectColor = (color: string) => {
+    setData({ ...data, color });
+  };
+
+  const handleSelectSize = (size: string) => {
+    setData({ ...data, size });
+  };
+
+  const handleChangeAmount = (amount: number) => {
+    setData({ ...data, amount });
+  };
   return (
     <MainContainer mt='60px'>
       <PageName>Product Detail</PageName>
@@ -30,19 +48,54 @@ const DetailsPage: React.FC = () => {
           <Price>ETH &nbsp; {container.price} </Price>
           <ColorContainer>
             <StyledText>Color</StyledText>
-            <ButtonColor color='#e86c13' colorText='Orange' />
-            <ButtonColor color='#ebebeb' colorText='White' />
-            <ButtonColor color='#7b61ff' colorText='Violet' />
+            <ButtonColor
+              color='#e86c13'
+              colorText='Orange'
+              onClick={() => handleSelectColor('Orange')}
+              active={data.color === 'Orange'}
+            />
+            <ButtonColor
+              color='#ebebeb'
+              colorText='White'
+              onClick={() => handleSelectColor('White')}
+              active={data.color === 'White'}
+            />
+            <ButtonColor
+              color='#7b61ff'
+              colorText='Violet'
+              onClick={() => handleSelectColor('Violet')}
+              active={data.color === 'Violet'}
+            />
           </ColorContainer>
           <SizeContainer>
             <StyledText>Size</StyledText>
-            <ButtonSize text='10ft' />
-            <ButtonSize text='15ft' />
-            <ButtonSize text='20ft' />
-            <ButtonSize text='25ft' />
-            <ButtonSize text='30ft' />
+            <ButtonSize
+              text='10ft'
+              onClick={() => handleSelectSize('10')}
+              active={data.size === '10'}
+            />
+            <ButtonSize
+              text='15ft'
+              onClick={() => handleSelectSize('15')}
+              active={data.size === '15'}
+            />
+            <ButtonSize
+              text='20ft'
+              onClick={() => handleSelectSize('20')}
+              active={data.size === '20'}
+            />
+            <ButtonSize
+              text='25ft'
+              onClick={() => handleSelectSize('25')}
+              active={data.size === '25'}
+            />
+            <ButtonSize
+              text='30ft'
+              onClick={() => handleSelectSize('30')}
+              active={data.size === '30'}
+            />
           </SizeContainer>
-          <ButtonOrder />
+          <ButtonOrder handleChangeAmount={handleChangeAmount} container={container} data={data} />
         </ProductInfo>
       </StyledBox>
     </MainContainer>

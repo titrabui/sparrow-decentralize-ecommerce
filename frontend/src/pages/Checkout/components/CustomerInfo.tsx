@@ -10,45 +10,89 @@ import { Country, State } from 'country-state-city';
 
 interface ICustomerInfoProps {
   setStep: any;
+  setCheckoutData: any;
+  checkoutData: any;
 }
 const { Option } = Select;
 const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) => {
-  const { setStep } = props;
+  const { setStep, setCheckoutData, checkoutData } = props;
   const [states, setStates] = useState([] as any);
+  const [country, setCountry] = useState('');
+
   const countries = Country.getAllCountries();
+  const handleChangeCheckoutData = (key: string, value: any) => {
+    setCheckoutData({ ...checkoutData, [key]: value });
+  };
   return (
     <Container>
       <Email>
         <Title>Customer Information</Title>
-        <Input placeholder='Email' />
+        <Input
+          placeholder='Email'
+          value={checkoutData.email}
+          onChange={(e) => handleChangeCheckoutData('email', e.target.value)}
+        />
       </Email>
       <Shipping>
         <ShippingTitle>Shipping Address</ShippingTitle>
-        <FirstName placeholder='First Name' />
-        <LastName placeholder='Last Name' />
-        <Company placeholder='Company' />
-        <Address placeholder='Address' />
-        <Apt placeholder='Apt (optional)' />
+        <FirstName
+          placeholder='First Name'
+          value={checkoutData.firstName}
+          onChange={(e) => handleChangeCheckoutData('firstName', e.target.value)}
+        />
+        <LastName
+          placeholder='Last Name'
+          value={checkoutData.lastName}
+          onChange={(e) => handleChangeCheckoutData('lastName', e.target.value)}
+        />
+        <Company
+          placeholder='Company'
+          value={checkoutData.company}
+          onChange={(e) => handleChangeCheckoutData('company', e.target.value)}
+        />
+        <Address
+          placeholder='Address'
+          value={checkoutData.address}
+          onChange={(e) => handleChangeCheckoutData('address', e.target.value)}
+        />
+        <Apt
+          placeholder='Apt (optional)'
+          value={checkoutData.apt}
+          onChange={(e) => handleChangeCheckoutData('apt', e.target.value)}
+        />
         <StyledSelect
           defaultValue='Country'
-          onChange={(country: any) => {
-            setStates(State.getStatesOfCountry(country));
+          value={checkoutData.country || 'Country'}
+          onChange={(item: any) => {
+            setStates(State.getStatesOfCountry(item));
+            setCountry(item);
+            handleChangeCheckoutData('country', Country.getCountryByCode(item)?.name);
           }}
         >
-          {countries.map((country: any) => (
-            <Option value={country?.isoCode} key={country?.isoCode}>
-              {country.name}
+          {countries.map((item: any) => (
+            <Option value={item?.isoCode} key={item?.isoCode}>
+              {item.name}
             </Option>
           ))}
         </StyledSelect>
-        <StyledSelect defaultValue='State'>
+        <StyledSelect
+          defaultValue='State'
+          value={checkoutData.state || 'State'}
+          onChange={(state: any) => {
+            handleChangeCheckoutData('state', State.getStateByCodeAndCountry(state, country)?.name);
+          }}
+        >
           {states.map((state: any) => (
             <Option value={state?.isoCode} key={state?.isoCode}>
               {state.name}
             </Option>
           ))}
         </StyledSelect>
-        <Zip placeholder='Zip' />
+        <Zip
+          placeholder='Zip'
+          value={checkoutData.zip}
+          onChange={(e) => handleChangeCheckoutData('zip', e.target.value)}
+        />
       </Shipping>
       <Navigation>
         <Link to='/cart'>{'<'} Return to Cart</Link>

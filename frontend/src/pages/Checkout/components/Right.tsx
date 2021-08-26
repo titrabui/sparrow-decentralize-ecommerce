@@ -8,25 +8,26 @@ import { Input } from 'antd';
 
 interface IRightProps {
   total: number;
+  checkoutData: any;
 }
 
 const Right: React.FC<IRightProps> = (props: IRightProps) => {
-  const { total } = props;
+  const { total, checkoutData } = props;
   return (
     <Container w='1200px' h='400px'>
       <Summary>
-        <SummaryTitle>ORDER SUMMARY (02 Items)</SummaryTitle>
+        <SummaryTitle>ORDER SUMMARY (1 Items)</SummaryTitle>
         <SummaryContent>
           Subtotal :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
-            {total.toFixed(2)} ETH
+            {checkoutData?.price * checkoutData?.amount || 0} ETH
           </Text>
         </SummaryContent>
         <SummaryContent>
           Shipping Fee :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            0 ETH
+            {checkoutData?.shippingFee || 0} ETH
           </Text>
         </SummaryContent>
       </Summary>
@@ -44,7 +45,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
           </Text>
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            {total.toFixed(2)} ETH
+            {checkoutData?.price * checkoutData?.amount + checkoutData?.shippingFee || 0} ETH
           </Text>
         </CheckoutContent>
       </Checkout>

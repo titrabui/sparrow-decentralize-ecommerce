@@ -6,7 +6,11 @@ import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
+import OrderApi from 'api/orderApi';
+import { getContract } from 'utils/getContract';
+import useWallet from 'hooks/useWallet';
 import InProgressProduct from './InProgressProduct';
+
 
 interface IInProgressProps {
   setTotal: (total: number) => void;
@@ -16,29 +20,38 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
 
+  const { connect, active, account, connector } = useWallet();
+  console.log({account});
+  
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'wait'
-      },
-      {
-        id: 2,
-        name: 'Shipping Container 01 ',
-        price: 0.65,
-        size: '20ft',
-        color: 'White',
-        addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
-        amount: 1,
-        status: 'ship'
-      }
-    ]);
+    const fetchOrder = async () => {
+      const orders = await OrderApi.getMyPurchased('DONG');
+      setData(orders)
+    }
+
+    fetchOrder();
+    // setData([
+    //   {
+    //     id: 1,
+    //     name: 'Shipping Container 01 ',
+    //     price: 0.65,
+    //     size: '20ft',
+    //     color: 'White',
+    //     addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
+    //     amount: 1,
+    //     status: 'wait'
+    //   },
+    //   {
+    //     id: 2,
+    //     name: 'Shipping Container 01 ',
+    //     price: 0.65,
+    //     size: '20ft',
+    //     color: 'White',
+    //     addr: '368 Tran Hung Dao, An Hai Tay, Son Tra, Da Nang',
+    //     amount: 1,
+    //     status: 'ship'
+    //   }
+    // ]);
   }, []);
 
   useEffect(() => {
