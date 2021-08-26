@@ -6,8 +6,6 @@ import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
-import OrderApi from 'api/orderApi';
-import { getContract } from 'utils/getContract';
 import useWallet from 'hooks/useWallet';
 import InProgressProduct from './InProgressProduct';
 
@@ -21,12 +19,11 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const [data, setData] = useState([] as any);
 
   const { connect, active, account, connector } = useWallet();
-  console.log({account});
-  
+
+
   useEffect(() => {
     const fetchOrder = async () => {
-      const orders = await OrderApi.getMyPurchased('DONG');
-      setData(orders)
+
     }
 
     fetchOrder();
