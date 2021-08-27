@@ -42,7 +42,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       <OrderInfo>
         <div>
           <OrderText strong>Order ID</OrderText>
-          <OrderText>AC20210800001</OrderText>
+          <OrderText>{data.id}</OrderText>
         </div>
         <div>
           <OrderText strong>Parcel Code</OrderText>
