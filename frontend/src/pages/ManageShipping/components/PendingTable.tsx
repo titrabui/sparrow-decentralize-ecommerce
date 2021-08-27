@@ -10,13 +10,15 @@ import isMember from 'utils/isMember';
 
 const PendingTable: React.FC = () => {
   const [data, setData] = useState([] as any);
-  const { account, connector } = useWallet();
-
+  const { account, connector, library } = useWallet();
   useEffect(() => {
     const fetchOrderPending = async () => {
       if (account) {
         const type = isMember(account || 'shipper').toLowerCase();
-        const result = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`, {})
+        const result = await request.getData(
+          `/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`,
+          {}
+        );
         if (result && result.status === 200) {
           const ordersPending = [];
           for (let i = 0; i < result.data.length; i += 1) {
@@ -26,27 +28,32 @@ const PendingTable: React.FC = () => {
               orderDate: convertedOrdeDate,
               status: 'Ready to Pickup',
               orderId: result.data[i].id,
-              parcelType: 'California USA'
-            })
+              parcelType: 'California USA',
+              quantity: result.data[i].quantity,
+              price: result.data[i].price
+            });
           }
           setData(ordersPending);
         }
       }
-    }
+    };
     fetchOrderPending();
   }, [account]);
 
-  const handleShipperPickupOrder = async (event: any) => {
+  const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
-    const orderId = '';
+    const orderId = record?.orderId;
+    const amount = (record.price * record.quantity * 20) / 100;
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
         .shipperStakeOrder(orderId)
         .send({
           from: account,
-          type: '0x2'
-        }).on('receipt', async () => {
+          type: '0x2',
+          value: library && library.utils && library.utils.toWei(amount.toString(), 'ether')
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been picked up successfully. Please delivery to customer!',
             message: 'Success'
@@ -58,19 +65,22 @@ const PendingTable: React.FC = () => {
           });
         });
     }
-  }
+  };
 
-  const handleCancelOrderPickedUp = async (event: any) => {
+  const handleCancelOrderPickedUp = async (event: any, record: any) => {
     event.preventDefault();
-    const orderId = '';
+    const orderId = record?.orderId;
+    const amount = (record.price * record.quantity * 20) / 100;
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
         .shipperCancelOrder(orderId)
         .send({
           from: account,
-          type: '0x2'
-        }).on('receipt', async () => {
+          type: '0x2',
+          value: library && library.utils && library.utils.toWei(amount.toString(), 'ether')
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'You are cancelled order successfully.!',
             message: 'Success'
@@ -82,7 +92,7 @@ const PendingTable: React.FC = () => {
           });
         });
     }
-  }
+  };
 
   const columns = [
     {
@@ -115,13 +125,13 @@ const PendingTable: React.FC = () => {
     {
       title: 'Confirm Shipping',
       dataIndex: 'confirmShipping',
-      render: () => (
+      render: (data: any, record: any) => (
         <div style={{ fontWeight: 'bold' }}>
-          <Link $color='#4cd038' href='http' onClick={(e) => handleShipperPickupOrder(e)}>
+          <Link $color='#4cd038' href='http' onClick={(e) => handleShipperPickupOrder(e, record)}>
             Confirm
           </Link>
           {' | '}
-          <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e)}>
+          <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
             Reject
           </Link>
         </div>
