@@ -220,10 +220,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     // Step 4: order status: SHIPPED
     // make an order is shipped
-    function orderShipped(string memory _orderId)
-        external
-        existOrder(_orderId)
-    {
+    function orderShipped(string memory _orderId) external existOrder(_orderId) {
         (, , address _shipper, OrderStatus _status, , , , , ) = getOrderInfo(
             _orderId
         );
@@ -266,7 +263,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         emit ReceiveOrder(_orderId, OrderStatus.RECEIVED);
     }
 
-    function requestRefund(string memory _orderId, ErrorProduct _statusErrorType) public {
+    function requestRefund(string memory _orderId, ErrorProduct _statusErrorType) public existOrder(_orderId) {
         (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
         require(_status != OrderStatus.RECEIVED, "Order has been received before");
         orderBook[_orderId].status = OrderStatus.REQUEST_REFUND;
@@ -274,7 +271,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         emit RequestRefundOrder(_orderId, OrderStatus.REQUEST_REFUND);
     }
 
-    function rejectRefundOrder(string memory _orderId) public {
+    function rejectRefundOrder(string memory _orderId) public existOrder(_orderId) {
         (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
         require(_status == OrderStatus.REQUEST_REFUND, "Order has been request refund");
         orderBook[_orderId].status = OrderStatus.REJECT_REFUND;
@@ -282,7 +279,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     // If have a problem with product
-    function refundOrder(string memory _orderId) external payable {
+    function refundOrder(string memory _orderId) external payable existOrder(_orderId) {
         (,address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(_orderId);
         require(_status == OrderStatus.REQUEST_REFUND, "Order have to request refund");
         uint256 _amountForBuyer = _price * _quantity;
@@ -312,20 +309,17 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     // get Order Info
-    function getOrderInfo(string memory _orderId)
-        public
-        view
-        returns (
-            address,
-            address,
-            address,
-            OrderStatus,
-            ErrorProduct,
-            uint256,
-            uint256,
-            uint256,
-            uint256
-        )
+    function getOrderInfo(string memory _orderId) public view returns (
+        address,
+        address,
+        address,
+        OrderStatus,
+        ErrorProduct,
+        uint256,
+        uint256,
+        uint256,
+        uint256
+    )
     {
         Order memory order = orderBook[_orderId];
         return (

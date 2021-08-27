@@ -20,8 +20,7 @@ export class OrderService {
     const orders = allOrders.filter(item => {
       return item.status == status;
     });
-
-    return orders;
+    return orders.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   async getOrderById(orderId: string) {
