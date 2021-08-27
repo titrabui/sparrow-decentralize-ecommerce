@@ -3,9 +3,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { Checkbox } from 'antd';
+import { Checkbox, notification } from 'antd';
 import p2 from 'assets/images/p2.png';
 import Input from 'ui/Input';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
+import { ORDER_STATUS } from 'utils/constants';
+import request from 'utils/request';
 import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
@@ -15,9 +19,31 @@ interface IInProgressProductProps {
 const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgressProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
+  const { account, connector } = useWallet();
+  const handelBuyerReceiveOrder = async (orderId: string) => {
+    if (connector) {
+      const contract = await getContract(connector);
+      await contract.methods
+        .receiveOrder(orderId)
+        .send({
+          from: account,
+          type: '0x2'
+        }).on('receipt', async () => {
+          notification.success({
+            description: 'Order has been received successfully!',
+            message: 'Success'
+          });
+
+          request.putData('/orders/update-order-status', {
+            id: orderId,
+            status: ORDER_STATUS.RECEIVED
+          });
+        });
+    }
+  }
   return (
     <Container>
-      <RefundModal setOpenModal={setOpenModal} visible={openModal} />
+      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
@@ -54,7 +80,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent'>Order Received</AddPlusButton>
+            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data.id)}>Order Received</AddPlusButton>
             <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
               Request Refund
             </AddPlusButton>
