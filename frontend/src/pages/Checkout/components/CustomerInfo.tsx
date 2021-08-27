@@ -85,13 +85,13 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             name='company'
             rules={[
               {
-                required: true,
+                required: false,
                 message: 'Please input your company!'
               }
             ]}
           >
             <Company
-              placeholder='Company'
+              placeholder='Company (optional)'
               value={checkoutData.company}
               onChange={(e) => handleChangeCheckoutData('company', e.target.value)}
             />
@@ -157,7 +157,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             name='state'
             rules={[
               {
-                required: true,
+                required: false,
                 message: 'Please select your state!'
               }
             ]}
@@ -181,7 +181,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
           </Form.Item>
           <Form.Item>
             <Zip
-              placeholder='Zip'
+              placeholder='Zip (optional)'
               value={checkoutData.zip}
               onChange={(e) => handleChangeCheckoutData('zip', e.target.value)}
             />
