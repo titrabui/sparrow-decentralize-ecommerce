@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Checkbox } from 'antd';
-import CustomerInfo from './CustomerInfo';
-import ShippingMethod from './ShippingMethod';
-import Payment from './Payment';
 import Completed from './Completed';
+import CustomerInfo from './CustomerInfo';
+import Payment from './Payment';
+import ShippingMethod from './ShippingMethod';
 
 interface ILeftProps {
   setTotal: (total: number) => void;
@@ -51,7 +50,7 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
   }, [data, setTotal]);
 
   return (
-    <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '500px'}>
+    <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '550px'}>
       {step === 1 && (
         <CustomerInfo
           setStep={setStep}

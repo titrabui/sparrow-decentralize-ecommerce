@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { Text } from 'ui/Typography';
-import Box from 'ui/Box';
-import styled from 'styled-components';
-import { Input, Select } from 'antd';
-import { Link } from 'react-router-dom';
-import Button from 'ui/Button';
+import { Form, Input, Select } from 'antd';
 import { Country, State } from 'country-state-city';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Box from 'ui/Box';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 
 interface ICustomerInfoProps {
   setStep: any;
@@ -23,83 +23,179 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
   const handleChangeCheckoutData = (key: string, value: any) => {
     setCheckoutData({ ...checkoutData, [key]: value });
   };
+
+  const onFinish = () => setStep(2);
+
   return (
     <Container>
-      <Email>
-        <Title>Customer Information</Title>
-        <Input
-          placeholder='Email'
-          value={checkoutData.email}
-          onChange={(e) => handleChangeCheckoutData('email', e.target.value)}
-        />
-      </Email>
-      <Shipping>
-        <ShippingTitle>Shipping Address</ShippingTitle>
-        <FirstName
-          placeholder='First Name'
-          value={checkoutData.firstName}
-          onChange={(e) => handleChangeCheckoutData('firstName', e.target.value)}
-        />
-        <LastName
-          placeholder='Last Name'
-          value={checkoutData.lastName}
-          onChange={(e) => handleChangeCheckoutData('lastName', e.target.value)}
-        />
-        <Company
-          placeholder='Company'
-          value={checkoutData.company}
-          onChange={(e) => handleChangeCheckoutData('company', e.target.value)}
-        />
-        <Address
-          placeholder='Address'
-          value={checkoutData.address}
-          onChange={(e) => handleChangeCheckoutData('address', e.target.value)}
-        />
-        <Apt
-          placeholder='Apt (optional)'
-          value={checkoutData.apt}
-          onChange={(e) => handleChangeCheckoutData('apt', e.target.value)}
-        />
-        <StyledSelect
-          defaultValue='Country'
-          value={checkoutData.country || 'Country'}
-          onChange={(item: any) => {
-            setStates(State.getStatesOfCountry(item));
-            setCountry(item);
-            handleChangeCheckoutData('country', Country.getCountryByCode(item)?.name);
-          }}
-        >
-          {countries.map((item: any) => (
-            <Option value={item?.isoCode} key={item?.isoCode}>
-              {item.name}
-            </Option>
-          ))}
-        </StyledSelect>
-        <StyledSelect
-          defaultValue='State'
-          value={checkoutData.state || 'State'}
-          onChange={(state: any) => {
-            handleChangeCheckoutData('state', State.getStateByCodeAndCountry(state, country)?.name);
-          }}
-        >
-          {states.map((state: any) => (
-            <Option value={state?.isoCode} key={state?.isoCode}>
-              {state.name}
-            </Option>
-          ))}
-        </StyledSelect>
-        <Zip
-          placeholder='Zip'
-          value={checkoutData.zip}
-          onChange={(e) => handleChangeCheckoutData('zip', e.target.value)}
-        />
-      </Shipping>
-      <Navigation>
-        <Link to='/cart'>{'<'} Return to Cart</Link>
-        <Button $bgType='accent' onClick={() => setStep(2)}>
-          Continue to Shipping Method
-        </Button>
-      </Navigation>
+      <Form name='basic' onFinish={onFinish}>
+        <Email>
+          <Title>Customer Information</Title>
+          <Form.Item
+            name='email'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Email!'
+              }
+            ]}
+          >
+            <Input
+              placeholder='Email'
+              value={checkoutData.email}
+              onChange={(e) => handleChangeCheckoutData('email', e.target.value)}
+            />
+          </Form.Item>
+        </Email>
+
+        <Shipping>
+          <ShippingTitle>Shipping Address</ShippingTitle>
+
+          <Form.Item
+            name='firstName'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your First Name!'
+              }
+            ]}
+          >
+            <FirstName
+              placeholder='First Name'
+              value={checkoutData.firstName}
+              onChange={(e) => handleChangeCheckoutData('firstName', e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            name='lastName'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Last Name!'
+              }
+            ]}
+          >
+            <LastName
+              placeholder='Last Name'
+              value={checkoutData.lastName}
+              onChange={(e) => handleChangeCheckoutData('lastName', e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            name='company'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your company!'
+              }
+            ]}
+          >
+            <Company
+              placeholder='Company'
+              value={checkoutData.company}
+              onChange={(e) => handleChangeCheckoutData('company', e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            name='address'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your address!'
+              }
+            ]}
+          >
+            <Address
+              placeholder='Address'
+              value={checkoutData.address}
+              onChange={(e) => handleChangeCheckoutData('address', e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            name='apt'
+            rules={[
+              {
+                required: false,
+                message: 'Please input your apt!'
+              }
+            ]}
+          >
+            <Apt
+              placeholder='Apt (optional)'
+              value={checkoutData.apt}
+              onChange={(e) => handleChangeCheckoutData('apt', e.target.value)}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name='country'
+            rules={[
+              {
+                required: true,
+                message: 'Please select your country!'
+              }
+            ]}
+          >
+            <StyledSelect
+              defaultValue='Country'
+              value={checkoutData.country || 'Country'}
+              onChange={(item: any) => {
+                setStates(State.getStatesOfCountry(item));
+                setCountry(item);
+                handleChangeCheckoutData('country', Country.getCountryByCode(item)?.name);
+              }}
+            >
+              {countries.map((item: any) => (
+                <Option value={item?.isoCode} key={item?.isoCode}>
+                  {item.name}
+                </Option>
+              ))}
+            </StyledSelect>
+          </Form.Item>
+
+          <Form.Item
+            name='state'
+            rules={[
+              {
+                required: true,
+                message: 'Please select your state!'
+              }
+            ]}
+          >
+            <StyledSelect
+              defaultValue='State'
+              value={checkoutData.state || 'State'}
+              onChange={(state: any) => {
+                handleChangeCheckoutData(
+                  'state',
+                  State.getStateByCodeAndCountry(state, country)?.name
+                );
+              }}
+            >
+              {states.map((state: any) => (
+                <Option value={state?.isoCode} key={state?.isoCode}>
+                  {state.name}
+                </Option>
+              ))}
+            </StyledSelect>
+          </Form.Item>
+          <Form.Item>
+            <Zip
+              placeholder='Zip'
+              value={checkoutData.zip}
+              onChange={(e) => handleChangeCheckoutData('zip', e.target.value)}
+            />
+          </Form.Item>
+        </Shipping>
+        <Form.Item>
+          <Navigation>
+            <Link to='/cart'>{'<'} Return to Cart</Link>
+            <Button htmlType='submit' $bgType='primary'>
+              Continue to Shipping Method
+            </Button>
+          </Navigation>
+        </Form.Item>
+      </Form>
     </Container>
   );
 };
@@ -118,23 +214,32 @@ const Zip = styled(Input)`
 `;
 const StyledSelect = styled(Select)`
   flex-basis: 39%;
+  .ant-select {
+    width: 50px;
+  }
+  .ant-select-arrow {
+    margin-top: 0px;
+  }
+`;
+const FirstName = styled(Input)`
+  flex-basis: 49%;
+  width: 380px;
+`;
+const LastName = styled(Input)`
+  flex-basis: 49%;
+  width: 380px;
+`;
+const Company = styled(Input)`
+  flex-basis: 100%;
+  width: 290px;
 `;
 const Address = styled(Input)`
   flex-basis: 69%;
+  width: 290px;
 `;
 const Apt = styled(Input)`
   flex-basis: 29%;
 `;
-const Company = styled(Input)`
-  flex-basis: 100%;
-`;
-const FirstName = styled(Input)`
-  flex-basis: 49%;
-`;
-const LastName = styled(Input)`
-  flex-basis: 49%;
-`;
-
 const Email = styled.div`
   border-bottom: 1px solid rgba(79, 79, 79, 0.2);
   padding: 20px 30px;
