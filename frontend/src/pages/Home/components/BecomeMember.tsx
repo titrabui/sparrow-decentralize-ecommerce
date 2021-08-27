@@ -28,6 +28,7 @@ const BecomeMember = () => {
       }
       message.success(`You are now a ${memberType}`);
       setVisible(false);
+      window.location.reload()
     }
   };
   const [memberType, setMemberType] = React.useState('Buyer');
@@ -40,7 +41,7 @@ const BecomeMember = () => {
   return (
     <div>
       {visible && (
-        <StyledModal visible title='Select Member Type'>
+        <StyledModal visible title='Select Member Type' onCancel={()=>setVisible(false)}>
           <Radio.Group onChange={onChange} value={memberType}>
             <Radio value='Buyer'>Buyer</Radio>
             <Radio value='Seller'>Seller</Radio>
