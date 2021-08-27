@@ -14,9 +14,10 @@ export class OrdersController {
     return await this.orderService.getMyPurchased(address);
   }
 
-  @Get('/:status')
-  async getOrders(@Param('status') status: number): Promise<IOrder[]> {
-    return await this.orderService.getAllOrders(status);
+  @Get('/:status/:address/:type')
+  async getOrders(@Param('status') status: number, @Param('address') address: string, @Param('type') type: string): Promise<IOrder[]> {
+
+    return await this.orderService.getAllOrders({ status, address, type });
   }
 
   @Post('/create')

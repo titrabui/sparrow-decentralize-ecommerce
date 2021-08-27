@@ -124,6 +124,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         SHIPPED,
         RECEIVED,
         REQUEST_REFUND,
+        APPROVAL_REFUND,
         REJECT_REFUND
     }
 
@@ -275,7 +276,6 @@ contract ECommerce is Ownable, ReentrancyGuard {
         (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
         require(_status == OrderStatus.REQUEST_REFUND, "Order has been request refund");
         orderBook[_orderId].status = OrderStatus.REJECT_REFUND;
-        emit RequestRefundOrder(_orderId, OrderStatus.REJECT_REFUND);
     }
 
     // If have a problem with product
@@ -295,6 +295,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
             // Return money for buyer
             payable(_buyer).transfer(_amountForBuyer);
         }
+        orderBook[_orderId].status = OrderStatus.APPROVAL_REFUND
     }
 
     function shipperCancelOrder(string memory _orderId) external payable existOrder(_orderId) {

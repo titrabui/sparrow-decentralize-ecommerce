@@ -7,7 +7,7 @@ const isMember = (account: string) => {
   if (buyers && buyers.some((buyer: string) => buyer === account)) return 'Buyer';
   if (sellers && sellers.some((seller: string) => seller === account)) return 'Seller';
   if (shippers && shippers.some((shipper: string) => shipper === account)) return 'Shipper';
-  return false;
+  return '';
 };
 
 export default isMember;

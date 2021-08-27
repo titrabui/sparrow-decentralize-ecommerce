@@ -15,11 +15,19 @@ export class OrderService {
     return await this.orderRepo.create(historyData);
   }
 
-  async getAllOrders(status: number) {
+  async getAllOrders({ status, address, type }) {
     let allOrders = await this.orderRepo.getAll();
-    const orders = allOrders.filter(item => {
-      return item.status == status;
-    });
+    let orders: any;
+    if (type == 'shipper' || type == 'seller') {
+      orders = allOrders.filter(item => {
+        return item.status == status;
+      });
+    } else {
+      orders = allOrders.filter(item => {
+        return item.status == status && item[type] == address;
+      });
+    }
+
     return orders.sort((a, b) => b.createdAt - a.createdAt);
   }
 

@@ -17,7 +17,8 @@ export const ORDER_STATUS = {
   SHIPPED: 3,
   RECEIVED: 4,
   REQUEST_REFUND: 5,
-  REJECT_REFUND: 6
+  APPROVAL_REFUND: 6,
+  REJECT_REFUND: 7
 }
 
 export const ERROR_STATUS = {

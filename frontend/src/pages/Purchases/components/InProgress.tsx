@@ -8,6 +8,9 @@ import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
 import { ORDER_STATUS } from 'utils/constants';
+import isMember from 'utils/isMember';
+import { getContract } from 'utils/getContract';
+import useWallet from 'hooks/useWallet';
 import InProgressProduct from './InProgressProduct';
 
 interface IInProgressProps {
@@ -17,16 +20,19 @@ interface IInProgressProps {
 const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
+  const { account, connector } = useWallet();
   useEffect(() => {
-    const fetchOrderCreated = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.PAID}`, {})
-      if (result && result.status === 200) {
-        setData(result.data)
+    if (account) {
+      const type = isMember(account || 'buyer').toLowerCase()
+      const fetchOrderCreated = async () => {
+        const result = await request.getData(`/orders/${ORDER_STATUS.PAID}/${account}/${type}`, {})
+        if (result && result.status === 200) {
+          setData(result.data)
+        }
       }
+      fetchOrderCreated();
     }
-
-    fetchOrderCreated();
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     const total = data.reduce(

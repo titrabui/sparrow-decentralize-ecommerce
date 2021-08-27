@@ -8,6 +8,9 @@ import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
 import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
+import isMember from 'utils/isMember';
+import { getContract } from 'utils/getContract';
+import useWallet from 'hooks/useWallet';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 interface IReturnRefundProps {
@@ -17,18 +20,23 @@ interface IReturnRefundProps {
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
+  const { account, connector } = useWallet();
 
   useEffect(() => {
     const fetchOrderRefund = async () => {
-      const resultErrProduct = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_PRODUCT_ERROR}`, {})
-      const resultErrShipping = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_SHIPPING_ERROR}`, {})
-      if (resultErrProduct && resultErrProduct.status === 200 && resultErrShipping && resultErrShipping.status === 200) {
-        const result = resultErrProduct.data.concat(resultErrShipping.data);
-        setData(result);
+      if (account) {
+        const type = isMember(account || 'buyer').toLowerCase()
+        const getOrderApprovalRefund = await request.getData(`/orders/${ORDER_STATUS.APPROVAL_REFUND}/${account}/${type}`, {})
+        const getOrderRejectRefund = await request.getData(`/orders/${ORDER_STATUS.REJECT_REFUND}/${account}/${type}`, {})
+        if (getOrderApprovalRefund && getOrderApprovalRefund.status === 200 && getOrderRejectRefund && getOrderRejectRefund.status === 200) {
+          const result = getOrderApprovalRefund.data.concat(getOrderRejectRefund.data);
+          setData(result);
+        }
       }
+
     }
     fetchOrderRefund();
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     const total = data.reduce(

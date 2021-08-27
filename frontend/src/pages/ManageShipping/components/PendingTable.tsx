@@ -6,13 +6,16 @@ import { getContract } from 'utils/getContract';
 import { ORDER_STATUS } from 'utils/constants';
 import request from 'utils/request';
 import { Link } from 'ui/Typography';
+import isMember from 'utils/isMember';
 
 const PendingTable: React.FC = () => {
   const [data, setData] = useState([] as any);
+  const { account, connector } = useWallet();
+  const type = isMember(account || 'shipper').toLowerCase();
 
   useEffect(() => {
     const fetchOrderPending = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}`, {})
+      const result = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`, {})
       if (result && result.status === 200) {
         const ordersPending = [];
         for (let i = 0; i < result.data.length; i += 1) {
@@ -30,8 +33,6 @@ const PendingTable: React.FC = () => {
     }
     fetchOrderPending();
   }, []);
-
-  const { account, connector } = useWallet();
 
   const handleShipperPickupOrder = async (event: any) => {
     event.preventDefault();
