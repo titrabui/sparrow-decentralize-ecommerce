@@ -9,7 +9,7 @@ const Routes = (
   <ScrollToTop>
     <Helmet>
       <html lang='en' />
-      <title>Napa NFTs</title>
+      <title>Napa E-Commerce</title>
       <meta property='og:title' content='' />
       <meta property='twitter:title' content='' />
       <meta name='description' content='' />
@@ -20,6 +20,7 @@ const Routes = (
       {publicRoutes.map((route) => (
         <Route key={route.path} path={route.path} component={route.component} exact />
       ))}
+      
       {privateRoutes.map((route) => (
         <PrivateRoute key={route.path} path={route.path} component={route.component} exact />
       ))}

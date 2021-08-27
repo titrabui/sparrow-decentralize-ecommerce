@@ -3,10 +3,13 @@ import { Col, Row } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
 import { routesEnum } from 'routes/routesData';
 import styled from 'styled-components';
+import isMember from 'utils/isMember';
+import useWallet from 'hooks/useWallet';
 import RightHeader from './RightHeader';
 import ShoppingBag from './ShoppingBag';
 
 const CommonHeader: React.FC = () => {
+  const { account } = useWallet();
   const location = useLocation();
   return (
     <Container>
@@ -19,15 +22,26 @@ const CommonHeader: React.FC = () => {
             <Tab data-active={location.pathname === routesEnum.home} to={routesEnum.home}>
               Home
             </Tab>
-            <Tab data-active={location.pathname === routesEnum.purchases} to={routesEnum.purchases}>
-              Purchases
-            </Tab>
-            <Tab data-active={location.pathname === routesEnum.mySales} to={routesEnum.mySales}>
-              My Sales
-            </Tab>
-            <Tab data-active={location.pathname === routesEnum.shipping} to={routesEnum.shipping}>
-              Shipping
-            </Tab>
+            {isMember(account || '') === 'Buyer' && (
+              <Tab
+                data-active={location.pathname === routesEnum.purchases}
+                to={routesEnum.purchases}
+              >
+                Purchases
+              </Tab>
+            )}
+            {isMember(account || '') === 'Seller' && (
+              <Tab data-active={location.pathname === routesEnum.mySales} to={routesEnum.mySales}>
+                My Sales
+              </Tab>
+            )}
+            {isMember(account || '') === 'Shipper' && (
+              <Tab data-active={location.pathname === routesEnum.shipping} to={routesEnum.shipping}>
+                Shipping
+              </Tab>
+            )}
+            <Tab to={routesEnum.home}>About</Tab>
+            <Tab to={routesEnum.home}>Blog</Tab>
           </TabContainer>
         </Col>
         <Col span={8}>
