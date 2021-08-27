@@ -7,9 +7,8 @@ import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
-import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
+import { ORDER_STATUS } from 'utils/constants';
 import isMember from 'utils/isMember';
-import { getContract } from 'utils/getContract';
 import useWallet from 'hooks/useWallet';
 import ReturnRefundProduct from './ReturnRefundProduct';
 

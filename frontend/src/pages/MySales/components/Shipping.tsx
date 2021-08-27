@@ -7,6 +7,8 @@ import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import request from 'utils/request';
 import { ORDER_STATUS } from 'utils/constants';
+import isMember from 'utils/isMember';
+import useWallet from 'hooks/useWallet';
 import ShippingProduct from './ShippingProduct';
 
 interface IShippingProps {
@@ -16,16 +18,20 @@ interface IShippingProps {
 const Shipping: React.FC<IShippingProps> = (props: IShippingProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
+  const { account } = useWallet();
 
   useEffect(() => {
-    const fetchOrderConfirmed = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.CONFIRMED_PICKUP}`, {})
-      if (result && result.status === 200) {
-        setData(result.data)
+    if (account) {
+      const type = isMember(account || 'seller').toLowerCase()
+      const fetchOrderConfirmed = async () => {
+        const result = await request.getData(`/orders/${ORDER_STATUS.CONFIRMED_PICKUP}/${account}/${type}`, {})
+        if (result && result.status === 200) {
+          setData(result.data)
+        }
       }
+      fetchOrderConfirmed();
     }
-    fetchOrderConfirmed();
-  }, []);
+  }, [account]);
 
 
   useEffect(() => {
