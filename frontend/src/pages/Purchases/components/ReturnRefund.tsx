@@ -7,7 +7,7 @@ import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
-import { ORDER_STATUS } from 'utils/constants';
+import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 interface IReturnRefundProps {
@@ -20,8 +20,8 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
 
   useEffect(() => {
     const fetchOrderRefund = async () => {
-      const resultErrProduct = await request.getData(`/orders/${ORDER_STATUS.REFUNDED_PRODUCT_ERROR}`, {})
-      const resultErrShipping = await request.getData(`/orders/${ORDER_STATUS.REFUNDED_SHIPPING_ERROR}`, {})
+      const resultErrProduct = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_PRODUCT_ERROR}`, {})
+      const resultErrShipping = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_SHIPPING_ERROR}`, {})
       if (resultErrProduct && resultErrProduct.status === 200 && resultErrShipping && resultErrShipping.status === 200) {
         const result = resultErrProduct.data.concat(resultErrShipping.data);
         setData(result);
