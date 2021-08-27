@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
@@ -16,9 +16,9 @@ const DetailsPage: React.FC = () => {
   const container: any = spaces.find((co: any) => co.id.toString() === param.id);
 
   const [data, setData] = useState({
-    color: '',
-    size: '',
-    amount: 0
+    color: 'Violet',
+    size: '10',
+    amount: 1
   });
 
   const handleSelectColor = (color: string) => {
