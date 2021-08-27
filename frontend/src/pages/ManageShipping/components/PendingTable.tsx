@@ -11,28 +11,30 @@ import isMember from 'utils/isMember';
 const PendingTable: React.FC = () => {
   const [data, setData] = useState([] as any);
   const { account, connector } = useWallet();
-  const type = isMember(account || 'shipper').toLowerCase();
 
   useEffect(() => {
     const fetchOrderPending = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`, {})
-      if (result && result.status === 200) {
-        const ordersPending = [];
-        for (let i = 0; i < result.data.length; i += 1) {
-          const convertedOrdeDate = new Date(result.data[i].createdAt).toISOString().slice(0, 10);
-          ordersPending.push({
-            key: result.data[i].key,
-            orderDate: convertedOrdeDate,
-            status: 'Ready to Pickup',
-            orderId: result.data[i].id,
-            parcelType: 'California USA'
-          })
+      if (account) {
+        const type = isMember(account || 'shipper').toLowerCase();
+        const result = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`, {})
+        if (result && result.status === 200) {
+          const ordersPending = [];
+          for (let i = 0; i < result.data.length; i += 1) {
+            const convertedOrdeDate = new Date(result.data[i].createdAt).toISOString().slice(0, 10);
+            ordersPending.push({
+              key: result.data[i].key,
+              orderDate: convertedOrdeDate,
+              status: 'Ready to Pickup',
+              orderId: result.data[i].id,
+              parcelType: 'California USA'
+            })
+          }
+          setData(ordersPending);
         }
-        setData(ordersPending);
       }
     }
     fetchOrderPending();
-  }, []);
+  }, [account]);
 
   const handleShipperPickupOrder = async (event: any) => {
     event.preventDefault();
