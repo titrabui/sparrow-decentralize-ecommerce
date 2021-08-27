@@ -1,10 +1,10 @@
+import { Radio } from 'antd';
 import React from 'react';
-import Box from 'ui/Box';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
-import { Radio } from 'antd';
 
 interface IShippingMethodProps {
   setStep: any;
@@ -46,6 +46,9 @@ const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodPr
     }
     setCheckoutData({ ...checkoutData, shippingFee, shippingMethod: method });
   };
+
+  if (!shippingMethod) handleSelectShippingMethod('UPS Ground');
+
   return (
     <Container>
       <Address>
