@@ -21,7 +21,7 @@ const ButtonOrder: React.FC<IButtonOrderProps> = (props: IButtonOrderProps) => {
     handleChangeAmount(amount + 1);
   };
   const handleSub = () => {
-    handleChangeAmount(amount - 1);
+    if (amount > 1) handleChangeAmount(amount - 1);
   };
   return (
     <Container>
@@ -86,6 +86,10 @@ const AddToCard = styled(Button)`
   background: #7b61ff;
   box-shadow: 3px 3px 5px #b1b1fc;
   &:active {
+    background-color: #7b61ff;
+  }
+  &:hover,
+  &:focus {
     background-color: #7b61ff;
   }
 `;

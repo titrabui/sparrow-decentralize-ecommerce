@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
-import { Checkbox } from 'antd';
 import Product from './Product';
 
 interface ILeftProps {
@@ -21,7 +20,7 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
   }, [data, setTotal]);
 
   const handleChangeAmount = (id: number, amount: number) => {
-    const validatedAmount = amount > 0 ? amount : 0;
+    const validatedAmount = amount > 0 ? amount : 1;
     const newData = data.map((item: any) => {
       if (item.id === id) return { ...item, amount: validatedAmount };
       return item;

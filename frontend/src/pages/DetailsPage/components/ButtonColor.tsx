@@ -33,17 +33,14 @@ const StyleButton = styled(Button)`
   display: flex;
   background: #e3eeff;
   &.active {
-    background-color: #7b61ff;
+    background-color: #a5a6f6;
     .ant-typography {
       color: white;
     }
-  }
-  &:hover {
-    background-color: #7b61ff;
     border: 2px solid #6c6cff;
   }
   &:focus {
-    background-color: #7b61ff;
+    background-color: #a5a6f6;
     border: 2px solid #6c6cff;
   }
 `;
