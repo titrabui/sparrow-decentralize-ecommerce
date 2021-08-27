@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import p2 from 'assets/images/p2.png';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
+import { notification } from 'antd';
+import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
+import request from 'utils/request';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -27,6 +32,52 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         return '';
     }
   };
+
+  const { account, connector, library } = useWallet();
+  const handleConfirmRefundOrder = async (orderId: string) => {
+    if (connector) {
+      const contract = await getContract(connector);
+      await contract.methods
+        .refundOrder(orderId)
+        .send({
+          from: account,
+          type: '0x2'
+        }).on('receipt', async () => {
+          notification.success({
+            description: 'Order has been request refund successfully!',
+            message: 'Success'
+          });
+
+          request.putData('/orders/update-order-status', {
+            id: orderId,
+            status: ORDER_STATUS.REJECT_REFUND
+          });
+        });
+    }
+  }
+
+  const handleRejectRequestRefund = async (orderId: string) => {
+    if (connector) {
+      const contract = await getContract(connector);
+      await contract.methods
+        .rejectRefundOrder(orderId)
+        .send({
+          from: account,
+          type: '0x2'
+        }).on('receipt', async () => {
+          notification.success({
+            description: 'Order has been rejecct refund successfully!',
+            message: 'Success'
+          });
+
+          request.putData('/orders/update-order-status', {
+            id: orderId,
+            status: ORDER_STATUS.REQUEST_REFUND
+          });
+        });
+    }
+  }
+
   return (
     <Container>
       <ImageWrapper>
@@ -57,8 +108,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='error'>Reject</AddPlusButton>
-        <AddPlusButton $color='black'>Confirm</AddPlusButton>
+        <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>Reject</AddPlusButton>
+        <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>Confirm</AddPlusButton>
       </Amount>
       <Price>
         {renderStatus()}
