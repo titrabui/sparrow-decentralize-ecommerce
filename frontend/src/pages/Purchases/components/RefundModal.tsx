@@ -4,7 +4,7 @@ import Button from 'ui/Button';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
-import { ORDER_STATUS } from 'utils/constants';
+import { ERROR_STATUS } from 'utils/constants';
 import request from 'utils/request';
 import { Space, Radio, notification } from 'antd';
 import { Text } from 'ui/Typography';
@@ -19,7 +19,7 @@ interface IModalProps {
 const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
   const { setOpenModal, visible, orderId } = props;
   const [completed, setCompleted] = useState(false);
-  const [reasonError, setReasonError] = useState(ORDER_STATUS.REFUNDED_PRODUCT_ERROR)
+  const [reasonError, setReasonError] = useState(ERROR_STATUS.REFUNDED_PRODUCT_ERROR)
   const { account, connector } = useWallet();
 
   const handleSubmit = async () => {
@@ -27,13 +27,13 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
       const contract = await getContract(connector);
 
       await contract.methods
-        .refundOrder(orderId, reasonError)
+        .requestRefund(orderId, reasonError)
         .send({
           from: account,
           type: '0x2'
         }).on('receipt', async () => {
           notification.success({
-            description: 'Order has been refunded successfully!',
+            description: 'Order has been request refund successfully!',
             message: 'Success'
           });
 
@@ -54,8 +54,8 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
         <CheckBoxContainer>
           <Radio.Group onChange={(e) => setReasonError(e.target.value)} value={reasonError}>
             <Space direction='vertical'>
-              <Radio value={ORDER_STATUS.REFUNDED_PRODUCT_ERROR}>Production Error</Radio>
-              <Radio value={ORDER_STATUS.REFUNDED_SHIPPING_ERROR}>Damage while shipping</Radio>
+              <Radio value={ERROR_STATUS.REFUNDED_PRODUCT_ERROR}>Production Error</Radio>
+              <Radio value={ERROR_STATUS.REFUNDED_SHIPPING_ERROR}>Damage while shipping</Radio>
             </Space>
           </Radio.Group>
         </CheckBoxContainer>
