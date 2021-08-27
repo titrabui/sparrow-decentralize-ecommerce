@@ -179,7 +179,15 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
               ))}
             </StyledSelect>
           </Form.Item>
-          <Form.Item>
+          <Form.Item
+            name='zip'
+            rules={[
+              {
+                required: false,
+                message: 'Please input your zip!'
+              }
+            ]}
+          >
             <Zip
               placeholder='Zip (optional)'
               value={checkoutData.zip}
