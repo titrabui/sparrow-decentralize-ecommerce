@@ -16,11 +16,9 @@ export class OrderReposity extends BaseModel {
   }
 
   async create(data: IOrder) {
-    let key = this.generateUniqueId()
     data.createdAt = new Date().getTime();
-    data.key = key;
     try {
-      return await this.redisService.hset(`${DATABASE_NAME}:${data.buyer}`, key, this.convertToJSON(data));
+      return await this.redisService.hset(`${DATABASE_NAME}:${data.id}`, data.id, this.convertToJSON(data));
     } catch (error) {
       this.logger.error(error);
     }
@@ -44,26 +42,13 @@ export class OrderReposity extends BaseModel {
     }
   }
 
-  async getMyPurchased(buyAddress: string): Promise<Array<IOrder>> {
-    try {
-      const queriedData = await this.redisService.hgetall(`${DATABASE_NAME}:${buyAddress}`);
-      if (!queriedData) return [];
-
-      const data = Object.values(queriedData);
-      return data.map(item => this.convertToObject(item));
-    } catch (error) {
-      this.logger.error(error);
-      return [];
-    }
-  }
-
   async updateOrderStatus(order: IOrder) {
     order.updatedAt = new Date().getTime();
     try {
-      await this.redisService.hdel(`${DATABASE_NAME}:${order.buyer}`, order.key);
+      await this.redisService.hdel(`${DATABASE_NAME}:${order.id}`, order.id);
       return await this.redisService.hset(
-        `${DATABASE_NAME}:${order.buyer}`,
-        this.generateUniqueId(),
+        `${DATABASE_NAME}:${order.id}`,
+        order.id,
         this.convertToJSON(order)
       );
     } catch (error) {

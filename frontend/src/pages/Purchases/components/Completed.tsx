@@ -7,6 +7,8 @@ import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
+import isMember from 'utils/isMember';
+import useWallet from 'hooks/useWallet';
 import { ORDER_STATUS } from 'utils/constants';
 import CompletedProduct from './CompletedProduct';
 
@@ -17,16 +19,20 @@ interface ICompletedProps {
 const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
+  const { account } = useWallet();
 
   useEffect(() => {
-    const fetchOrderCompleted = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}`, {})
-      if (result && result.status === 200) {
-        setData(result.data)
+    if (account) {
+      const type = isMember(account || 'buyer').toLowerCase()
+      const fetchOrderCompleted = async () => {
+        const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}/${account}/${type}`, {})
+        if (result && result.status === 200) {
+          setData(result.data)
+        }
       }
+      fetchOrderCompleted();
     }
-    fetchOrderCompleted();
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     const total = data.reduce(

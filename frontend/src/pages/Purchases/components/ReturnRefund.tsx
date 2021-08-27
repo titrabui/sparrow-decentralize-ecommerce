@@ -20,7 +20,7 @@ interface IReturnRefundProps {
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const { account, connector } = useWallet();
+  const { account } = useWallet();
 
   useEffect(() => {
     const fetchOrderRefund = async () => {

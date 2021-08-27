@@ -9,11 +9,6 @@ export class OrdersController {
     private readonly orderService: OrderService
   ) { }
 
-  @Get('/my-order/:address')
-  async getMyOrders(@Param('address') address: string): Promise<IOrder[]> {
-    return await this.orderService.getMyPurchased(address);
-  }
-
   @Get('/:status/:address/:type')
   async getOrders(@Param('status') status: number, @Param('address') address: string, @Param('type') type: string): Promise<IOrder[]> {
 

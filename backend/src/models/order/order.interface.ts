@@ -1,6 +1,5 @@
 export interface IOrder {
   id: string,
-  key: string,
   buyer: string,
   seller?: string,
   shipper?: string,

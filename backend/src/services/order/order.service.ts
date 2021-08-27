@@ -39,10 +39,6 @@ export class OrderService {
     return order;
   }
 
-  async getMyPurchased(address: string) {
-    return await this.orderRepo.getMyPurchased(address);
-  }
-
   async updateOrderStatus(data: IUpdateOrderStatus) {
     let orders = await this.orderRepo.getAll();
     let order = orders.filter(item => {
