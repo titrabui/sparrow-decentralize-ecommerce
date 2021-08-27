@@ -68,7 +68,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>AC20210800001</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
