@@ -64,6 +64,18 @@ const PendingTable: React.FC = () => {
             status: ORDER_STATUS.CONFIRMED_PICKUP
           });
         });
+
+      const data1 = await contract.methods.getOrderInfo(orderId).call();
+      const status = data1[3];
+      console.log({ status })
+      const quantity = data1[5];
+      console.log({ quantity })
+      const price = library?.utils?.fromWei(data1[6], 'ether');
+      console.log({ price })
+      const shippingFee = library?.utils?.fromWei(data1[7], 'ether');
+      console.log({ shippingFee })
+      const deposit = library?.utils?.fromWei(data1[8], 'ether');
+      console.log({ deposit })
     }
   };
 

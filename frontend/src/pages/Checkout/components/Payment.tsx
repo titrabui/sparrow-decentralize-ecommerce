@@ -36,7 +36,7 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const handleComplete = async () => {
     if (type === 0) setCheckoutData({ ...checkoutData, billingAddress: renderAddress() });
     else setCheckoutData({ ...checkoutData, billingAddress });
-    const totalAmount = amount * price + shippingFee;
+    const totalAmount = (amount * price) + shippingFee;
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods

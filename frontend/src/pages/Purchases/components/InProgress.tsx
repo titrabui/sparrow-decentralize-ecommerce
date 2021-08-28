@@ -20,7 +20,7 @@ interface IInProgressProps {
 const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const { account, connector } = useWallet();
+  const { account, connector, library } = useWallet();
   useEffect(() => {
     if (account) {
       const type = isMember(account || 'buyer').toLowerCase()

@@ -147,11 +147,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         uint256 deposit;
     }
 
-    OrderStatus public x;
-    uint256 public constant STAKE_REQUIRE = 20;
-    uint256 public constant SHIP_FEE = 10;
-
-    mapping(string => Order) private orderBook;
+    mapping(string => Order) public orderBook;
 
     event Ordered(string _orderId, address _buyer, uint256 indexed _totalMoney);
     event SellerConfirmOrder(string _orderId, OrderStatus _finalStatus);
@@ -295,7 +291,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
             // Return money for buyer
             payable(_buyer).transfer(_amountForBuyer);
         }
-        orderBook[_orderId].status = OrderStatus.APPROVAL_REFUND
+        orderBook[_orderId].status = OrderStatus.APPROVAL_REFUND;
     }
 
     function shipperCancelOrder(string memory _orderId) external payable existOrder(_orderId) {
