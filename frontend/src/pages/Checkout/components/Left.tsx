@@ -50,7 +50,7 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
   }, [data, setTotal]);
 
   return (
-    <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '550px'}>
+    <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '460px'}>
       {step === 1 && (
         <CustomerInfo
           setStep={setStep}
