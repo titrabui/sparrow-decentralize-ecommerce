@@ -50,7 +50,11 @@ const Left: React.FC<ILeftProps> = (props: ILeftProps) => {
   }, [data, setTotal]);
 
   return (
-    <Container w={step === 4 ? '950px' : '830px'} h={step === 4 ? '600px' : '460px'}>
+    <Container
+      bgColor={step === 4 ? 'transparent' : 'rgba(255, 255, 255, 0.6)'}
+      w={step === 4 ? '950px' : '830px'}
+      h={step === 4 ? '600px' : '460px'}
+    >
       {step === 1 && (
         <CustomerInfo
           setStep={setStep}
@@ -80,8 +84,6 @@ const CheckAll = styled.div`
 `;
 
 const Container = styled(Box)`
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(40px);
   border-radius: 24px;
   position: relative;
   max-height: 82vh;

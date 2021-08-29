@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text } from 'ui/Typography';
-import styled from 'styled-components';
 import { CheckCircleOutlined } from '@ant-design/icons';
+import React from 'react';
+import styled from 'styled-components';
+import { Text } from 'ui/Typography';
 
 interface ICompletedProps {
   checkoutData: any;
@@ -23,7 +23,7 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
     shippingFee
   } = checkoutData;
   return (
-    <div>
+    <Container>
       <Thankyou>
         <CheckCircleOutlined />
         <div>
@@ -65,7 +65,7 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
           </div>
         </InfoContainer>
       </Info>
-    </div>
+    </Container>
   );
 };
 
@@ -116,6 +116,13 @@ const Thankyou = styled.div`
   }
   display: flex;
   align-items: center;
+`;
+
+const Container = styled.div`
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
 `;
 
 export default Completed;
