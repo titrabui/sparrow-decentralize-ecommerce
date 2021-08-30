@@ -48,7 +48,9 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
           <div>
             <Text strong>Shipping Address</Text>
             <Text>{`${firstName || ''} ${lastName}`}</Text>
-            <Text>{`${address || ''}, ${state}, ${country}`}</Text>
+            <Text>{`${address ? `${address},` : ''} ${state ? `${state},` : ''} ${
+              country ? `${country}` : ''
+            }`}</Text>
           </div>
           <div>
             <Text strong>Billing Address</Text>

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import p2 from 'assets/images/p2.png';
+import getImage from 'utils/getImage';
 import useWallet from 'hooks/useWallet';
 import request from 'utils/request';
 import RefundModal from './RefundModal';
@@ -34,7 +35,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{data.name}</Name>
@@ -48,7 +49,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Completed>
@@ -76,7 +77,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
 const OrderInfo = styled.div`
   div {
     margin-bottom: 10px;
-    margin-top:5px;
+    margin-top: 5px;
   }
 `;
 const OrderText = styled(Text)`
@@ -133,6 +134,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -146,7 +156,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

@@ -8,6 +8,7 @@ import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
 import { ORDER_STATUS } from 'utils/constants';
+import getImage from 'utils/getImage';
 import request from 'utils/request';
 import RefundModal from './RefundModal';
 
@@ -24,13 +25,19 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   const price = library?.utils?.fromWei(data[7], 'ether');
   const shippingFee = library?.utils?.fromWei(data[8], 'ether');
 
-  const [newData, setNewData] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const [newData, setNewData] = useState({
+    name: null,
+    size: null,
+    color: null,
+    shippingAddress: null,
+    productId: 1
+  });
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewData(response.data[0])
-    }
+      const response = await request.getData(`/orders/${data[0]}`, {});
+      setNewData(response.data[0]);
+    };
     fetchOrder();
   }, [data]);
 
@@ -42,7 +49,8 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been confirmed successfully!',
             message: 'Success'
@@ -54,12 +62,12 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           });
         });
     }
-  }
+  };
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(newData.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{newData.name}</Name>
@@ -73,7 +81,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {newData.color}
+            <Color className={newData?.color || ''} /> {newData.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
@@ -86,11 +94,13 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent' onClick={() => handleConfirmOrder(data[0])}>Confirm</AddPlusButton>
+        <AddPlusButton $bgType='accent' onClick={() => handleConfirmOrder(data[0])}>
+          Confirm
+        </AddPlusButton>
       </Amount>
       <Price>
         <Status>Wait for seller to confirm</Status>
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
@@ -164,6 +174,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -177,7 +196,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

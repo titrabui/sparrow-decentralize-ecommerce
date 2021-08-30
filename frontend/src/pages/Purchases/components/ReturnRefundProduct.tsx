@@ -57,7 +57,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {newOrder.color}
+            <Color className={newOrder?.color || ''} /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
@@ -148,6 +148,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -161,7 +170,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

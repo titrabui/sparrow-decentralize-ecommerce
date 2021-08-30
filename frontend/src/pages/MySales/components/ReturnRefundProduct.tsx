@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
@@ -9,6 +9,7 @@ import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
 import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
 import request from 'utils/request';
+import getImage from 'utils/getImage';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -34,21 +35,6 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   };
 
   const { account, connector, library } = useWallet();
-
-  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
-
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewOrder(response.data[0])
-    }
-    fetchOrder();
-  }, [data]);
-
   const handleConfirmRefundOrder = async (orderId: string) => {
     if (connector) {
       const contract = await getContract(connector);
@@ -57,9 +43,10 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
-            description: 'Order has been refund successfully!',
+            description: 'Order has been request refund successfully!',
             message: 'Success'
           });
 
@@ -69,7 +56,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           });
         });
     }
-  }
+  };
 
   const handleRejectRequestRefund = async (orderId: string) => {
     if (connector) {
@@ -79,7 +66,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been reject refund successfully!',
             message: 'Success'
@@ -96,7 +84,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   return (
     <Container>
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{newOrder.name}</Name>
@@ -146,7 +134,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 const Price = styled.div`
   position: relative;
   width: 230px;
-  margin-top:5px;
+  margin-top: 5px;
 `;
 
 const PriceText = styled(Text)`
@@ -223,7 +211,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

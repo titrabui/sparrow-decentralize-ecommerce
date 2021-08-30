@@ -19,24 +19,21 @@ interface IPaymentProps {
 
 const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const { setStep, setCheckoutData, checkoutData } = props;
-  const { address, country, state, amount, price, shippingFee, id, name } = checkoutData;
+  const { address, country, state, amount, price, shippingFee, id, name, size, color } =
+    checkoutData;
   const { account, connector, library } = useWallet();
 
   const [type, setType] = useState(0);
   const [billingAddress, setBillingAddress] = useState('');
 
-  const renderAddress = () => {
-    const renderText = (value: string) => {
-      if (value) return `${value},`;
-      return '';
-    };
-    return `${renderText(address)} ${renderText(country)} ${renderText(state)} `;
-  };
+  const renderAddress = () => `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${
+      country ? `${country}` : ''
+    }`;
 
   const handleComplete = async () => {
     if (type === 0) setCheckoutData({ ...checkoutData, billingAddress: renderAddress() });
     else setCheckoutData({ ...checkoutData, billingAddress });
-    const totalAmount = (amount * price) + shippingFee;
+    const totalAmount = amount * price + shippingFee;
     if (connector) {
       const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03'
       const contract = await getContract(connector);
@@ -71,7 +68,9 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
         price: Number(price),
         shippingFee,
         totalAmount,
-        status: ORDER_STATUS.PAID
+        status: ORDER_STATUS.PAID,
+        size,
+        color
       });
     }
 
