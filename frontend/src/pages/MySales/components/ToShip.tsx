@@ -5,10 +5,9 @@ import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
-import request from 'utils/request';
 import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 import { ORDER_STATUS } from 'utils/constants';
-import isMember from 'utils/isMember';
 import ToShipProduct from './ToShipProduct';
 
 interface IToShipProps {
@@ -21,17 +20,16 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
   const { account, connector } = useWallet();
 
   useEffect(() => {
-    const fetchOrderCreated = async () => {
-      if (account) {
-        const type = isMember(account || 'seller').toLowerCase();
-        const result = await request.getData(`/orders/${ORDER_STATUS.PAID}/${account}/${type}`, {})
-        if (result && result.status === 200) {
-          setData(result.data)
-        }
+    if (account) {
+      const fetchOrderCreated = async () => {
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => Number(item[5]) === ORDER_STATUS.PAID)
+        setData(ordersFiltered);
       }
+      fetchOrderCreated()
     }
-    fetchOrderCreated();
-  }, [account]);
+  })
 
   useEffect(() => {
     const total = data.reduce(

@@ -149,6 +149,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     mapping(uint256 => Order) public orderBook;
     uint256 public _orderId = 0;
+    Order[] orders;
 
     event Ordered(uint256 orderId, address _buyer, uint256 indexed _totalMoney);
     event SellerConfirmOrder(uint256 orderId, OrderStatus _finalStatus);
@@ -159,13 +160,13 @@ contract ECommerce is Ownable, ReentrancyGuard {
     event RefundOrder(uint256 orderId, OrderStatus _finalStatus);
     event ShipperCancelOrder(uint256 orderId, OrderStatus _status);
 
-    modifier existOrder(uint256 orderId) {
-        require((orderBook[orderId].id) != _orderId, "Not exists");
+    modifier existOrder(uint256 idOrder) {
+        require(orderBook[idOrder].id != idOrder, "Not exists");
         _;
     }
 
-    modifier notExistOrder(uint256 orderId) {
-        require((orderBook[orderId].id) == _orderId, "Already exists");
+    modifier notExistOrder(uint256 idOrder) {
+        require(orderBook[idOrder].id == idOrder, "Already exists");
         _;
     }
 
@@ -175,12 +176,12 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     // Step 1 => order status: PAID
     // create an order
-    function createOrder(uint256 _quantity, uint256 _price, uint256 _shippingFee) external payable nonReentrant notExistOrder(_orderId) {
+    function createOrder(address _seller, uint256 _quantity, uint256 _price, uint256 _shippingFee) external payable nonReentrant notExistOrder(_orderId) returns (Order memory) {
         _orderId += 1;
         require(msg.value == ((_quantity * _price) + _shippingFee), "Value request not match with total amount");
         orderBook[_orderId] = Order(
             _orderId,
-            payable(address(0)),
+            payable(_seller),
             _msgSender(),
             payable(address(0)),
             OrderStatus.PAID,
@@ -191,14 +192,15 @@ contract ECommerce is Ownable, ReentrancyGuard {
             0
         );
         emit Ordered(_orderId, _msgSender(), msg.value);
+        return orderBook[_orderId];
     }
 
     // Step 2 => order status: READY_TO_PICKUP
     function sellerConfirmOrder(uint256 orderId) external {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        (address _seller , , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status != OrderStatus.READY_TO_PICKUP, "Order has been confirm before");
         require(_status == OrderStatus.PAID, "Order has not paid yet");
-        orderBook[orderId].seller = _msgSender();
         orderBook[orderId].status = OrderStatus.READY_TO_PICKUP;
         emit SellerConfirmOrder(orderId, OrderStatus.READY_TO_PICKUP);
     }
@@ -258,7 +260,8 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     function requestRefund(uint256 orderId, ErrorProduct _statusErrorType) public existOrder(orderId) {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        (, address _buyer , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_buyer == _msgSender(), "Invalid buyer");
         require(_status != OrderStatus.RECEIVED, "Order has been received before");
         orderBook[orderId].status = OrderStatus.REQUEST_REFUND;
         orderBook[orderId].statusErrorType = _statusErrorType;
@@ -266,14 +269,16 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     function rejectRefundOrder(uint256 orderId) public existOrder(orderId) {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        (address _seller, , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order has been request refund");
         orderBook[orderId].status = OrderStatus.REJECT_REFUND;
     }
 
     // If have a problem with product
     function refundOrder(uint256 orderId) external payable existOrder(orderId) {
-        (,address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(orderId);
+        (address _seller, address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order have to request refund");
         uint256 _amountForBuyer = _price * _quantity;
         require(_buyer == _msgSender(), "Invalid buyer");
@@ -331,5 +336,13 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     function getBalanceOfSC() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    
+    function getAllOrders() public returns (Order[] memory) {
+        for(uint256 i = 1; i <= _orderId; i ++) {
+            orders.push(orderBook[i]);
+        }
+        return orders;
     }
 }

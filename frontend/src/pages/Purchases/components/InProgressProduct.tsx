@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
@@ -19,12 +19,27 @@ interface IInProgressProductProps {
 const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgressProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
-  const { account, connector } = useWallet();
-  const handelBuyerReceiveOrder = async (orderId: string) => {
+  const { account, connector, library } = useWallet();
+
+  const [newData, setNewData] = useState({ name: null, size: null, color: null, shippingAddress: null });
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewData(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  const handelBuyerReceiveOrder = async (orderId: number) => {
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
-        .receiveOrder(orderId)
+        .receiveOrder(Number(orderId))
         .send({
           from: account,
           type: '0x2'
@@ -41,34 +56,35 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         });
     }
   }
+
   return (
     <Container>
-      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
+      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data[0]} />
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newData.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newData.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color /> {newData.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newData.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
+          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -80,7 +96,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data.id)}>Order Received</AddPlusButton>
+            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data[0])}>Order Received</AddPlusButton>
             <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
               Request Refund
             </AddPlusButton>
@@ -89,7 +105,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
       </Amount>
       <Price>
         <Status>{data.status === 'wait' ? 'Wait for seller to confirm' : 'Shipping'}</Status>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
