@@ -5,10 +5,10 @@ import Box from 'ui/Box';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
-import request from 'utils/request';
 import { ORDER_STATUS } from 'utils/constants';
 import isMember from 'utils/isMember';
 import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 import ShippingProduct from './ShippingProduct';
 
 interface IShippingProps {
@@ -18,20 +18,19 @@ interface IShippingProps {
 const Shipping: React.FC<IShippingProps> = (props: IShippingProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const { account } = useWallet();
+  const { account, connector } = useWallet();
 
   useEffect(() => {
     if (account) {
-      const type = isMember(account || 'seller').toLowerCase()
       const fetchOrderConfirmed = async () => {
-        const result = await request.getData(`/orders/${ORDER_STATUS.CONFIRMED_PICKUP}/${account}/${type}`, {})
-        if (result && result.status === 200) {
-          setData(result.data)
-        }
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP && Number(item[0]) !== 0)
+        setData(ordersFiltered);
       }
       fetchOrderConfirmed();
     }
-  }, [account]);
+  }, [account, connector]);
 
 
   useEffect(() => {

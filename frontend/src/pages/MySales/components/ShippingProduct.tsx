@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
+import useWallet from 'hooks/useWallet';
 import p2 from 'assets/images/p2.png';
+import request from 'utils/request';
 import RefundModal from './RefundModal';
 
 interface IToShipProductProps {
@@ -13,6 +15,21 @@ interface IToShipProductProps {
 const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
+  const { account, connector, library } = useWallet();
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
@@ -20,23 +37,23 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
         <img src={p2} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newOrder.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newOrder.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
         </Shipping>
       </Content>
       <OrderInfo>
@@ -51,7 +68,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       </OrderInfo>
       <Price>
         <Status>{data.status === 'wait' ? 'Ready To Pickup' : 'Shipping'}</Status>
-        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
