@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
@@ -19,6 +19,9 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
   const { data } = props;
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const { account, connector, library } = useWallet();
+
   const renderStatus = () => {
     switch (data.status) {
       case 'wait':
@@ -34,7 +37,18 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
     }
   };
 
-  const { account, connector, library } = useWallet();
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
   const handleConfirmRefundOrder = async (orderId: string) => {
     if (connector) {
       const contract = await getContract(connector);
