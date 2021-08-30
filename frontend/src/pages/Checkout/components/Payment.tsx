@@ -19,7 +19,7 @@ interface IPaymentProps {
 
 const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const { setStep, setCheckoutData, checkoutData } = props;
-  const { address, country, state, orderId, amount, price, shippingFee, id, name } = checkoutData;
+  const { address, country, state, amount, price, shippingFee, id, name } = checkoutData;
   const { account, connector, library } = useWallet();
 
   const [type, setType] = useState(0);
@@ -38,10 +38,11 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
     else setCheckoutData({ ...checkoutData, billingAddress });
     const totalAmount = (amount * price) + shippingFee;
     if (connector) {
+      const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x44643a2A42EAeC3ea253555b848719124BD197Ae'
       const contract = await getContract(connector);
-      await contract.methods
+      const order = await contract.methods
         .createOrder(
-          orderId,
+          sellerAddress,
           amount,
           library?.utils?.toWei(price, 'ether'),
           library?.utils?.toWei(shippingFee.toString(), 'ether')
@@ -58,20 +59,22 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
             message: 'Success'
           });
         });
+
+      request.postData('/orders/create', {
+        id: order.events.Ordered.returnValues.orderId,
+        buyer: account,
+        shippingAddress: renderAddress(),
+        billingAddress: type === 0 ? renderAddress() : billingAddress,
+        productId: id,
+        name,
+        quantity: amount,
+        price: Number(price),
+        shippingFee,
+        totalAmount,
+        status: ORDER_STATUS.PAID
+      });
     }
-    request.postData('/orders/create', {
-      id: orderId,
-      buyer: account,
-      shippingAddress: renderAddress(),
-      billingAddress: type === 0 ? renderAddress() : billingAddress,
-      productId: id,
-      name,
-      quantity: amount,
-      price: Number(price),
-      shippingFee,
-      totalAmount,
-      status: ORDER_STATUS.PAID
-    });
+
     setStep(4);
   };
 

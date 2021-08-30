@@ -6,7 +6,6 @@ import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
-import request from 'utils/request';
 import { ORDER_STATUS } from 'utils/constants';
 import isMember from 'utils/isMember';
 import { getContract } from 'utils/getContract';
@@ -21,32 +20,19 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
   const { account, connector, library } = useWallet();
+
   useEffect(() => {
     if (account) {
       const type = isMember(account || 'buyer').toLowerCase()
       const fetchOrderCreated = async () => {
-        const resultPaid = await request.getData(`/orders/${ORDER_STATUS.PAID}/${account}/${type}`, {})
-        const resultReadyPickup = await request.getData(`/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`, {})
-        const resultConfirmedPickup = await request.getData(`/orders/${ORDER_STATUS.CONFIRMED_PICKUP}/${account}/${type}`, {})
-        if (resultPaid && resultPaid.status === 200 && resultReadyPickup && resultReadyPickup.status === 200 && resultConfirmedPickup && resultConfirmedPickup.status === 200) {
-          const result = resultPaid.data.concat(resultReadyPickup.data).concat(resultConfirmedPickup.data);
-          // for (let index = 0; index < result.data.length; index += 1) {
-          //   const element = result.data[index];
-          //   const x = 1;
-          //   const contract = await getContract(connector);
-          //   const data = await contract.methods.getOrderInfo(orderId).call();
-          //   const status = data[3];
-          //   const quantity = library?.utils?.fromWei(data[5], 'ether');
-          //   const price = library?.utils?.fromWei(data[6], 'ether');
-          //   const shippingFee = library?.utils?.fromWei(data[7], 'ether');
-          //   const deposit = library?.utils?.fromWei(data[8], 'ether');
-          // }
-          setData(result)
-        }
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID)
+        setData(ordersFiltered);
       }
-      fetchOrderCreated();
+      fetchOrderCreated()
     }
-  }, [account]);
+  });
 
   useEffect(() => {
     const total = data.reduce(

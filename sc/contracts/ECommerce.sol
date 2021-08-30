@@ -135,7 +135,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     struct Order {
-        string id;
+        uint256 id;
         address payable seller;
         address payable buyer;
         address payable shipper;
@@ -147,24 +147,26 @@ contract ECommerce is Ownable, ReentrancyGuard {
         uint256 deposit;
     }
 
-    mapping(string => Order) public orderBook;
+    mapping(uint256 => Order) public orderBook;
+    uint256 public _orderId = 0;
+    Order[] orders;
 
-    event Ordered(string _orderId, address _buyer, uint256 indexed _totalMoney);
-    event SellerConfirmOrder(string _orderId, OrderStatus _finalStatus);
-    event Staked(string _orderId, address _shipper, uint256 indexed _stakedAmount);
-    event Shipped(string _orderId);
-    event ReceiveOrder(string _orderId, OrderStatus _finalStatus);
-    event RequestRefundOrder(string _orderId, OrderStatus _finalStatus);
-    event RefundOrder(string _orderId, OrderStatus _finalStatus);
-    event ShipperCancelOrder(string orderId, OrderStatus _status);
+    event Ordered(uint256 orderId, address _buyer, uint256 indexed _totalMoney);
+    event SellerConfirmOrder(uint256 orderId, OrderStatus _finalStatus);
+    event Staked(uint256 orderId, address _shipper, uint256 indexed _stakedAmount);
+    event Shipped(uint256 orderId);
+    event ReceiveOrder(uint256 orderId, OrderStatus _finalStatus);
+    event RequestRefundOrder(uint256 orderId, OrderStatus _finalStatus);
+    event RefundOrder(uint256 orderId, OrderStatus _finalStatus);
+    event ShipperCancelOrder(uint256 orderId, OrderStatus _status);
 
-    modifier existOrder(string memory _orderId) {
-        require(bytes(orderBook[_orderId].id).length != 0, "Not exists");
+    modifier existOrder(uint256 idOrder) {
+        require(orderBook[idOrder].id != idOrder, "Not exists");
         _;
     }
 
-    modifier notExistOrder(string memory _orderId) {
-        require(bytes(orderBook[_orderId].id).length == 0, "Already exists");
+    modifier notExistOrder(uint256 idOrder) {
+        require(orderBook[idOrder].id == idOrder, "Already exists");
         _;
     }
 
@@ -174,11 +176,12 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     // Step 1 => order status: PAID
     // create an order
-    function createOrder(string memory _orderId, uint256 _quantity, uint256 _price, uint256 _shippingFee) external payable nonReentrant notExistOrder(_orderId) {
+    function createOrder(address _seller, uint256 _quantity, uint256 _price, uint256 _shippingFee) external payable nonReentrant notExistOrder(_orderId) returns (Order memory) {
+        _orderId += 1;
         require(msg.value == ((_quantity * _price) + _shippingFee), "Value request not match with total amount");
         orderBook[_orderId] = Order(
             _orderId,
-            payable(address(0)),
+            payable(_seller),
             _msgSender(),
             payable(address(0)),
             OrderStatus.PAID,
@@ -189,51 +192,47 @@ contract ECommerce is Ownable, ReentrancyGuard {
             0
         );
         emit Ordered(_orderId, _msgSender(), msg.value);
+        return orderBook[_orderId];
     }
 
     // Step 2 => order status: READY_TO_PICKUP
-    function sellerConfirmOrder(string memory _orderId) external {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
+    function sellerConfirmOrder(uint256 orderId) external {
+        (address _seller , , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status != OrderStatus.READY_TO_PICKUP, "Order has been confirm before");
         require(_status == OrderStatus.PAID, "Order has not paid yet");
-        orderBook[_orderId].seller = _msgSender();
-        orderBook[_orderId].status = OrderStatus.READY_TO_PICKUP;
-        emit SellerConfirmOrder(_orderId, OrderStatus.READY_TO_PICKUP);
+        orderBook[orderId].status = OrderStatus.READY_TO_PICKUP;
+        emit SellerConfirmOrder(orderId, OrderStatus.READY_TO_PICKUP);
     }
 
     // Step 3: order status: CONFIRMED_PICKUP
     // stake an order
-    function shipperStakeOrder(string memory _orderId) external payable nonReentrant existOrder(_orderId) {
+    function shipperStakeOrder(uint256 orderId) external payable nonReentrant existOrder(orderId) {
         // check money from FE and in Order
-        (,,, OrderStatus _status,, uint256 _quantity, uint256 _price,,) = getOrderInfo(_orderId);
+        (,,, OrderStatus _status,, uint256 _quantity, uint256 _price,,) = getOrderInfo(orderId);
         require(msg.value == (_quantity * _price * 20) / 100, "Value not match with deposit");
         require(_status == OrderStatus.READY_TO_PICKUP, "Order has not confirm yet");
 
-        orderBook[_orderId].shipper = _msgSender();
-        orderBook[_orderId].deposit = msg.value;
-        orderBook[_orderId].status = OrderStatus.CONFIRMED_PICKUP;
-        emit Staked(_orderId, _msgSender(), msg.value);
+        orderBook[orderId].shipper = _msgSender();
+        orderBook[orderId].deposit = msg.value;
+        orderBook[orderId].status = OrderStatus.CONFIRMED_PICKUP;
+        emit Staked(orderId, _msgSender(), msg.value);
     }
 
     // Step 4: order status: SHIPPED
     // make an order is shipped
-    function orderShipped(string memory _orderId) external existOrder(_orderId) {
-        (, , address _shipper, OrderStatus _status, , , , , ) = getOrderInfo(
-            _orderId
-        );
-        require(
-            _status == OrderStatus.CONFIRMED_PICKUP,
-            "Order has not confirm yet"
-        );
+    function orderShipped(uint256 orderId) external existOrder(orderId) {
+        (, , address _shipper, OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_status == OrderStatus.CONFIRMED_PICKUP, "Order has not confirm yet");
         require(_shipper == _msgSender(), "Invalid shipper");
 
-        orderBook[_orderId].status = OrderStatus.SHIPPED;
-        emit Shipped(_orderId);
+        orderBook[orderId].status = OrderStatus.SHIPPED;
+        emit Shipped(orderId);
     }
 
     // Step 5: User receive order
     // receiver an order
-    function receiveOrder(string memory _orderId) external payable existOrder(_orderId) {
+    function receiveOrder(uint256 orderId) external payable existOrder(orderId) {
         (
             address _seller,
             address _buyer,
@@ -244,7 +243,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
             uint256 quantity,
             uint256 _shippingFee,
             uint256 _deposit
-        ) = getOrderInfo(_orderId);
+        ) = getOrderInfo(orderId);
         require(
             _status == OrderStatus.CONFIRMED_PICKUP,
             "Order have not confirm yet"
@@ -256,27 +255,30 @@ contract ECommerce is Ownable, ReentrancyGuard {
         uint256 _amountForSeller = price * quantity;
         payable(_seller).transfer(_amountForSeller);
         payable(_shipper).transfer(_deposit + _shippingFee);
-        orderBook[_orderId].status = OrderStatus.RECEIVED;
-        emit ReceiveOrder(_orderId, OrderStatus.RECEIVED);
+        orderBook[orderId].status = OrderStatus.RECEIVED;
+        emit ReceiveOrder(orderId, OrderStatus.RECEIVED);
     }
 
-    function requestRefund(string memory _orderId, ErrorProduct _statusErrorType) public existOrder(_orderId) {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
+    function requestRefund(uint256 orderId, ErrorProduct _statusErrorType) public existOrder(orderId) {
+        (, address _buyer , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_buyer == _msgSender(), "Invalid buyer");
         require(_status != OrderStatus.RECEIVED, "Order has been received before");
-        orderBook[_orderId].status = OrderStatus.REQUEST_REFUND;
-        orderBook[_orderId].statusErrorType = _statusErrorType;
-        emit RequestRefundOrder(_orderId, OrderStatus.REQUEST_REFUND);
+        orderBook[orderId].status = OrderStatus.REQUEST_REFUND;
+        orderBook[orderId].statusErrorType = _statusErrorType;
+        emit RequestRefundOrder(orderId, OrderStatus.REQUEST_REFUND);
     }
 
-    function rejectRefundOrder(string memory _orderId) public existOrder(_orderId) {
-        (, , , OrderStatus _status, , , , , ) = getOrderInfo(_orderId);
+    function rejectRefundOrder(uint256 orderId) public existOrder(orderId) {
+        (address _seller, , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order has been request refund");
-        orderBook[_orderId].status = OrderStatus.REJECT_REFUND;
+        orderBook[orderId].status = OrderStatus.REJECT_REFUND;
     }
 
     // If have a problem with product
-    function refundOrder(string memory _orderId) external payable existOrder(_orderId) {
-        (,address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(_orderId);
+    function refundOrder(uint256 orderId) external payable existOrder(orderId) {
+        (address _seller, address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(orderId);
+        require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order have to request refund");
         uint256 _amountForBuyer = _price * _quantity;
         require(_buyer == _msgSender(), "Invalid buyer");
@@ -291,22 +293,22 @@ contract ECommerce is Ownable, ReentrancyGuard {
             // Return money for buyer
             payable(_buyer).transfer(_amountForBuyer);
         }
-        orderBook[_orderId].status = OrderStatus.APPROVAL_REFUND;
+        orderBook[orderId].status = OrderStatus.APPROVAL_REFUND;
     }
 
-    function shipperCancelOrder(string memory _orderId) external payable existOrder(_orderId) {
-        (,, address _shipper, OrderStatus _status,,,,,uint256 _deposit) = getOrderInfo(_orderId);
+    function shipperCancelOrder(uint256 orderId) external payable existOrder(orderId) {
+        (,, address _shipper, OrderStatus _status,,,,,uint256 _deposit) = getOrderInfo(orderId);
         require(_shipper == _msgSender(), "Invalid shipper");
         require(_status != OrderStatus.READY_TO_PICKUP, "Order now is ready to pickup");
         require(_status != OrderStatus.RECEIVED, "Order alreay received");
 
         payable(_shipper).transfer(_deposit);
-        orderBook[_orderId].status = OrderStatus.READY_TO_PICKUP;
-        emit ShipperCancelOrder(_orderId, OrderStatus.READY_TO_PICKUP);
+        orderBook[orderId].status = OrderStatus.READY_TO_PICKUP;
+        emit ShipperCancelOrder(orderId, OrderStatus.READY_TO_PICKUP);
     }
 
     // get Order Info
-    function getOrderInfo(string memory _orderId) public view returns (
+    function getOrderInfo(uint256 orderId) public view returns (
         address,
         address,
         address,
@@ -318,7 +320,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         uint256
     )
     {
-        Order memory order = orderBook[_orderId];
+        Order memory order = orderBook[orderId];
         return (
             order.seller,
             order.buyer,
@@ -334,5 +336,13 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     function getBalanceOfSC() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    
+    function getAllOrders() public returns (Order[] memory) {
+        for(uint256 i = 1; i <= _orderId; i ++) {
+            orders.push(orderBook[i]);
+        }
+        return orders;
     }
 }

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Link } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
-import isMember from 'utils/isMember';
 import request from 'utils/request';
 
 const PendingTable: React.FC = () => {
@@ -14,31 +13,40 @@ const PendingTable: React.FC = () => {
   useEffect(() => {
     const fetchOrderPending = async () => {
       if (account) {
-        const type = isMember(account || 'shipper').toLowerCase();
-        const result = await request.getData(
-          `/orders/${ORDER_STATUS.READY_TO_PICKUP}/${account}/${type}`,
-          {}
-        );
-        if (result && result.status === 200) {
-          const ordersPending = [];
-          for (let i = 0; i < result.data.length; i += 1) {
-            const convertedOrdeDate = new Date(result.data[i].createdAt).toISOString().slice(0, 10);
-            ordersPending.push({
-              key: result.data[i].key,
-              orderDate: convertedOrdeDate,
-              status: 'Ready to Pickup',
-              orderId: result.data[i].id,
-              parcelType: 'California USA',
-              quantity: result.data[i].quantity,
-              price: result.data[i].price
-            });
-          }
-          setData(ordersPending);
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP)
+
+        const promises = [];
+        for (let i = 0; i < ordersFiltered.length; i += 1) {
+          promises.push(getUser(ordersFiltered[i][0]));
         }
+
+        const ordersPending = [];
+        const users = await Promise.all(promises);
+        users.sort((a, b) => b.id - a.id);
+        for (let j = 0; j < users.length; j += 1) {
+          const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
+          ordersPending.push({
+            key: users[j].id,
+            orderDate: convertedOrdeDate,
+            status: 'Ready to Pickup',
+            orderId: users[j].id,
+            parcelType: 'California USA',
+            quantity: users[j].quantity,
+            price: users[j].price
+          });
+        }
+        setData(ordersPending);
       }
     };
     fetchOrderPending();
-  }, [account]);
+  }, [account, connector]);
+
+  const getUser = async (userId: number) => {
+    const response = await request.getData(`/orders/${userId}`, {});
+    return response.data[0];
+  }
 
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
