@@ -5,7 +5,7 @@ import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import request from 'utils/request';
 import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
+import getImage from 'utils/getImage';
 import p2 from 'assets/images/p2.png';
 
 interface ICompletedProductProps {
@@ -15,23 +15,29 @@ interface ICompletedProductProps {
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
   const { data } = props;
   const { library } = useWallet();
-  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const [newOrder, setNewOrder] = useState({
+    name: null,
+    size: null,
+    color: null,
+    shippingAddress: null,
+    productId: 1
+  });
   const quantity = data[6];
   const price = library?.utils?.fromWei(data[7], 'ether');
   const shippingFee = library?.utils?.fromWei(data[8], 'ether');
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewOrder(response.data[0])
-    }
+      const response = await request.getData(`/orders/${data[0]}`, {});
+      setNewOrder(response.data[0]);
+    };
     fetchOrder();
   }, [data]);
 
   return (
     <Container>
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(newOrder.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{newOrder.name}</Name>
@@ -45,7 +51,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {newOrder.color}
+            <Color className={newOrder?.color || ''} /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
@@ -62,7 +68,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
       </Amount>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
@@ -71,7 +77,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
 const Price = styled.div`
   position: relative;
   width: 230px;
-  margin-top:5px;
+  margin-top: 5px;
 `;
 
 const PriceText = styled(Text)`
@@ -136,6 +142,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -149,7 +164,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

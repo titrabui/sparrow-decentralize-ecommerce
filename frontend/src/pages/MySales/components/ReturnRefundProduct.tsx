@@ -9,6 +9,7 @@ import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
 import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
 import request from 'utils/request';
+import getImage from 'utils/getImage';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -42,7 +43,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been request refund successfully!',
             message: 'Success'
@@ -54,7 +56,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           });
         });
     }
-  }
+  };
 
   const handleRejectRequestRefund = async (orderId: string) => {
     if (connector) {
@@ -64,7 +66,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been rejecct refund successfully!',
             message: 'Success'
@@ -76,12 +79,11 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           });
         });
     }
-  }
-
+  };
   return (
     <Container>
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{data.name}</Name>
@@ -95,7 +97,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
@@ -108,8 +110,12 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>Reject</AddPlusButton>
-        <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>Confirm</AddPlusButton>
+        <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>
+          Reject
+        </AddPlusButton>
+        <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>
+          Confirm
+        </AddPlusButton>
       </Amount>
       <Price>
         {renderStatus()}
@@ -122,7 +128,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 const Price = styled.div`
   position: relative;
   width: 230px;
-  margin-top:5px;
+  margin-top: 5px;
 `;
 
 const PriceText = styled(Text)`
@@ -186,6 +192,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -199,7 +214,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;

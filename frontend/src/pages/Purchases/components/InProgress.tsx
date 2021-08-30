@@ -27,12 +27,14 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
       const fetchOrderCreated = async () => {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
+
         const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.PAID || Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCreated()
     }
   }, [account, connector]);
+
 
   useEffect(() => {
     const total = data.reduce(
