@@ -92,7 +92,6 @@ const Container = styled(Box)`
   backdrop-filter: blur(40px);
   position: relative;
   width: 100%;
-  min-height: 600px;
   height: auto;
   max-height: 82vh;
   overflow-x: auto;

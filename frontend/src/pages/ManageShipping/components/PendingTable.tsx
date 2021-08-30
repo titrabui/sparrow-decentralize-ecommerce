@@ -17,13 +17,20 @@ const PendingTable: React.FC = () => {
         const orders = await contract.methods.getAllOrders().call();
         const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP)
 
-        const promises = [];
+        const promisesGetUsers = [];
+        const orderInfo = [];
         for (let i = 0; i < ordersFiltered.length; i += 1) {
-          promises.push(getUser(ordersFiltered[i][0]));
+          promisesGetUsers.push(getUser(ordersFiltered[i][0]));
+          const orderItem = {
+            id: ordersFiltered[i][0],
+            quantity: ordersFiltered[i][6],
+            price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether')
+          }
+          orderInfo.push(orderItem)
         }
 
         const ordersPending = [];
-        const users = await Promise.all(promises);
+        const users = await Promise.all(promisesGetUsers);
         users.sort((a, b) => b.id - a.id);
         for (let j = 0; j < users.length; j += 1) {
           const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
@@ -31,17 +38,18 @@ const PendingTable: React.FC = () => {
             key: users[j].id,
             orderDate: convertedOrdeDate,
             status: 'Ready to Pickup',
-            orderId: users[j].id,
+            orderId: orderInfo[j].id,
             parcelType: 'California USA',
-            quantity: users[j].quantity,
-            price: users[j].price
+            quantity: orderInfo[j].quantity,
+            price: orderInfo[j].price,
+            confirmShipping: orderInfo[j]
           });
         }
         setData(ordersPending);
       }
     };
     fetchOrderPending();
-  }, [account, connector]);
+  }, [account, connector, library]);
 
   const getUser = async (userId: number) => {
     const response = await request.getData(`/orders/${userId}`, {});
@@ -50,7 +58,7 @@ const PendingTable: React.FC = () => {
 
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
-    const orderId = record?.orderId;
+    const orderId = Number(record?.id);
     const amount = (record.price * record.quantity * 20) / 100;
     if (connector) {
       const contract = await getContract(connector);

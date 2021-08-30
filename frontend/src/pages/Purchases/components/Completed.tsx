@@ -7,9 +7,9 @@ import Button from 'ui/Button';
 import { DatePicker } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import request from 'utils/request';
-import isMember from 'utils/isMember';
 import useWallet from 'hooks/useWallet';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import CompletedProduct from './CompletedProduct';
 
 interface ICompletedProps {
@@ -19,20 +19,19 @@ interface ICompletedProps {
 const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const { account } = useWallet();
+  const { account, connector } = useWallet();
 
   useEffect(() => {
     if (account) {
-      const type = isMember(account || 'buyer').toLowerCase()
       const fetchOrderCompleted = async () => {
-        const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}/${account}/${type}`, {})
-        if (result && result.status === 200) {
-          setData(result.data)
-        }
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED)
+        setData(ordersFiltered);
       }
       fetchOrderCompleted();
     }
-  }, [account]);
+  }, [account, connector]);
 
   useEffect(() => {
     const total = data.reduce(
@@ -86,7 +85,6 @@ const Container = styled(Box)`
   backdrop-filter: blur(40px);
   position: relative;
   width: 100%;
-  min-height: 600px;
   height: auto;
   max-height: 82vh;
   overflow-x: auto;
