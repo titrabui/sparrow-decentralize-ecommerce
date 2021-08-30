@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
@@ -34,23 +34,38 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   };
 
   const { account, connector, library } = useWallet();
+
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
   const handleConfirmRefundOrder = async (orderId: string) => {
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
-        .refundOrder(orderId)
+        .acceptRefundOrder(orderId)
         .send({
           from: account,
           type: '0x2'
         }).on('receipt', async () => {
           notification.success({
-            description: 'Order has been request refund successfully!',
+            description: 'Order has been refund successfully!',
             message: 'Success'
           });
 
           request.putData('/orders/update-order-status', {
             id: orderId,
-            status: ORDER_STATUS.REJECT_REFUND
+            status: ORDER_STATUS.APPROVAL_REFUND
           });
         });
     }
@@ -66,13 +81,13 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           type: '0x2'
         }).on('receipt', async () => {
           notification.success({
-            description: 'Order has been rejecct refund successfully!',
+            description: 'Order has been reject refund successfully!',
             message: 'Success'
           });
 
           request.putData('/orders/update-order-status', {
             id: orderId,
-            status: ORDER_STATUS.REQUEST_REFUND
+            status: ORDER_STATUS.REJECT_REFUND
           });
         });
     }
@@ -84,36 +99,45 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         <img src={p2} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newOrder.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newOrder.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
+          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>Reject</AddPlusButton>
-        <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>Confirm</AddPlusButton>
+        {
+          data[4] === ORDER_STATUS.APPROVAL_REFUND ? (
+            <>
+              <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data[0])}>Reject</AddPlusButton>
+              <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data[0])}>Confirm</AddPlusButton>
+            </>
+          ) : (
+            <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+          )
+        }
+
       </Amount>
       <Price>
         {renderStatus()}
-        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
