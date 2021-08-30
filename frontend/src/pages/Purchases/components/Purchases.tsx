@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import MainContainer from 'ui/MainContainer';
-import Box from 'ui/Box';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
 import { Collapse } from 'antd';
-import InProgress from './InProgress';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Box from 'ui/Box';
+import MainContainer from 'ui/MainContainer';
+import { Text } from 'ui/Typography';
 import Completed from './Completed';
+import InProgress from './InProgress';
 import ReturnRefund from './ReturnRefund';
 
 const { Panel } = Collapse;

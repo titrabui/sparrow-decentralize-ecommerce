@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import { DatePicker, Empty, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { DatePicker, Select } from 'antd';
+import { Text } from 'ui/Typography';
+import { ERROR_STATUS } from 'utils/constants';
 import request from 'utils/request';
-import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 const { Option } = Select;
@@ -55,9 +55,11 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
         <StyledButton>Search</StyledButton>
       </FilterContainer>
 
-      {data.map((item: any) => (
-        <ReturnRefundProduct data={item} key={item?.id} />
-      ))}
+      {data?.length ? (
+        data.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
     </Container>
   );
 };
