@@ -33,10 +33,10 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   useEffect(() => {
     const fetchOrder = async () => {
       const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewData(response.data[0]);
+      setNewData({ ...newData, ...response.data[0] });
     };
     fetchOrder();
-  }, [data]);
+  }, [data, newData]);
 
   const quantity = data[6];
   const price = library?.utils?.fromWei(data[7], 'ether');

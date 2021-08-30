@@ -7,6 +7,7 @@ import request from 'utils/request';
 import p2 from 'assets/images/p2.png';
 import useWallet from 'hooks/useWallet';
 import { ORDER_STATUS } from 'utils/constants';
+import getImage from 'utils/getImage';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -18,15 +19,15 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   const { data } = props;
 
   const { library } = useWallet();
-  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const [newOrder, setNewOrder] = useState({ productId: 1, name: null, size: null, color: null, shippingAddress: null });
   const quantity = data[6];
   const price = library?.utils?.fromWei(data[7], 'ether');
   const shippingFee = library?.utils?.fromWei(data[8], 'ether');
 
   let orderStatus;
-  if (data[4] === ORDER_STATUS.REQUEST_REFUND) {
+  if (data[4] === ORDER_STATUS.REQUEST_REFUND.toString()) {
     orderStatus = 'Refund Request Processing';
-  } else if (data[4] === ORDER_STATUS.REJECT_REFUND) {
+  } else if (data[4] === ORDER_STATUS.REJECT_REFUND.toString()) {
     orderStatus = 'Request has been rejected';
   } else {
     orderStatus = 'Refund Completed';
@@ -35,15 +36,15 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   useEffect(() => {
     const fetchOrder = async () => {
       const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewOrder(response.data[0])
+      setNewOrder({ ...newOrder, ...response.data[0] })
     }
     fetchOrder();
-  }, [data]);
+  }, [newOrder, data]);
 
   return (
     <Container>
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(newOrder.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{newOrder.name}</Name>

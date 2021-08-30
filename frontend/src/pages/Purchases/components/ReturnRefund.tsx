@@ -28,7 +28,7 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
       const fetchOrderRefund = async () => {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND) && Number(item[0]) !== 0)
+        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND || Number(item[4]) === ORDER_STATUS.REQUEST_REFUND) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderRefund()

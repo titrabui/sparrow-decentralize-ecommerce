@@ -126,13 +126,13 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
       </Content>
       <Amount>
         {
-          data[4] === ORDER_STATUS.APPROVAL_REFUND ? (
+          data[4] === ORDER_STATUS.APPROVAL_REFUND.toString() || data[4] === ORDER_STATUS.REJECT_REFUND.toString() ? (
+            <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+          ) : (
             <>
               <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data[0])}>Reject</AddPlusButton>
               <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data[0])}>Confirm</AddPlusButton>
             </>
-          ) : (
-            <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
           )
         }
 
