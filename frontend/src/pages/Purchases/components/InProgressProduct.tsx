@@ -10,6 +10,7 @@ import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import { ORDER_STATUS } from 'utils/constants';
 import request from 'utils/request';
+import getImage from 'utils/getImage';
 import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
@@ -21,13 +22,19 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
 
-  const [newData, setNewData] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const [newData, setNewData] = useState({
+    name: null,
+    size: null,
+    color: null,
+    shippingAddress: null,
+    productId: 1
+  });
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewData(response.data[0])
-    }
+      const response = await request.getData(`/orders/${data[0]}`, {});
+      setNewData(response.data[0]);
+    };
     fetchOrder();
   }, [data]);
 
@@ -43,7 +50,8 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('receipt', async () => {
           notification.success({
             description: 'Order has been received successfully!',
             message: 'Success'
@@ -55,13 +63,35 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           });
         });
     }
-  }
+  };
 
+  const renderStatus = (status: string) => {
+    switch (status) {
+      case '0':
+        return 'Wait for Seller to confirm';
+      case '1':
+        return 'Ready to Pick Up';
+      case '2':
+        return 'Confirmed Pick Up';
+      case '3':
+        return 'Shipped';
+      case '4':
+        return 'Received';
+      case '5':
+        return 'Request refund';
+      case '6':
+        return 'Approval refund';
+      case '7':
+        return 'Reject refund';
+      default:
+        return '';
+    }
+  };
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data[0]} />
       <ImageWrapper>
-        <img src={p2} alt='img' />
+        <img src={getImage(newData.productId)} alt='img' />
       </ImageWrapper>
       <Content>
         <Name>{newData.name}</Name>
@@ -69,13 +99,13 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newData.size}</SizeButton>
+          <SizeButton>{newData.size}ft</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {newData.color}
+            <Color className={newData?.color || ''} /> {newData.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
@@ -96,7 +126,9 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data[0])}>Order Received</AddPlusButton>
+            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data[0])}>
+              Order Received
+            </AddPlusButton>
             <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
               Request Refund
             </AddPlusButton>
@@ -104,8 +136,8 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         )}
       </Amount>
       <Price>
-        <Status>{data.status === 'wait' ? 'Wait for seller to confirm' : 'Shipping'}</Status>
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <Status>{renderStatus(data.status)}</Status>
+        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
@@ -114,7 +146,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
 const Price = styled.div`
   position: relative;
   width: 210px;
-  margin-top:5px;
+  margin-top: 5px;
 `;
 
 const PriceText = styled(Text)`
@@ -180,6 +212,15 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
+  &.White {
+    background: #ebebeb;
+  }
+  &.Orange {
+    background: #e86c13;
+  }
+  &.Violet {
+    background: #7b61ff;
+  }
 `;
 
 const SizeButton = styled(Button)`
@@ -193,7 +234,7 @@ const SizeButton = styled(Button)`
 `;
 
 const ColorButton = styled(Button)`
-  width: 100px;
+  width: 110px;
   height: 32px;
   color: #4f4f4fcc;
   font-weight: 400;
