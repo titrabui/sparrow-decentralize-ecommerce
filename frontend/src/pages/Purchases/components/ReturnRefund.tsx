@@ -8,6 +8,7 @@ import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import isMember from 'utils/isMember';
 import request from 'utils/request';
 import ReturnRefundProduct from './ReturnRefundProduct';
@@ -17,25 +18,22 @@ interface IReturnRefundProps {
 }
 
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
+
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
-  const { account } = useWallet();
+  const { account, connector, library } = useWallet();
 
   useEffect(() => {
-    const fetchOrderRefund = async () => {
-      if (account) {
-        const type = isMember(account || 'buyer').toLowerCase()
-        const getOrderApprovalRefund = await request.getData(`/orders/${ORDER_STATUS.APPROVAL_REFUND}/${account}/${type}`, {})
-        const getOrderRejectRefund = await request.getData(`/orders/${ORDER_STATUS.REJECT_REFUND}/${account}/${type}`, {})
-        if (getOrderApprovalRefund && getOrderApprovalRefund.status === 200 && getOrderRejectRefund && getOrderRejectRefund.status === 200) {
-          const result = getOrderApprovalRefund.data.concat(getOrderRejectRefund.data);
-          setData(result);
-        }
+    if (account) {
+      const fetchOrderRefund = async () => {
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND) && Number(item[0]) !== 0)
+        setData(ordersFiltered);
       }
-
+      fetchOrderRefund()
     }
-    fetchOrderRefund();
-  }, [account]);
+  }, [account, connector]);
 
   useEffect(() => {
     const total = data.reduce(

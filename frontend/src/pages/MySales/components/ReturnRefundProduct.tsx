@@ -39,7 +39,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
-        .refundOrder(orderId)
+        .acceptRefundOrder(orderId)
         .send({
           from: account,
           type: '0x2'
@@ -52,7 +52,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
           request.putData('/orders/update-order-status', {
             id: orderId,
-            status: ORDER_STATUS.REJECT_REFUND
+            status: ORDER_STATUS.APPROVAL_REFUND
           });
         });
     }
@@ -69,57 +69,63 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         })
         .on('receipt', async () => {
           notification.success({
-            description: 'Order has been rejecct refund successfully!',
+            description: 'Order has been reject refund successfully!',
             message: 'Success'
           });
 
           request.putData('/orders/update-order-status', {
             id: orderId,
-            status: ORDER_STATUS.REQUEST_REFUND
+            status: ORDER_STATUS.REJECT_REFUND
           });
         });
     }
-  };
+  }
+
   return (
     <Container>
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newOrder.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newOrder.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={data?.color || ''} /> {data.color}
+            <Color /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
+          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>
-          Reject
-        </AddPlusButton>
-        <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>
-          Confirm
-        </AddPlusButton>
+        {
+          data[4] === ORDER_STATUS.APPROVAL_REFUND ? (
+            <>
+              <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data[0])}>Reject</AddPlusButton>
+              <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data[0])}>Confirm</AddPlusButton>
+            </>
+          ) : (
+            <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
+          )
+        }
+
       </Amount>
       <Price>
         {renderStatus()}
-        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
@@ -192,15 +198,6 @@ const Color = styled.div`
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   margin-right: 5px;
-  &.White {
-    background: #ebebeb;
-  }
-  &.Orange {
-    background: #e86c13;
-  }
-  &.Violet {
-    background: #7b61ff;
-  }
 `;
 
 const SizeButton = styled(Button)`

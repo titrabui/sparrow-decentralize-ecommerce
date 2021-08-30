@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { DatePicker, Empty, Select } from 'antd';
+import useWallet from 'hooks/useWallet';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { ERROR_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
@@ -19,17 +21,19 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
   const { setTotal } = props;
   const [data, setData] = useState([] as any);
 
+  const { account, connector } = useWallet();
+
   useEffect(() => {
-    const fetchOrderRefund = async () => {
-      const resultErrProduct = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_PRODUCT_ERROR}`, {})
-      const resultErrShipping = await request.getData(`/orders/${ERROR_STATUS.REFUNDED_SHIPPING_ERROR}`, {})
-      if (resultErrProduct && resultErrProduct.status === 200 && resultErrShipping && resultErrShipping.status === 200) {
-        const result = resultErrProduct.data.concat(resultErrShipping.data);
-        setData(result);
+    if (account) {
+      const fetchOrderCompleted = async () => {
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter((item: any) => (Number(item[5]) === ERROR_STATUS.REFUNDED_PRODUCT_ERROR || Number(item[5]) === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) && Number(item[0]) !== 0)
+        setData(ordersFiltered);
       }
+      fetchOrderCompleted();
     }
-    fetchOrderRefund();
-  }, []);
+  }, [account, connector]);
 
   useEffect(() => {
     const total = data.reduce(

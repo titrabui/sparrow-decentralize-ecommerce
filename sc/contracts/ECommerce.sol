@@ -157,7 +157,8 @@ contract ECommerce is Ownable, ReentrancyGuard {
     event Shipped(uint256 orderId);
     event ReceiveOrder(uint256 orderId, OrderStatus _finalStatus);
     event RequestRefundOrder(uint256 orderId, OrderStatus _finalStatus);
-    event RefundOrder(uint256 orderId, OrderStatus _finalStatus);
+    event AcceptRefundOrder(uint256 orderId, OrderStatus _finalStatus);
+    event RejectRefundOrder(uint256 orderId, OrderStatus _finalStatus);
     event ShipperCancelOrder(uint256 orderId, OrderStatus _status);
 
     modifier existOrder(uint256 idOrder) {
@@ -263,6 +264,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
         (, address _buyer , , OrderStatus _status, , , , , ) = getOrderInfo(orderId);
         require(_buyer == _msgSender(), "Invalid buyer");
         require(_status != OrderStatus.RECEIVED, "Order has been received before");
+        require(_status != OrderStatus.REQUEST_REFUND, "Order has been request before");
         orderBook[orderId].status = OrderStatus.REQUEST_REFUND;
         orderBook[orderId].statusErrorType = _statusErrorType;
         emit RequestRefundOrder(orderId, OrderStatus.REQUEST_REFUND);
@@ -273,15 +275,15 @@ contract ECommerce is Ownable, ReentrancyGuard {
         require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order has been request refund");
         orderBook[orderId].status = OrderStatus.REJECT_REFUND;
+        emit RejectRefundOrder(orderId, OrderStatus.REJECT_REFUND);
     }
 
     // If have a problem with product
-    function refundOrder(uint256 orderId) external payable existOrder(orderId) {
+    function acceptRefundOrder(uint256 orderId) external payable existOrder(orderId) {
         (address _seller, address _buyer, address _shipper, OrderStatus _status, ErrorProduct _errStatusType, uint256 _quantity, uint256 _price, uint256 _shippingFee, uint256 _deposit) = getOrderInfo(orderId);
         require(_seller == _msgSender(), "Invalid seller");
         require(_status == OrderStatus.REQUEST_REFUND, "Order have to request refund");
         uint256 _amountForBuyer = _price * _quantity;
-        require(_buyer == _msgSender(), "Invalid buyer");
         if (_errStatusType == ErrorProduct.REFUNDED_PRODUCT_ERROR) {
             // handle refund product error
             // Step 1: Return money for buyer
@@ -294,6 +296,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
             payable(_buyer).transfer(_amountForBuyer);
         }
         orderBook[orderId].status = OrderStatus.APPROVAL_REFUND;
+        emit AcceptRefundOrder(orderId, OrderStatus.APPROVAL_REFUND);
     }
 
     function shipperCancelOrder(uint256 orderId) external payable existOrder(orderId) {

@@ -16,7 +16,7 @@ interface IToShipProductProps {
 const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
-  const { account, connector, library } = useWallet();
+  const { library } = useWallet();
   const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
 
   const quantity = data[6];

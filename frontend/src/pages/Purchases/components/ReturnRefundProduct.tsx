@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
+import request from 'utils/request';
 import p2 from 'assets/images/p2.png';
+import useWallet from 'hooks/useWallet';
+import { ORDER_STATUS } from 'utils/constants';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -14,41 +17,64 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 ) => {
   const { data } = props;
 
+  const { library } = useWallet();
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  let orderStatus;
+  if (data[4] === ORDER_STATUS.REQUEST_REFUND) {
+    orderStatus = 'Refund Request Processing';
+  } else if (data[4] === ORDER_STATUS.REJECT_REFUND) {
+    orderStatus = 'Request has been rejected';
+  } else {
+    orderStatus = 'Refund Completed';
+  }
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
   return (
     <Container>
       <ImageWrapper>
         <img src={p2} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newOrder.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newOrder.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={data?.color || ''} /> {data.color}
+            <Color className={newOrder?.color || ''} /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
+          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
         <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
       </Amount>
       <Price>
-        <Status>{data.status === 'wait' ? 'Refund Request Processing' : 'Refund Completed'}</Status>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        <Status>{orderStatus}</Status>
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
