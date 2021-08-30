@@ -38,7 +38,7 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
     else setCheckoutData({ ...checkoutData, billingAddress });
     const totalAmount = (amount * price) + shippingFee;
     if (connector) {
-      const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x44643a2A42EAeC3ea253555b848719124BD197Ae'
+      const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03'
       const contract = await getContract(connector);
       const order = await contract.methods
         .createOrder(

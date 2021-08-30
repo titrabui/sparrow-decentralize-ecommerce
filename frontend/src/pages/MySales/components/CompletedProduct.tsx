@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import p2 from 'assets/images/p2.png';
+import useWallet from 'hooks/useWallet';
+import request from 'utils/request';
 import RefundModal from './RefundModal';
 
 interface IToShipProductProps {
@@ -13,6 +15,21 @@ interface IToShipProductProps {
 const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
+  const { account, connector, library } = useWallet();
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
+
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
@@ -51,7 +68,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       </OrderInfo>
       <Price>
         <Status>Completed</Status>
-        {/* <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText> */}
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );

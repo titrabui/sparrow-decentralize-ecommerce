@@ -24,7 +24,7 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
       const fetchOrderCreated = async () => {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => Number(item[5]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCreated()
