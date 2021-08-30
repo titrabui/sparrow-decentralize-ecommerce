@@ -148,7 +148,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
     }
 
     mapping(uint256 => Order) public orderBook;
-    uint256 public _orderId = 0;
+    uint256 public _orderId = 1;
     Order[] orders;
 
     event Ordered(uint256 orderId, address _buyer, uint256 indexed _totalMoney);
@@ -177,7 +177,6 @@ contract ECommerce is Ownable, ReentrancyGuard {
     // Step 1 => order status: PAID
     // create an order
     function createOrder(address _seller, uint256 _quantity, uint256 _price, uint256 _shippingFee) external payable nonReentrant notExistOrder(_orderId) returns (Order memory) {
-        _orderId += 1;
         require(msg.value == ((_quantity * _price) + _shippingFee), "Value request not match with total amount");
         orderBook[_orderId] = Order(
             _orderId,
@@ -192,6 +191,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
             0
         );
         emit Ordered(_orderId, _msgSender(), msg.value);
+        _orderId += 1;
         return orderBook[_orderId];
     }
 
