@@ -161,12 +161,12 @@ contract ECommerce is Ownable, ReentrancyGuard {
     event ShipperCancelOrder(uint256 orderId, OrderStatus _status);
 
     modifier existOrder(uint256 idOrder) {
-        require(orderBook[idOrder].id != idOrder, "Not exists");
+        require(orderBook[idOrder].id != 0, "Not exists");
         _;
     }
 
     modifier notExistOrder(uint256 idOrder) {
-        require(orderBook[idOrder].id == idOrder, "Already exists");
+        require(orderBook[idOrder].id == 0, "Already exists");
         _;
     }
 
@@ -207,16 +207,16 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     // Step 3: order status: CONFIRMED_PICKUP
     // stake an order
-    function shipperStakeOrder(uint256 orderId) external payable nonReentrant existOrder(orderId) {
+    function shipperStakeOrder(uint256 idOrder) external payable nonReentrant existOrder(idOrder) {
         // check money from FE and in Order
-        (,,, OrderStatus _status,, uint256 _quantity, uint256 _price,,) = getOrderInfo(orderId);
+        (,,, OrderStatus _status,, uint256 _quantity, uint256 _price,,) = getOrderInfo(idOrder);
         require(msg.value == (_quantity * _price * 20) / 100, "Value not match with deposit");
         require(_status == OrderStatus.READY_TO_PICKUP, "Order has not confirm yet");
 
-        orderBook[orderId].shipper = _msgSender();
-        orderBook[orderId].deposit = msg.value;
-        orderBook[orderId].status = OrderStatus.CONFIRMED_PICKUP;
-        emit Staked(orderId, _msgSender(), msg.value);
+        orderBook[idOrder].shipper = _msgSender();
+        orderBook[idOrder].deposit = msg.value;
+        orderBook[idOrder].status = OrderStatus.CONFIRMED_PICKUP;
+        emit Staked(idOrder, _msgSender(), msg.value);
     }
 
     // Step 4: order status: SHIPPED

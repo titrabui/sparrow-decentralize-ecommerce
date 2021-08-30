@@ -64,7 +64,6 @@ const Container = styled(Box)`
   border-radius: 24px;
   position: relative;
   width: 900px;
-  min-height: 600px;
   height: auto;
   max-height: 82vh;
   overflow-x: auto;

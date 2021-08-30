@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
+import request from 'utils/request';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 import p2 from 'assets/images/p2.png';
 
 interface ICompletedProductProps {
@@ -11,6 +14,19 @@ interface ICompletedProductProps {
 
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
   const { data } = props;
+  const { library } = useWallet();
+  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
+  const quantity = data[6];
+  const price = library?.utils?.fromWei(data[7], 'ether');
+  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await request.getData(`/orders/${data[0]}`, {})
+      setNewOrder(response.data[0])
+    }
+    fetchOrder();
+  }, [data]);
 
   return (
     <Container>
@@ -18,27 +34,27 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
         <img src={p2} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{data.name}</Name>
+        <Name>{newOrder.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{data.size}</SizeButton>
+          <SizeButton>{newOrder.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {data.color}
+            <Color /> {newOrder.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{data.addr}</ShippingAddress>
+          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
+          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -46,7 +62,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
       </Amount>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
       </Price>
     </Container>
   );
