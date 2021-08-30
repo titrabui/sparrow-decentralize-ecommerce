@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import { DatePicker, Empty } from 'antd';
+import useWallet from 'hooks/useWallet';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { DatePicker } from 'antd';
-import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import ToShipProduct from './ToShipProduct';
 
 interface IToShipProps {
@@ -24,7 +24,7 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
       const fetchOrderCreated = async () => {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => Number(item[5]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
+        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCreated()
@@ -49,9 +49,11 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
         <StyledButton>Search</StyledButton>
       </FilterContainer>
 
-      {data.map((item: any) => (
-        <ToShipProduct data={item} key={item?.id} />
-      ))}
+      {data?.length ? (
+        data.map((item: any) => <ToShipProduct data={item} key={item?.id} />)
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
     </Container>
   );
 };

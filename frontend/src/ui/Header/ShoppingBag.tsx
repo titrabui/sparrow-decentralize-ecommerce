@@ -1,12 +1,14 @@
-import React from 'react';
+import { message, Radio } from 'antd';
 import shoppingBag from 'assets/images/shoppingBag.svg';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import useWallet from 'hooks/useWallet';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { routesEnum } from 'routes/routesData';
+import { history } from 'store';
+import styled from 'styled-components';
 import Button from 'ui/Button';
-import isMember from 'utils/isMember';
 import Modal from 'ui/Modal';
-import { Radio, message } from 'antd';
+import isMember from 'utils/isMember';
 
 const ShoppingBag: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -19,8 +21,23 @@ const ShoppingBag: React.FC = () => {
   const onChange = (e: any) => {
     setMemberType(e.target.value);
   };
+  let route = '';
 
   const handleSubmit = () => {
+    const currentRoute = history.location.pathname;
+    switch (memberType) {
+      case 'Buyer':
+        route = routesEnum.purchases;
+        break;
+      case 'Seller':
+        route = routesEnum.mySales;
+        break;
+      case 'Shipper':
+        route = routesEnum.shipping;
+        break;
+      default:
+        route = routesEnum.home;
+    }
     const buyers = localStorage.getItem('Buyer') && JSON.parse(localStorage.getItem('Buyer') || '');
     const sellers =
       localStorage.getItem('Seller') && JSON.parse(localStorage.getItem('Seller') || '');
@@ -50,7 +67,8 @@ const ShoppingBag: React.FC = () => {
     }
     message.success(`You are now a ${memberType}`);
     setVisible(false);
-    window.location.reload()
+    if (currentRoute !== routesEnum.home) history.push(route);
+    window.location.reload();
   };
   return (
     <Container>

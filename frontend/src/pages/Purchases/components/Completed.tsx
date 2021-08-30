@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import { DatePicker, Empty } from 'antd';
+import Search from 'antd/lib/transfer/search';
+import useWallet from 'hooks/useWallet';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { DatePicker } from 'antd';
-import Search from 'antd/lib/transfer/search';
-import request from 'utils/request';
-import useWallet from 'hooks/useWallet';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import CompletedProduct from './CompletedProduct';
@@ -26,9 +25,11 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
       const fetchOrderCompleted = async () => {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED)
+        const ordersFiltered = orders.filter(
+          (item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED
+        );
         setData(ordersFiltered);
-      }
+      };
       fetchOrderCompleted();
     }
   }, [account, connector]);
@@ -53,9 +54,11 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
         <StyledButton>Search</StyledButton>
       </CheckAll>
 
-      {data.map((item: any) => (
-        <CompletedProduct data={item} key={item?.id} />
-      ))}
+      {data?.length ? (
+        data.map((item: any) => <CompletedProduct data={item} key={item?.id} />)
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
     </Container>
   );
 };

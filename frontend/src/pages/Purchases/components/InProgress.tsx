@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import { DatePicker, Empty } from 'antd';
+import Search from 'antd/lib/transfer/search';
+import useWallet from 'hooks/useWallet';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { DatePicker } from 'antd';
-import Search from 'antd/lib/transfer/search';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
-import isMember from 'utils/isMember';
 import { getContract } from 'utils/getContract';
-import useWallet from 'hooks/useWallet';
+import isMember from 'utils/isMember';
 import InProgressProduct from './InProgressProduct';
 
 interface IInProgressProps {
@@ -55,10 +55,12 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
         <DatePicker />
         <StyledButton>Search</StyledButton>
       </CheckAll>
-
-      {data.map((item: any) => (
-        <InProgressProduct data={item} key={item?.id} />
-      ))}
+      
+      {data?.length ? (
+        data.map((item: any) => <InProgressProduct data={item} key={item?.id} />)
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
     </Container>
   );
 };
