@@ -7,7 +7,6 @@ import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
-import { getContract } from 'utils/getContract';
 import ToShipProduct from './ToShipProduct';
 
 interface IToShipProps {

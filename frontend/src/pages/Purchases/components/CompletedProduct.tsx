@@ -6,7 +6,6 @@ import Button from 'ui/Button';
 import request from 'utils/request';
 import useWallet from 'hooks/useWallet';
 import getImage from 'utils/getImage';
-import p2 from 'assets/images/p2.png';
 
 interface ICompletedProductProps {
   data: any;
