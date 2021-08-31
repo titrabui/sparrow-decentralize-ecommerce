@@ -23,15 +23,13 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   const { account, connector, library } = useWallet();
 
   const renderStatus = () => {
-    switch (data.status) {
-      case 'wait':
+    switch (data[4]) {
+      case ORDER_STATUS.REQUEST_REFUND.toString():
         return <Status $color='#e86c13'>Wait for Confirmation</Status>;
-      case 'reject':
+      case ORDER_STATUS.REJECT_REFUND.toString():
         return <Status $color='red'>Refund Reject</Status>;
-      case 'confirm':
-        return <Status $color='green'>Confirmed</Status>;
-      case 'complete':
-        return <Status $color='#e86c13'>Refund Completed</Status>;
+      case ORDER_STATUS.APPROVAL_REFUND.toString():
+        return <Status $color='green'>Refund Confirmed</Status>;
       default:
         return '';
     }
