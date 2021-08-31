@@ -15,25 +15,24 @@ import ReturnRefundProduct from './ReturnRefundProduct';
 
 interface IReturnRefundProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
 
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
-  const { account, connector, library } = useWallet();
+  const { account, library } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderRefund = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND || Number(item[4]) === ORDER_STATUS.REQUEST_REFUND) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND || Number(item[4]) === ORDER_STATUS.REQUEST_REFUND) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderRefund()
     }
-  }, [account, connector]);
+  }, [account, orders]);
 
   useEffect(() => {
     const total = data.reduce(

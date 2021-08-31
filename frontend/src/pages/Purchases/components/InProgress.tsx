@@ -14,26 +14,23 @@ import InProgressProduct from './InProgressProduct';
 
 interface IInProgressProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
-  const { account, connector, library } = useWallet();
+  const { account } = useWallet();
 
   useEffect(() => {
     if (account) {
-      const type = isMember(account || 'buyer').toLowerCase()
       const fetchOrderCreated = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-
-        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.PAID || Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.PAID || Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCreated()
     }
-  }, [account, connector]);
+  }, [account, orders]);
 
 
   useEffect(() => {
@@ -55,7 +52,7 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
         <DatePicker />
         <StyledButton>Search</StyledButton>
       </CheckAll>
-      
+
       {data?.length ? (
         data.map((item: any) => <InProgressProduct data={item} key={item?.id} />)
       ) : (

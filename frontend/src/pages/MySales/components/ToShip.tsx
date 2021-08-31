@@ -12,24 +12,23 @@ import ToShipProduct from './ToShipProduct';
 
 interface IToShipProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
   const { account, connector } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderCreated = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCreated()
     }
-  })
+  }, [orders, account])
 
   useEffect(() => {
     const total = data.reduce(

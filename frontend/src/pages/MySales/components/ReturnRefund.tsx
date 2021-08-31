@@ -7,33 +7,30 @@ import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { ERROR_STATUS } from 'utils/constants';
-import { getContract } from 'utils/getContract';
-import request from 'utils/request';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 const { Option } = Select;
 
 interface IReturnRefundProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
 
-  const { account, connector } = useWallet();
+  const { account } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderCompleted = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => (Number(item[5]) === ERROR_STATUS.REFUNDED_PRODUCT_ERROR || Number(item[5]) === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter((item: any) => (Number(item[5]) === ERROR_STATUS.REFUNDED_PRODUCT_ERROR || Number(item[5]) === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderCompleted();
     }
-  }, [account, connector]);
+  }, [account, orders]);
 
   useEffect(() => {
     const total = data.reduce(
