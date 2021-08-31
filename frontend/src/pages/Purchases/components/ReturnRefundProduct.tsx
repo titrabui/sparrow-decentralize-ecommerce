@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import request from 'utils/request';
-import p2 from 'assets/images/p2.png';
 import useWallet from 'hooks/useWallet';
 import { ORDER_STATUS } from 'utils/constants';
 import getImage from 'utils/getImage';

@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import { Checkbox, notification } from 'antd';
-import p2 from 'assets/images/p2.png';
-import Input from 'ui/Input';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import { ORDER_STATUS } from 'utils/constants';
