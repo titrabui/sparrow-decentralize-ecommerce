@@ -62,6 +62,9 @@ const GlobalStyles = createGlobalStyle<{ theme: ThemeTypes }>`
     border-radius:8px;
   }
 
+.anticon-close-circle {
+  margin-left:8px;
+}
 `;
 
 export default GlobalStyles;

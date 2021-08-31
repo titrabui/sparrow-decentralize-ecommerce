@@ -20,25 +20,9 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
 
-  const [newData, setNewData] = useState({
-    name: null,
-    size: null,
-    color: null,
-    shippingAddress: null,
-    productId: 1
-  });
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewData({ ...newData, ...response.data[0] });
-    };
-    fetchOrder();
-  }, [data, newData]);
-
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+  const { quantity } = data;
+  const price = data?.price;
+  const shippingFee = data?.shippingFee;
 
   const handelBuyerReceiveOrder = async (orderId: number) => {
     if (connector) {
@@ -89,30 +73,30 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data[0]} />
       <ImageWrapper>
-        <img src={getImage(newData.productId)} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newData.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newData.size}ft</SizeButton>
+          <SizeButton>{data.size}ft</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={newData?.color || ''} /> {newData.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newData.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -124,7 +108,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data[0])}>
+            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data.id)}>
               Order Received
             </AddPlusButton>
             <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
@@ -135,7 +119,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
       </Amount>
       <Price>
         <Status>{renderStatus(data.status)}</Status>
-        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

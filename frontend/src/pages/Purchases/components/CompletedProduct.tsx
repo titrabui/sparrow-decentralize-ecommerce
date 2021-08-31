@@ -21,9 +21,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
     shippingAddress: null,
     productId: 1
   });
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+  const { quantity, price, shippingFee } = data;
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -36,30 +34,30 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
   return (
     <Container>
       <ImageWrapper>
-        <img src={getImage(newOrder.productId)} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newOrder.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newOrder.size}</SizeButton>
+          <SizeButton>{data.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={newOrder?.color || ''} /> {newOrder.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -67,7 +65,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
       </Amount>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

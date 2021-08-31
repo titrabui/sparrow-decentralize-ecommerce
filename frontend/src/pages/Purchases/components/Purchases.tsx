@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Collapse } from 'antd';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -7,6 +8,8 @@ import { Text } from 'ui/Typography';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import { SELLER_ACCOUNT_ADDRESS } from 'environment';
+import request from 'utils/request';
+
 import Completed from './Completed';
 import InProgress from './InProgress';
 import ReturnRefund from './ReturnRefund';
@@ -15,7 +18,11 @@ const { Panel } = Collapse;
 const Purchases: React.FC = () => {
   const [, setTotal] = useState(0);
   const [orders, setOrders] = useState([] as any);
+  const [ordersBE, setOrdersBE] = useState([] as any);
+
   const { account, connector } = useWallet();
+  const sellerAddress =
+    process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03';
   useEffect(() => {
     if (account) {
       const fetchOrderCreated = async () => {
@@ -23,10 +30,15 @@ const Purchases: React.FC = () => {
         const allOrders = await contract.methods.getAllOrders().call();
         const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
         setOrders(ordersFiltered);
-      }
-      fetchOrderCreated()
+        const result = await request.getData(`/orders/buyers`, {});
+        const orderMapWithSC = result?.data?.filter((item: any) =>
+          ordersFiltered.some((order: any) => order[0] === item.id)
+        );
+        setOrdersBE(orderMapWithSC);
+      };
+      fetchOrderCreated();
     }
-  }, [account, connector])
+  }, [account, connector, sellerAddress]);
 
   return (
     <MainContainer mt='60px'>
@@ -35,11 +47,10 @@ const Purchases: React.FC = () => {
         <StyledCollapse defaultActiveKey={['1']}>
           <Panel header='In-Progress Order' key='1'>
             {' '}
-            <InProgress setTotal={setTotal} orders={orders} />
+            <InProgress setTotal={setTotal} orders={ordersBE} />
           </Panel>
           <Panel header='Completed Order' key='2'>
-            {' '}
-            <Completed setTotal={setTotal} orders={orders} />
+            <Completed setTotal={setTotal} orders={ordersBE} />
           </Panel>
           <Panel header='Returned/Refund' key='3'>
             {' '}

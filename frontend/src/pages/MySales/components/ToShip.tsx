@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 import { DatePicker, Empty } from 'antd';
 import useWallet from 'hooks/useWallet';
@@ -18,16 +19,47 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
   const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
   const { account, connector } = useWallet();
+  const [searchData, setSearchData] = useState([] as any);
+  const [searchInput, setSearchInput] = useState({
+    text: '',
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
+
+  useEffect(() => {
+    const filterByFromData =
+      searchInput.from !== ''
+        ? data.filter((item: any) => item.createdAt > searchInput.from)
+        : data;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput]);
+
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
 
   useEffect(() => {
     if (account) {
       const fetchOrderCreated = async () => {
-        const ordersFiltered = await orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.PAID && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter(
+          (item: any) => item.status === ORDER_STATUS.PAID && Number(item[0]) !== 0
+        );
         setData(ordersFiltered);
-      }
-      fetchOrderCreated()
+      };
+      fetchOrderCreated();
     }
-  }, [orders, account])
+  }, [orders, account]);
 
   useEffect(() => {
     const total = data.reduce(
@@ -37,18 +69,24 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
     setTotal(total);
   }, [data, setTotal]);
 
+  const mapData = isSearch ? searchData : data;
+
   return (
     <Container w='1200px' h='400px'>
       <FilterContainer>
         <Text>Order Date</Text>
-        <DatePicker />
+         <DatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
         <Text>to</Text>
-        <DatePicker />
-        <StyledButton>Search</StyledButton>
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
+        <StyledButton onClick={handleSearch}>Search</StyledButton>
       </FilterContainer>
 
-      {data?.length ? (
-        data.map((item: any) => <ToShipProduct data={item} key={item?.id} />)
+      {mapData?.length ? (
+        mapData.map((item: any) => <ToShipProduct data={item} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
