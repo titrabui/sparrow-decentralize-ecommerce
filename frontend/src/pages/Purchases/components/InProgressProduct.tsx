@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import { Checkbox, notification } from 'antd';
+import { notification } from 'antd';
 import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
-import request from 'utils/request';
+import { getContract } from 'utils/getContract';
 import getImage from 'utils/getImage';
+import request from 'utils/request';
 import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
@@ -60,6 +60,8 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
             status: ORDER_STATUS.RECEIVED
           });
         });
+
+        window.location.reload();
     }
   };
 

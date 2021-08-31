@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import p2 from 'assets/images/p2.png';
-import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
+import useWallet from 'hooks/useWallet';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import getImage from 'utils/getImage';
 import request from 'utils/request';
 import RefundModal from './RefundModal';
@@ -61,6 +60,8 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
             status: ORDER_STATUS.READY_TO_PICKUP
           });
         });
+
+        window.location.reload();
     }
   };
   return (
@@ -75,7 +76,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newData.size}</SizeButton>
+          <SizeButton>{newData.size}ft</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>

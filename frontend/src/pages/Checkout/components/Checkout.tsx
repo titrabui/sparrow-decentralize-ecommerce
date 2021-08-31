@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import MainContainer from 'ui/MainContainer';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import MainContainer from 'ui/MainContainer';
 import { v4 as uuidv4 } from 'uuid';
-import Right from './Right';
 import Left from './Left';
+import Right from './Right';
 
 const Checkout: React.FC = () => {
   const [total, setTotal] = useState(0);
@@ -13,7 +13,11 @@ const Checkout: React.FC = () => {
     const cart = localStorage.getItem('cart');
     if (cart) {
       const parseCart = JSON.parse(cart);
-      setCheckoutData({ ...parseCart[0], orderId: uuidv4() });
+      setCheckoutData({
+        ...parseCart[0],
+        shippingFee: parseCart[0].shippingFee || 0,
+        orderId: uuidv4()
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

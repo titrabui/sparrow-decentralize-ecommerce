@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
+import { Input } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { Input } from 'antd';
+import { Text } from 'ui/Typography';
 
 interface IRightProps {
   total: number;
@@ -20,14 +20,14 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
         <SummaryContent>
           Subtotal :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
-            {checkoutData?.price * checkoutData?.amount || 0} ETH
+            {(checkoutData?.price * checkoutData?.amount || 0).toFixed(2)} ETH
           </Text>
         </SummaryContent>
         <SummaryContent>
           Shipping Fee :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            {checkoutData?.shippingFee || 0} ETH
+            {(checkoutData?.shippingFee || 0).toFixed(2)} ETH
           </Text>
         </SummaryContent>
       </Summary>
@@ -45,7 +45,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
           </Text>
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            {checkoutData?.price * checkoutData?.amount + checkoutData?.shippingFee || 0} ETH
+            {(checkoutData?.price * checkoutData?.amount + checkoutData?.shippingFee || 0).toFixed(2)} ETH
           </Text>
         </CheckoutContent>
       </Checkout>

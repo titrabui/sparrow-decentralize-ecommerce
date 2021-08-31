@@ -1,9 +1,9 @@
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
 import request from 'utils/request';
-import { Link } from 'ui/Typography';
 
 const CompleteTable: React.FC = () => {
 
@@ -53,9 +53,9 @@ const CompleteTable: React.FC = () => {
       title: 'View More',
       dataIndex: 'viewMore',
       render: () => (
-        <Link $color='#40a9ff' href='http'>
-          View More
-        </Link>
+        <StyleButton>
+          <Text $color='#40a9ff'>View More</Text>
+        </StyleButton>
       )
     },
     {
@@ -82,6 +82,11 @@ const StyleTable = styled(Table)`
   .ant-table-thead > tr > th {
     font-weight: bold;
   }
+`;
+
+const StyleButton = styled(Button)`
+  font-weight: bold;
+  border: none;
 `;
 
 export default CompleteTable;

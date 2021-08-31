@@ -1,8 +1,8 @@
-import { notification, Table } from 'antd';
+import { Button, notification, Table } from 'antd';
 import useWallet from 'hooks/useWallet';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'ui/Typography';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
@@ -33,10 +33,10 @@ const PendingTable: React.FC = () => {
         const users = await Promise.all(promisesGetUsers);
         users.sort((a, b) => b.id - a.id);
         for (let j = 0; j < users.length; j += 1) {
-          const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
+          const convertedOrderDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
           ordersPending.push({
             key: users[j].id,
-            orderDate: convertedOrdeDate,
+            orderDate: convertedOrderDate,
             status: 'Ready to Pickup',
             orderId: orderInfo[j].id,
             parcelType: 'California USA',
@@ -80,6 +80,8 @@ const PendingTable: React.FC = () => {
             status: ORDER_STATUS.CONFIRMED_PICKUP
           });
         });
+
+        window.location.reload();
     }
   };
 
@@ -107,6 +109,8 @@ const PendingTable: React.FC = () => {
             status: ORDER_STATUS.READY_TO_PICKUP
           });
         });
+
+        window.location.reload();
     }
   };
 
@@ -133,23 +137,25 @@ const PendingTable: React.FC = () => {
       title: 'View More',
       dataIndex: 'viewMore',
       render: () => (
-        <Link $color='#40a9ff' href='http'>
-          View More
-        </Link>
+        <StyleButton>
+          <Text $color='#40a9ff'>View More</Text>
+        </StyleButton>
       )
     },
     {
       title: 'Confirm Shipping',
       dataIndex: 'confirmShipping',
       render: (record: any) => (
-        <div style={{ fontWeight: 'bold' }}>
-          <Link $color='#4cd038' href='http' onClick={(e) => handleShipperPickupOrder(e, record)}>
-            Confirm
-          </Link>
-          {' | '}
-          <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
-            Reject
-          </Link>
+        <div>
+          <StyleButton onClick={(e) => handleShipperPickupOrder(e, record)}>
+            <Text $color='#4cd038'>Confirm</Text>
+          </StyleButton>
+          <StyleButton
+            style={{ marginLeft: '10px' }}
+            onClick={(e) => handleCancelOrderPickedUp(e, record)}
+          >
+            <Text $color='#ff5e5e'>Reject</Text>
+          </StyleButton>
         </div>
       )
     }
@@ -174,6 +180,11 @@ const StyleTable = styled(Table)`
   .ant-table-thead > tr > th {
     font-weight: bold;
   }
+`;
+
+const StyleButton = styled(Button)`
+  font-weight: bold;
+  border: none;
 `;
 
 export default PendingTable;
