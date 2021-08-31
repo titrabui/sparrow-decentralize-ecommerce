@@ -7,29 +7,27 @@ import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
-import { getContract } from 'utils/getContract';
 import ShippingProduct from './ShippingProduct';
 
 interface IShippingProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const Shipping: React.FC<IShippingProps> = (props: IShippingProps) => {
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
-  const { account, connector } = useWallet();
+  const { account } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderConfirmed = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP) && Number(item[0]) !== 0)
         setData(ordersFiltered);
       }
       fetchOrderConfirmed();
     }
-  }, [account, connector]);
+  }, [account, orders]);
 
 
   useEffect(() => {

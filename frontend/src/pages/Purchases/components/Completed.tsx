@@ -13,26 +13,23 @@ import CompletedProduct from './CompletedProduct';
 
 interface ICompletedProps {
   setTotal: (total: number) => void;
+  orders: any;
 }
 
 const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
-  const { setTotal } = props;
+  const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
   const { account, connector } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderCompleted = async () => {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter(
-          (item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED
-        );
+        const ordersFiltered = await orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED);
         setData(ordersFiltered);
       };
       fetchOrderCompleted();
     }
-  }, [account, connector]);
+  }, [account, orders]);
 
   useEffect(() => {
     const total = data.reduce(
