@@ -6,6 +6,7 @@ import { Collapse } from 'antd';
 import { Text } from 'ui/Typography';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import { SELLER_ACCOUNT_ADDRESS } from 'environment';
 import ToShip from './ToShip';
 import Shipping from './Shipping';
 import ReturnRefund from './ReturnRefund';
@@ -16,18 +17,17 @@ const MySales: React.FC = () => {
   const [, setTotal] = useState(0);
   const [orders, setOrders] = useState([] as any);
   const { account, connector } = useWallet();
-  const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03'
   useEffect(() => {
     if (account) {
       const fetchOrderCreated = async () => {
         const contract = await getContract(connector);
         const allOrders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = allOrders.filter((item: any) => item[1] === sellerAddress);
+        const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
         setOrders(ordersFiltered);
       }
       fetchOrderCreated()
     }
-  }, [account, connector, sellerAddress])
+  }, [account, connector])
 
   return (
     <MainContainer mt='60px'>

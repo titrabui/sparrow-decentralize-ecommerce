@@ -10,6 +10,7 @@ import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 import { ORDER_STATUS } from 'utils/constants';
+import { SELLER_ACCOUNT_ADDRESS } from 'environment';
 
 interface IPaymentProps {
   setStep: any;
@@ -26,8 +27,7 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const [type, setType] = useState(0);
   const [billingAddress, setBillingAddress] = useState('');
 
-  const renderAddress = () => `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${
-      country ? `${country}` : ''
+  const renderAddress = () => `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${country ? `${country}` : ''
     }`;
 
   const handleComplete = async () => {
@@ -35,11 +35,10 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
     else setCheckoutData({ ...checkoutData, billingAddress });
     const totalAmount = amount * price + shippingFee;
     if (connector) {
-      const sellerAddress = process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03'
       const contract = await getContract(connector);
       const order = await contract.methods
         .createOrder(
-          sellerAddress,
+          SELLER_ACCOUNT_ADDRESS,
           amount,
           library?.utils?.toWei(price, 'ether'),
           library?.utils?.toWei(shippingFee.toString(), 'ether')
