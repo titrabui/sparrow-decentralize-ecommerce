@@ -17,19 +17,17 @@ import ReturnRefund from './ReturnRefund';
 const { Panel } = Collapse;
 const Purchases: React.FC = () => {
   const [, setTotal] = useState(0);
-  const [orders, setOrders] = useState([] as any);
   const [ordersBE, setOrdersBE] = useState([] as any);
 
   const { account, connector } = useWallet();
   const sellerAddress =
-    process.env.SELLER_ACCOUNT_ADDRESS || '0x520C5A9555f73E4935048954e7f660ED27886a03';
+    process.env.SELLER_ACCOUNT_ADDRESS || '0xBcd4042DE499D14e55001CcbB24a551F3b954096';
   useEffect(() => {
     if (account) {
       const fetchOrderCreated = async () => {
         const contract = await getContract(connector);
         const allOrders = await contract.methods.getAllOrders().call();
         const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
-        setOrders(ordersFiltered);
         const result = await request.getData(`/orders/buyers`, {});
         const orderMapWithSC = result?.data?.filter((item: any) =>
           ordersFiltered.some((order: any) => order[0] === item.id)
@@ -39,7 +37,6 @@ const Purchases: React.FC = () => {
       fetchOrderCreated();
     }
   }, [account, connector, sellerAddress]);
-
   return (
     <MainContainer mt='60px'>
       <PageName> Purchases</PageName>
@@ -54,7 +51,7 @@ const Purchases: React.FC = () => {
           </Panel>
           <Panel header='Returned/Refund' key='3'>
             {' '}
-            <ReturnRefund setTotal={setTotal} orders={orders} />
+            <ReturnRefund setTotal={setTotal} orders={ordersBE} />
           </Panel>
         </StyledCollapse>
       </StyledBox>

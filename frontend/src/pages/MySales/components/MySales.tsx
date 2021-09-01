@@ -16,7 +16,6 @@ import Completed from './Completed';
 const { Panel } = Collapse;
 const MySales: React.FC = () => {
   const [, setTotal] = useState(0);
-  const [, setOrders] = useState([] as any);
   const [ordersBE, setOrdersBE] = useState([] as any);
   const { account, connector } = useWallet();
   useEffect(() => {
@@ -25,7 +24,6 @@ const MySales: React.FC = () => {
         const contract = await getContract(connector);
         const allOrders = await contract.methods.getAllOrders().call();
         const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
-        setOrders(ordersFiltered);
         const result = await request.getData(`/orders/buyers`, {});
         const orderMapWithSC = result?.data?.filter((item: any) =>
           ordersFiltered.some((order: any) => order[0] === item.id)

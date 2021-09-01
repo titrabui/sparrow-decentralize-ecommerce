@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import request from 'utils/request';
-import useWallet from 'hooks/useWallet';
 import getImage from 'utils/getImage';
 
 interface ICompletedProductProps {
@@ -13,23 +11,7 @@ interface ICompletedProductProps {
 
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
   const { data } = props;
-  const { library } = useWallet();
-  const [newOrder, setNewOrder] = useState({
-    name: null,
-    size: null,
-    color: null,
-    shippingAddress: null,
-    productId: 1
-  });
   const { quantity, price, shippingFee } = data;
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewOrder(response.data[0]);
-    };
-    fetchOrder();
-  }, [data]);
 
   return (
     <Container>

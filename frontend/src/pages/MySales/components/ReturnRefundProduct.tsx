@@ -19,7 +19,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
   const { data } = props;
-  const { account, connector, library } = useWallet();
+  const { account, connector} = useWallet();
 
   const renderStatus = () => {
     switch (data.status) {
@@ -126,7 +126,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
       </Amount>
       <Price>
         {renderStatus()}
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

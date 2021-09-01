@@ -42,7 +42,7 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
 
   useEffect(() => {
     const filterData = data.filter((order: any) =>
-      JSON.stringify(order).includes(searchInput?.text)
+    JSON.stringify(order).toLowerCase().includes(searchInput?.text?.toLowerCase())
     );
     const filterByFromData =
       searchInput.from !== ''
@@ -60,6 +60,7 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const handleSearch = () => {
     setIsSearch(true);
   };
+  
   const handleChangeSearch = (key: string, value: any) => {
     setSearchInput({ ...searchInput, [key]: value });
   };

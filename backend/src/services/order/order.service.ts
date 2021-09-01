@@ -32,9 +32,7 @@ export class OrderService {
 
   async getOrdersAllBuyer() {
     let allOrders = await this.orderRepo.getAll();
-    let orders = allOrders;
-
-    return orders.sort((a, b) => b.createdAt - a.createdAt);
+    return allOrders.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   async getOrderById(orderId: string) {

@@ -59,9 +59,9 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
       const fetchOrderCompleted = async () => {
         const ordersFiltered = await orders.filter(
           (item: any) =>
-            (Number(item[5]) === ERROR_STATUS.REFUNDED_PRODUCT_ERROR ||
-              Number(item[5]) === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) &&
-            Number(item[0]) !== 0
+            (item.status === ERROR_STATUS.REFUNDED_PRODUCT_ERROR ||
+              item.status === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) &&
+            item.id !== 0
         );
         setData(ordersFiltered);
       };
