@@ -71,7 +71,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   };
   return (
     <Container>
-      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data[0]} />
+      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>

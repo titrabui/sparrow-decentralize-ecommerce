@@ -17,10 +17,10 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
     state,
     billingAddress,
     shippingMethod,
-    orderId,
     amount,
     price,
-    shippingFee
+    shippingFee,
+    id
   } = checkoutData;
   return (
     <Container>
@@ -28,7 +28,7 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
         <CheckCircleOutlined />
         <div>
           {' '}
-          <Text $size='16px'>Order {orderId}</Text>
+          <Text $size='16px'>Order {id}</Text>
           <Text $size='24px' strong>
             Thank you, {`${firstName || ''} ${lastName}`}!
           </Text>
