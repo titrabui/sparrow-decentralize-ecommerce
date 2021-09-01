@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import request from 'utils/request';
-import useWallet from 'hooks/useWallet';
 import getImage from 'utils/getImage';
 
 interface ICompletedProductProps {
@@ -13,53 +11,35 @@ interface ICompletedProductProps {
 
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
   const { data } = props;
-  const { library } = useWallet();
-  const [newOrder, setNewOrder] = useState({
-    name: null,
-    size: null,
-    color: null,
-    shippingAddress: null,
-    productId: 1
-  });
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewOrder(response.data[0]);
-    };
-    fetchOrder();
-  }, [data]);
+  const { quantity, price, shippingFee } = data;
 
   return (
     <Container>
       <ImageWrapper>
-        <img src={getImage(newOrder.productId)} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newOrder.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newOrder.size}</SizeButton>
+          <SizeButton>{data.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={newOrder?.color || ''} /> {newOrder.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
@@ -67,7 +47,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
       </Amount>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

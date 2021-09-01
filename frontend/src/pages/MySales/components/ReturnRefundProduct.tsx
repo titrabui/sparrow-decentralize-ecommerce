@@ -19,11 +19,10 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
   const { data } = props;
-  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
-  const { account, connector, library } = useWallet();
+  const { account, connector} = useWallet();
 
   const renderStatus = () => {
-    switch (data[4]) {
+    switch (data.status) {
       case ORDER_STATUS.REQUEST_REFUND.toString():
         return <Status $color='#e86c13'>Wait for Confirmation</Status>;
       case ORDER_STATUS.REJECT_REFUND.toString():
@@ -35,17 +34,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
     }
   };
 
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewOrder(response.data[0])
-    }
-    fetchOrder();
-  }, [data]);
-
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
+  const { quantity, price, shippingFee } = data;
 
   const handleConfirmRefundOrder = async (orderId: string) => {
     if (connector) {
@@ -99,37 +88,37 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newOrder.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newOrder.size}</SizeButton>
+          <SizeButton>{data.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color /> {newOrder.color}
+            <Color /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
         {
-          data[4] === ORDER_STATUS.APPROVAL_REFUND.toString() || data[4] === ORDER_STATUS.REJECT_REFUND.toString() ? (
+          data.status === ORDER_STATUS.APPROVAL_REFUND.toString() || data.status === ORDER_STATUS.REJECT_REFUND.toString() ? (
             <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
           ) : (
             <>
-              <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data[0])}>Reject</AddPlusButton>
-              <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data[0])}>Confirm</AddPlusButton>
+              <AddPlusButton $bgType='error' onClick={() => handleRejectRequestRefund(data.id)}>Reject</AddPlusButton>
+              <AddPlusButton $color='black' onClick={() => handleConfirmRefundOrder(data.id)}>Confirm</AddPlusButton>
             </>
           )
         }
@@ -137,7 +126,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
       </Amount>
       <Price>
         {renderStatus()}
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

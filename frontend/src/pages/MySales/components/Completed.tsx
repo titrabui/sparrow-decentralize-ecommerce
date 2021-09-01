@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 import { DatePicker, Empty } from 'antd';
 import useWallet from 'hooks/useWallet';
@@ -18,13 +19,46 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
   const { account } = useWallet();
+  const [searchData, setSearchData] = useState([] as any);
+  const [searchInput, setSearchInput] = useState({
+    text: '',
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
+
+  useEffect(() => {
+    const filterByFromData =
+      searchInput.from !== ''
+        ? data.filter((item: any) => item.createdAt > searchInput.from)
+        : data;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput]);
+
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
+
+  const mapData = isSearch ? searchData : data;
 
   useEffect(() => {
     if (account) {
       const fetchOrderCompleted = async () => {
-        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED && Number(item[0]) !== 0)
+        const ordersFiltered = orders.filter(
+          (item: any) => item.status === ORDER_STATUS.RECEIVED && item.id !== 0
+        );
         setData(ordersFiltered);
-      }
+      };
       fetchOrderCompleted();
     }
   }, [account, orders]);
@@ -41,14 +75,18 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
     <Container w='1200px' h='400px'>
       <FilterContainer>
         <Text>Order Date</Text>
-        <DatePicker />
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
         <Text>to</Text>
-        <DatePicker />
-        <StyledButton>Search</StyledButton>
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
+        <StyledButton onClick={handleSearch}>Search</StyledButton>
       </FilterContainer>
 
-      {data?.length ? (
-        data.map((item: any) => <CompletedProduct data={item} key={item?.id} />)
+      {mapData?.length ? (
+        mapData.map((item: any) => <CompletedProduct data={item} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

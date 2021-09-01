@@ -17,50 +17,32 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
-  const [newOrder, setNewOrder] = useState({
-    name: null,
-    size: null,
-    color: null,
-    shippingAddress: null,
-    productId: 1
-  });
-
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewOrder(response.data[0]);
-    };
-    fetchOrder();
-  }, [data]);
+  const { quantity, price, shippingFee } = data;
 
   return (
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
-      <img src={getImage(newOrder.productId)} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newOrder.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newOrder.size}</SizeButton>
+          <SizeButton>{data.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={newOrder?.color || ''} /> {newOrder.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newOrder.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
       </Content>
       <OrderInfo>
@@ -75,7 +57,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       </OrderInfo>
       <Price>
         <Status>{data.status === 'wait' ? 'Ready To Pickup' : 'Shipping'}</Status>
-        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

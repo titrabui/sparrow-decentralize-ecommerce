@@ -7,15 +7,40 @@ import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 
-const PendingTable: React.FC = () => {
+interface IPendingTableProps {
+  searchInput: any;
+  isSearch: boolean;
+  setIsSearch: Function;
+}
+const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) => {
+  const { searchInput, isSearch, setIsSearch } = props;
   const [data, setData] = useState([] as any);
+  const [searchData, setSearchData] = useState([] as any);
+
   const { account, connector, library } = useWallet();
+
+  useEffect(() => {
+    const filterByFromData =
+      searchInput.from !== ''
+        ? data.filter((item: any) => item.createdAt > searchInput.from)
+        : data;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput, setIsSearch]);
+  
   useEffect(() => {
     const fetchOrderPending = async () => {
       if (account) {
         const contract = await getContract(connector);
         const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP)
+        const ordersFiltered = orders.filter(
+          (item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP
+        );
 
         const promisesGetUsers = [];
         const orderInfo = [];
@@ -25,8 +50,8 @@ const PendingTable: React.FC = () => {
             id: ordersFiltered[i][0],
             quantity: ordersFiltered[i][6],
             price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether')
-          }
-          orderInfo.push(orderItem)
+          };
+          orderInfo.push(orderItem);
         }
 
         const ordersPending = [];
@@ -37,6 +62,7 @@ const PendingTable: React.FC = () => {
           ordersPending.push({
             key: users[j].id,
             orderDate: convertedOrdeDate,
+            createdAt: users[j].createdAt,
             status: 'Ready to Pickup',
             orderId: orderInfo[j].id,
             parcelType: 'California USA',
@@ -50,11 +76,10 @@ const PendingTable: React.FC = () => {
     };
     fetchOrderPending();
   }, [account, connector, library]);
-
   const getUser = async (userId: number) => {
     const response = await request.getData(`/orders/${userId}`, {});
     return response.data[0];
-  }
+  };
 
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
@@ -157,7 +182,12 @@ const PendingTable: React.FC = () => {
 
   return (
     <Container>
-      <StyleTable columns={columns} dataSource={data} scroll={{ y: 400 }} pagination={false} />
+      <StyleTable
+        columns={columns}
+        dataSource={isSearch ? searchData : data}
+        scroll={{ y: 400 }}
+        pagination={false}
+      />
     </Container>
   );
 };

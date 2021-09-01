@@ -6,6 +6,7 @@ import { Collapse } from 'antd';
 import { Text } from 'ui/Typography';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import request from 'utils/request';
 import { SELLER_ACCOUNT_ADDRESS } from 'environment';
 import ToShip from './ToShip';
 import Shipping from './Shipping';
@@ -15,7 +16,7 @@ import Completed from './Completed';
 const { Panel } = Collapse;
 const MySales: React.FC = () => {
   const [, setTotal] = useState(0);
-  const [orders, setOrders] = useState([] as any);
+  const [ordersBE, setOrdersBE] = useState([] as any);
   const { account, connector } = useWallet();
   useEffect(() => {
     if (account) {
@@ -23,12 +24,15 @@ const MySales: React.FC = () => {
         const contract = await getContract(connector);
         const allOrders = await contract.methods.getAllOrders().call();
         const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
-        setOrders(ordersFiltered);
+        const result = await request.getData(`/orders/buyers`, {});
+        const orderMapWithSC = result?.data?.filter((item: any) =>
+          ordersFiltered.some((order: any) => order[0] === item.id)
+        );
+        setOrdersBE(orderMapWithSC);
       }
       fetchOrderCreated()
     }
   }, [account, connector])
-
   return (
     <MainContainer mt='60px'>
       <PageName>My Sales</PageName>
@@ -36,19 +40,19 @@ const MySales: React.FC = () => {
         <StyledCollapse defaultActiveKey={['1']}>
           <Panel header='To Ship' key='1'>
             {' '}
-            <ToShip setTotal={setTotal} orders={orders} />
+            <ToShip setTotal={setTotal} orders={ordersBE} />
           </Panel>
           <Panel header='Shipping' key='2'>
             {' '}
-            <Shipping setTotal={setTotal} orders={orders} />
+            <Shipping setTotal={setTotal} orders={ordersBE} />
           </Panel>
           <Panel header='Completed' key='3'>
             {' '}
-            <Completed setTotal={setTotal} orders={orders} />
+            <Completed setTotal={setTotal} orders={ordersBE} />
           </Panel>
           <Panel header='Return/Refund' key='4'>
             {' '}
-            <ReturnRefund setTotal={setTotal} orders={orders} />
+            <ReturnRefund setTotal={setTotal} orders={ordersBE} />
           </Panel>
         </StyledCollapse>
       </StyledBox>

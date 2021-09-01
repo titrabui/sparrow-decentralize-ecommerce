@@ -5,11 +5,10 @@ import { OrderReposity } from 'src/models/order/order.reposity';
 
 @Injectable()
 export class OrderService {
-
   constructor(
     private readonly orderRepo: OrderReposity,
-    private readonly latestBlockRepo: LatestBlockReposity
-  ) { }
+    private readonly latestBlockRepo: LatestBlockReposity,
+  ) {}
 
   async createOrder(historyData: IOrder) {
     return await this.orderRepo.create(historyData);
@@ -19,11 +18,11 @@ export class OrderService {
     let allOrders = await this.orderRepo.getAll();
     let orders: any;
     if (type == 'shipper' || type == 'seller') {
-      orders = allOrders.filter(item => {
+      orders = allOrders.filter((item) => {
         return item.status == status;
       });
     } else {
-      orders = allOrders.filter(item => {
+      orders = allOrders.filter((item) => {
         return item.status == status && item[type] == address;
       });
     }
@@ -31,9 +30,14 @@ export class OrderService {
     return orders.sort((a, b) => b.createdAt - a.createdAt);
   }
 
+  async getOrdersAllBuyer() {
+    let allOrders = await this.orderRepo.getAll();
+    return allOrders.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
   async getOrderById(orderId: string) {
     let orders = await this.orderRepo.getAll();
-    const order = orders.filter(item => {
+    const order = orders.filter((item) => {
       return item.id === orderId;
     });
     return order;
@@ -41,7 +45,7 @@ export class OrderService {
 
   async updateOrderStatus(data: IUpdateOrderStatus) {
     let orders = await this.orderRepo.getAll();
-    let order = orders.filter(item => {
+    let order = orders.filter((item) => {
       return item.id === data.id;
     });
 
@@ -50,13 +54,13 @@ export class OrderService {
       myOrder.status = data.status;
       await this.orderRepo.updateOrderStatus(myOrder);
       return {
-        status: 200
+        status: 200,
       };
     }
     return {
       status: 500,
-      message: `There are no order with id ${data.id}`
-    }
+      message: `There are no order with id ${data.id}`,
+    };
   }
 
   async getLatestBlock(): Promise<number> {
