@@ -3,7 +3,7 @@ import useWallet from 'hooks/useWallet';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'ui/Typography';
-import { ORDER_STATUS } from 'utils/constants';
+import { ORDER_STATUS, SHIPPER_STAKE_PERCENT } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 
@@ -75,46 +75,6 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   }, [account, connector, library]);
 
   useEffect(() => {
-    // const fetchOrderPending = async () => {
-    //   if (account) {
-    //     const contract = await getContract(connector);
-    //     const orders = await contract.methods.getAllOrders().call();
-    //     const ordersFiltered = orders.filter(
-    //       (item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP
-    //     );
-
-    //     const promisesGetUsers = [];
-    //     const orderInfo = [];
-    //     for (let i = 0; i < ordersFiltered.length; i += 1) {
-    //       promisesGetUsers.push(getUser(ordersFiltered[i][0]));
-    //       const orderItem = {
-    //         id: ordersFiltered[i][0],
-    //         quantity: ordersFiltered[i][6],
-    //         price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether')
-    //       };
-    //       orderInfo.push(orderItem);
-    //     }
-
-    //     const ordersPending = [];
-    //     const users = await Promise.all(promisesGetUsers);
-    //     users.sort((a, b) => b.id - a.id);
-    //     for (let j = 0; j < users.length; j += 1) {
-    //       const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
-    //       ordersPending.push({
-    //         key: users[j].id,
-    //         orderDate: convertedOrdeDate,
-    //         createdAt: users[j].createdAt,
-    //         status: 'Ready to Pickup',
-    //         orderId: orderInfo[j].id,
-    //         parcelType: 'California USA',
-    //         quantity: orderInfo[j].quantity,
-    //         price: orderInfo[j].price,
-    //         confirmShipping: orderInfo[j]
-    //       });
-    //     }
-    //     setData(ordersPending);
-    //   }
-    // };
     fetchOrderPending();
   }, [fetchOrderPending]);
 
@@ -125,7 +85,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
-    const amount = (record.price * record.quantity * 20) / 100;
+    const amount = (record.price * record.quantity * SHIPPER_STAKE_PERCENT) / 100;
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
