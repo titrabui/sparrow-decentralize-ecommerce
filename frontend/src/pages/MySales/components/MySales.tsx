@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MainContainer from 'ui/MainContainer';
 import Box from 'ui/Box';
 import styled from 'styled-components';
@@ -18,21 +18,24 @@ const MySales: React.FC = () => {
   const [, setTotal] = useState(0);
   const [ordersBE, setOrdersBE] = useState([] as any);
   const { account, connector } = useWallet();
+
+  const fetchOrder = useCallback(async () => {
+    const contract = await getContract(connector);
+    const allOrders = await contract.methods.getAllOrders().call();
+    const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
+    const result = await request.getData(`/orders/buyers`, {});
+    const orderMapWithSC = result?.data?.filter((item: any) =>
+      ordersFiltered.some((order: any) => order[0] === item.id)
+    );
+    setOrdersBE(orderMapWithSC);
+  }, [connector]);
+
   useEffect(() => {
     if (account) {
-      const fetchOrderCreated = async () => {
-        const contract = await getContract(connector);
-        const allOrders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
-        const result = await request.getData(`/orders/buyers`, {});
-        const orderMapWithSC = result?.data?.filter((item: any) =>
-          ordersFiltered.some((order: any) => order[0] === item.id)
-        );
-        setOrdersBE(orderMapWithSC);
-      }
-      fetchOrderCreated()
+      fetchOrder();
     }
-  }, [account, connector])
+  }, [account, fetchOrder]);
+
   return (
     <MainContainer mt='60px'>
       <PageName>My Sales</PageName>
@@ -40,7 +43,7 @@ const MySales: React.FC = () => {
         <StyledCollapse defaultActiveKey={['1']}>
           <Panel header='To Ship' key='1'>
             {' '}
-            <ToShip setTotal={setTotal} orders={ordersBE} />
+            <ToShip setTotal={setTotal} orders={ordersBE} fetchOrder={fetchOrder} />
           </Panel>
           <Panel header='Shipping' key='2'>
             {' '}

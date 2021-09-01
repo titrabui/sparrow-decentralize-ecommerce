@@ -7,6 +7,7 @@ import getImage from 'utils/getImage';
 
 interface ICompletedProductProps {
   data: any;
+  
 }
 
 const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedProductProps) => {
