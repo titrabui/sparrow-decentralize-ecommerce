@@ -3,7 +3,7 @@ import useWallet from 'hooks/useWallet';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'ui/Typography';
-import { ORDER_STATUS } from 'utils/constants';
+import { ORDER_STATUS, SHIPPER_STAKE_PERCENT } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 
@@ -32,7 +32,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
     if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
       setIsSearch(false);
   }, [data, searchInput, setIsSearch]);
-  
+
   useEffect(() => {
     const fetchOrderPending = async () => {
       if (account) {
@@ -84,7 +84,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
-    const amount = (record.price * record.quantity * 20) / 100;
+    const amount = (record.price * record.quantity * SHIPPER_STAKE_PERCENT) / 100;
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
