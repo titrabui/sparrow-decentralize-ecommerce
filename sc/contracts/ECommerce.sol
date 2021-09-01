@@ -155,11 +155,7 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     event Ordered(uint256 orderId, address _buyer, uint256 indexed _totalMoney);
     event SellerConfirmOrder(uint256 orderId, OrderStatus _finalStatus);
-    event Staked(
-        uint256 orderId,
-        address _shipper,
-        uint256 indexed _stakedAmount
-    );
+    event Staked(uint256 orderId, address _shipper, uint256 indexed _stakedAmount);
     event Shipped(uint256 orderId);
     event ReceiveOrder(uint256 orderId, OrderStatus _finalStatus);
     event RequestRefundOrder(uint256 orderId, OrderStatus _finalStatus);
