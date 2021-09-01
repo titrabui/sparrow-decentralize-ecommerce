@@ -4,7 +4,7 @@ import Button from 'ui/Button';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
-import { ERROR_STATUS } from 'utils/constants';
+import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
 import request from 'utils/request';
 import { Space, Radio, notification } from 'antd';
 import { Text } from 'ui/Typography';
@@ -39,7 +39,8 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
 
           request.putData('/orders/update-order-status', {
             id: orderId,
-            status: reasonError
+            status: ORDER_STATUS.REQUEST_REFUND,
+            statusErrorType: reasonError
           });
         });
       setOpenModal(false);
