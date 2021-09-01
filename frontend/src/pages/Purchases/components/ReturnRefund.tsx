@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-underscore-dangle */
 import { DatePicker, Empty } from 'antd';
 import Search from 'antd/lib/transfer/search';
 import useWallet from 'hooks/useWallet';
@@ -19,18 +20,30 @@ interface IReturnRefundProps {
 }
 
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
-
   const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
   const { account, library } = useWallet();
+  const [searchData, setSearchData] = useState([] as any);
+  const [searchInput, setSearchInput] = useState({
+    text: '',
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
 
   useEffect(() => {
     if (account) {
       const fetchOrderRefund = async () => {
-        const ordersFiltered = await orders.filter((item: any) => (Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND || Number(item[4]) === ORDER_STATUS.REJECT_REFUND || Number(item[4]) === ORDER_STATUS.REQUEST_REFUND) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter(
+          (item: any) =>
+            (item.status === ORDER_STATUS.APPROVAL_REFUND ||
+              item.status === ORDER_STATUS.REJECT_REFUND ||
+              item.status === ORDER_STATUS.REQUEST_REFUND) &&
+            item.id !== 0
+        );
         setData(ordersFiltered);
-      }
-      fetchOrderRefund()
+      };
+      fetchOrderRefund();
     }
   }, [account, orders]);
 
@@ -42,20 +55,55 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
     setTotal(total);
   }, [data, setTotal]);
 
+  useEffect(() => {
+    const filterData = data.filter((order: any) =>
+      JSON.stringify(order).toLowerCase().includes(searchInput?.text?.toLowerCase())
+    );
+    const filterByFromData =
+      searchInput.from !== ''
+        ? filterData.filter((item: any) => item.createdAt > searchInput.from)
+        : filterData;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput]);
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
+
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const mapData = isSearch ? searchData : data;
+
   return (
     <Container w='1200px' h='400px'>
       <CheckAll>
         <Text>Item Name</Text>
-        <Search />
+        <Search
+          onChange={(e: any) => handleChangeSearch('text', e.target.value)}
+          value={searchInput?.text}
+          handleClear={() => handleChangeSearch('text', '')}
+        />
         <Text>Order Date</Text>
-        <DatePicker />
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
         <Text>to</Text>
-        <DatePicker />
-        <StyledButton>Search</StyledButton>
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
+        <StyledButton onClick={handleSearch}>Search</StyledButton>
       </CheckAll>
 
-      {data?.length ? (
-        data.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
+      {mapData?.length ? (
+        mapData.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

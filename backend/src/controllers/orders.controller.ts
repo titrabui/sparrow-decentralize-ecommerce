@@ -4,15 +4,20 @@ import { OrderService } from 'src/services/order/order.service';
 
 @Controller('orders')
 export class OrdersController {
-
-  constructor(
-    private readonly orderService: OrderService
-  ) { }
+  constructor(private readonly orderService: OrderService) {}
 
   @Get('/:status/:address/:type')
-  async getOrders(@Param('status') status: number, @Param('address') address: string, @Param('type') type: string): Promise<IOrder[]> {
-
+  async getOrders(
+    @Param('status') status: number,
+    @Param('address') address: string,
+    @Param('type') type: string,
+  ): Promise<IOrder[]> {
     return await this.orderService.getAllOrders({ status, address, type });
+  }
+
+  @Get('/buyers')
+  async getOrdersAllBuyer(): Promise<IOrder[]> {
+    return await this.orderService.getOrdersAllBuyer();
   }
 
   @Post('/create')

@@ -17,19 +17,8 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
   const { library } = useWallet();
-  const [newOrder, setNewOrder] = useState({ name: null, size: null, color: null, shippingAddress: null });
 
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {})
-      setNewOrder(response.data[0])
-    }
-    fetchOrder();
-  }, [data]);
+  const { quantity, price, shippingFee } = data;
 
   return (
     <Container>
@@ -69,7 +58,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       </OrderInfo>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{(quantity * price) + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );

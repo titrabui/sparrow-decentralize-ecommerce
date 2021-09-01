@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 import { DatePicker, Empty } from 'antd';
 import Search from 'antd/lib/transfer/search';
@@ -18,17 +19,53 @@ interface ICompletedProps {
 const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
   const { setTotal, orders } = props;
   const [data, setData] = useState([] as any);
+  const [searchData, setSearchData] = useState([] as any);
+  const [searchInput, setSearchInput] = useState({
+    text: '',
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
   const { account } = useWallet();
 
   useEffect(() => {
     if (account) {
       const fetchOrderCompleted = async () => {
-        const ordersFiltered = await orders.filter((item: any) => Number(item[4]) === ORDER_STATUS.RECEIVED);
+        const ordersFiltered = await orders.filter(
+          (item: any) => item.status === ORDER_STATUS.RECEIVED
+        );
         setData(ordersFiltered);
       };
       fetchOrderCompleted();
     }
   }, [account, orders]);
+
+  useEffect(() => {
+    const filterData = data.filter((order: any) =>
+    JSON.stringify(order).toLowerCase().includes(searchInput?.text?.toLowerCase())
+    );
+    const filterByFromData =
+      searchInput.from !== ''
+        ? filterData.filter((item: any) => item.createdAt > searchInput.from)
+        : filterData;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput]);
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
+  
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const mapData = isSearch ? searchData : data;
 
   useEffect(() => {
     const total = data.reduce(
@@ -42,16 +79,24 @@ const Completed: React.FC<ICompletedProps> = (props: ICompletedProps) => {
     <Container w='1200px' h='400px'>
       <CheckAll>
         <Text>Item Name</Text>
-        <Search />
+        <Search
+          onChange={(e: any) => handleChangeSearch('text', e.target.value)}
+          value={searchInput?.text}
+          handleClear={() => handleChangeSearch('text', '')}
+        />
         <Text>Order Date</Text>
-        <DatePicker />
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
         <Text>to</Text>
-        <DatePicker />
-        <StyledButton>Search</StyledButton>
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
+        <StyledButton onClick={handleSearch}>Search</StyledButton>
       </CheckAll>
 
-      {data?.length ? (
-        data.map((item: any) => <CompletedProduct data={item} key={item?.id} />)
+      {mapData?.length ? (
+        mapData.map((item: any) => <CompletedProduct data={item} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

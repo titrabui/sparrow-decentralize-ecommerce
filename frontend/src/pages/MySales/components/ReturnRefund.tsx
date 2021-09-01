@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-underscore-dangle */
 import { DatePicker, Empty, Select } from 'antd';
 import useWallet from 'hooks/useWallet';
 import React, { useEffect, useState } from 'react';
@@ -21,13 +22,49 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
   const [data, setData] = useState([] as any);
 
   const { account } = useWallet();
+  const [searchData, setSearchData] = useState([] as any);
+  const [searchInput, setSearchInput] = useState({
+    text: '',
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
+
+  useEffect(() => {
+    const filterByFromData =
+      searchInput.from !== ''
+        ? data.filter((item: any) => item.createdAt > searchInput.from)
+        : data;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput]);
+
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
+
+  const mapData = isSearch ? searchData : data;
 
   useEffect(() => {
     if (account) {
       const fetchOrderCompleted = async () => {
-        const ordersFiltered = await orders.filter((item: any) => (Number(item[5]) === ERROR_STATUS.REFUNDED_PRODUCT_ERROR || Number(item[5]) === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) && Number(item[0]) !== 0)
+        const ordersFiltered = await orders.filter(
+          (item: any) =>
+            (item.status === ERROR_STATUS.REFUNDED_PRODUCT_ERROR ||
+              item.status === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) &&
+            item.id !== 0
+        );
         setData(ordersFiltered);
-      }
+      };
       fetchOrderCompleted();
     }
   }, [account, orders]);
@@ -43,21 +80,24 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
   return (
     <Container w='1200px' h='400px'>
       <FilterContainer>
-        <Text>Order Date</Text>
-        <DatePicker />
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
         <Text>to</Text>
-        <DatePicker />
+        <DatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
         <Select defaultValue='Refund Status'>
           <Option value='wait'>Wait for Confirmation</Option>
           <Option value='reject'>Refund Reject</Option>
           <Option value='confirm'>Confirmed</Option>
           <Option value='complete'>Refund Completed</Option>
         </Select>
-        <StyledButton>Search</StyledButton>
+        <StyledButton onClick={handleSearch}>Search</StyledButton>
       </FilterContainer>
 
-      {data?.length ? (
-        data.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
+      {mapData?.length ? (
+        mapData.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

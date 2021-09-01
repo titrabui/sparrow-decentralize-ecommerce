@@ -5,13 +5,33 @@ import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
 import request from 'utils/request';
 
-const CompleteTable: React.FC = () => {
-
+interface ICompleteTableProps {
+  searchInput: any;
+  isSearch: boolean;
+  setIsSearch: Function;
+}
+const CompleteTable: React.FC<ICompleteTableProps> = (props: ICompleteTableProps) => {
+  const { searchInput, isSearch, setIsSearch } = props;
+  const [searchData, setSearchData] = useState([] as any);
   const [data, setData] = useState([] as any);
 
   useEffect(() => {
+    const filterByFromData =
+      searchInput.from !== ''
+        ? data.filter((item: any) => item.createdAt > searchInput.from)
+        : data;
+    const filterByToData =
+      searchInput.to !== ''
+        ? filterByFromData.filter((item: any) => item.createdAt < searchInput.to)
+        : filterByFromData;
+    setSearchData(filterByToData);
+    if (searchInput.from === '' && searchInput.text === '' && searchInput.to === '')
+      setIsSearch(false);
+  }, [data, searchInput, setIsSearch]);
+
+  useEffect(() => {
     const fetchOrderPending = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}`, {})
+      const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}`, {});
       if (result && result.status === 200) {
         const ordersPending = [];
         for (let i = 0; i < result.data.length; i += 1) {
@@ -22,11 +42,11 @@ const CompleteTable: React.FC = () => {
             status: 'Completed',
             orderId: result.data[i].id,
             parcelType: 'California USA'
-          })
+          });
         }
         setData(ordersPending);
       }
-    }
+    };
     fetchOrderPending();
   }, []);
 
@@ -65,7 +85,12 @@ const CompleteTable: React.FC = () => {
   ];
   return (
     <Container>
-      <StyleTable columns={columns} dataSource={data} scroll={{ y: 400 }} pagination={false} />
+      <StyleTable
+        columns={columns}
+        dataSource={isSearch ? searchData : data}
+        scroll={{ y: 400 }}
+        pagination={false}
+      />
     </Container>
   );
 };

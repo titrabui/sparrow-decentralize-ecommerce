@@ -1,28 +1,47 @@
+/* eslint-disable no-underscore-dangle */
 import { DatePicker } from 'antd';
-import React from 'react';
+import React, {  useState } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import ButtonShipping from './ButtonShipping';
 import PendingTable from './PendingTable';
 
-const PendingDeliveries: React.FC = () => (
-  <Container>
-    <Title>
-      <Text ml='20px' strong $size='17px'>
-        Pending Deliveries
-      </Text>
-    </Title>
-    <Filter>
-      <StyleText>Filter deliveries from</StyleText>
-      <StyleDatePicker />
-      <StyleText ml='15px'>to</StyleText>
-      <StyleDatePicker />
-      <ButtonShipping.ButtonSearch />
-      <ButtonShipping.ButtonExport />
-    </Filter>
-    <PendingTable />
-  </Container>
-);
+const PendingDeliveries: React.FC = () => {
+  const [searchInput, setSearchInput] = useState({
+    from: '',
+    to: ''
+  });
+  const [isSearch, setIsSearch] = useState(false);
+  const handleChangeSearch = (key: string, value: any) => {
+    setSearchInput({ ...searchInput, [key]: value });
+  };
+
+  const handleSearch = () => {
+    setIsSearch(true);
+  };
+  return (
+    <Container>
+      <Title>
+        <Text ml='20px' strong $size='17px'>
+          Pending Deliveries
+        </Text>
+      </Title>
+      <Filter>
+        <StyleText>Filter deliveries from</StyleText>
+        <StyleDatePicker
+          onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
+        />
+        <StyleText ml='15px'>to</StyleText>
+        <StyleDatePicker
+          onChange={(e: any) => handleChangeSearch('to', e ? new Date(e._d).getTime() : '')}
+        />
+        <ButtonShipping.ButtonSearch onClick={handleSearch} />
+        <ButtonShipping.ButtonExport />
+      </Filter>
+      <PendingTable searchInput={searchInput} isSearch={isSearch} setIsSearch={setIsSearch} />
+    </Container>
+  );
+};
 
 const Container = styled.div`
   width: 100%;

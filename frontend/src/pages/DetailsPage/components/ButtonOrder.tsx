@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -16,6 +16,10 @@ const ButtonOrder: React.FC<IButtonOrderProps> = (props: IButtonOrderProps) => {
 
   const handleBuy = () => {
     localStorage.setItem('cart', JSON.stringify([{ ...container, ...data }]));
+    notification.success({
+      description: 'Product has been add to cart',
+      message: 'Success'
+    });
   };
   const handleAdd = () => {
     handleChangeAmount(amount + 1);

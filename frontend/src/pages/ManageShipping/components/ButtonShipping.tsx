@@ -3,8 +3,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 
-const ButtonSearch: React.FC = () => (
-  <StyleButtonSearch>
+interface Props {
+  // eslint-disable-next-line react/require-default-props
+  onClick?:any;
+}
+const ButtonSearch: React.FC<Props> = (props: Props) => (
+  // eslint-disable-next-line react/destructuring-assignment
+  <StyleButtonSearch onClick={props.onClick}>
     <Text strong $color='#fff'>
       Search
     </Text>

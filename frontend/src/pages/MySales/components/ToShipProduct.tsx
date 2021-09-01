@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { notification } from 'antd';
 import useWallet from 'hooks/useWallet';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
@@ -19,26 +19,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   const { data } = props;
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
-
-  const quantity = data[6];
-  const price = library?.utils?.fromWei(data[7], 'ether');
-  const shippingFee = library?.utils?.fromWei(data[8], 'ether');
-
-  const [newData, setNewData] = useState({
-    name: null,
-    size: null,
-    color: null,
-    shippingAddress: null,
-    productId: 1
-  });
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      const response = await request.getData(`/orders/${data[0]}`, {});
-      setNewData(response.data[0]);
-    };
-    fetchOrder();
-  }, [data]);
+  const { quantity, price, shippingFee } = data;
 
   const handleConfirmOrder = async (orderId: string) => {
     if (connector) {
@@ -68,40 +49,40 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
     <Container>
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
-        <img src={getImage(newData.productId)} alt='img' />
+        <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
       <Content>
-        <Name>{newData.name}</Name>
+        <Name>{data.name}</Name>
         <SizeAndColor>
           <Text strong $color='black'>
             Size
           </Text>
-          <SizeButton>{newData.size}ft</SizeButton>
+          <SizeButton>{data.size}</SizeButton>
           <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
-            <Color className={newData?.color || ''} /> {newData.color}
+            <Color className={data?.color || ''} /> {data.color}
           </ColorButton>
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
-          <ShippingAddress $color='black'>{newData.shippingAddress}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.shippingAddress}</ShippingAddress>
         </Shipping>
         <Shipping>
           <ShippingTitle>Order ID</ShippingTitle>
-          <ShippingAddress $color='black'>{data[0]}</ShippingAddress>
+          <ShippingAddress $color='black'>{data.id}</ShippingAddress>
         </Shipping>
       </Content>
       <Amount>
-        <AddPlusButton $bgType='accent' onClick={() => handleConfirmOrder(data[0])}>
+        <AddPlusButton $bgType='accent' onClick={() => handleConfirmOrder(data.id)}>
           Confirm
         </AddPlusButton>
       </Amount>
       <Price>
         <Status>Wait for seller to confirm</Status>
-        <PriceText>{quantity * price + parseFloat(shippingFee)} ETH</PriceText>
+        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
       </Price>
     </Container>
   );
