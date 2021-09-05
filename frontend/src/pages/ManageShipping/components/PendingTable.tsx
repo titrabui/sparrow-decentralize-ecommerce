@@ -84,7 +84,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
-    const amount = (record.price * record.quantity * SHIPPER_STAKE_PERCENT) / 100;
+    const amount = ((parseFloat(record.price) * record.quantity * SHIPPER_STAKE_PERCENT) / 100).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
@@ -110,8 +110,8 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
   const handleCancelOrderPickedUp = async (event: any, record: any) => {
     event.preventDefault();
-    const orderId = record?.orderId;
-    const amount = (record.price * record.quantity * 20) / 100;
+    const orderId = record?.id;
+    const amount = ((record.price * record.quantity * 20) / 100).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods

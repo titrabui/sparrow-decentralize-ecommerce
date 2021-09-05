@@ -1,6 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3");
-
+const secret = require('./secret.json');
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -20,6 +20,10 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 1337
+    },
+    rinkeby: {
+      url: secret.url,
+      accounts: [secret.key]
     }
   },
   solidity: "0.8.4",

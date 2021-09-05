@@ -17,9 +17,9 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   const { quantity, price, shippingFee } = data;
 
   let orderStatus;
-  if (data.status === ORDER_STATUS.REQUEST_REFUND.toString()) {
+  if (data.status === ORDER_STATUS.REQUEST_REFUND) {
     orderStatus = 'Refund Request Processing';
-  } else if (data.status === ORDER_STATUS.REJECT_REFUND.toString()) {
+  } else if (data.status === ORDER_STATUS.REJECT_REFUND) {
     orderStatus = 'Request has been rejected';
   } else {
     orderStatus = 'Refund Completed';

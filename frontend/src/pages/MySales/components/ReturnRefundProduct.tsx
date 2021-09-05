@@ -19,7 +19,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
   const { data } = props;
-  const { account, connector} = useWallet();
+
+  const { account, connector } = useWallet();
 
   const renderStatus = () => {
     switch (data.status) {
@@ -47,7 +48,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         })
         .on('receipt', async () => {
           notification.success({
-            description: 'Order has been request refund successfully!',
+            description: 'Order has been accepted request refund successfully!',
             message: 'Success'
           });
 
@@ -70,7 +71,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
         })
         .on('receipt', async () => {
           notification.success({
-            description: 'Order has been reject refund successfully!',
+            description: 'Order has been reject request refund successfully!',
             message: 'Success'
           });
 
@@ -113,7 +114,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
       </Content>
       <Amount>
         {
-          data.status === ORDER_STATUS.APPROVAL_REFUND.toString() || data.status === ORDER_STATUS.REJECT_REFUND.toString() ? (
+          data.status === ORDER_STATUS.APPROVAL_REFUND || data.status === ORDER_STATUS.REJECT_REFUND ? (
             <AddPlusButton $bgType='accent'>Rate</AddPlusButton>
           ) : (
             <>
