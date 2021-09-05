@@ -177,9 +177,9 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
                   Confirm
                 </Link>
               ) : (
-                  <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
-                    Reject
-                  </Link>
+                <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
+                  Reject
+                </Link>
               )
             }
           </div>

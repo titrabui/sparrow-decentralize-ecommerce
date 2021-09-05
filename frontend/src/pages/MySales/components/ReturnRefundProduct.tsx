@@ -127,7 +127,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
       </Amount>
       <Price>
         {renderStatus()}
-        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
+        <PriceText>{(quantity * price + shippingFee).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>
   );

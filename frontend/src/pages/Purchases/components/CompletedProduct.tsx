@@ -47,7 +47,7 @@ const CompletedProduct: React.FC<ICompletedProductProps> = (props: ICompletedPro
       </Amount>
       <Price>
         <Status>Completed</Status>
-        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
+        <PriceText>{(quantity * price + shippingFee).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>
   );

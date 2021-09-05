@@ -45,7 +45,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
           </Text>
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            {checkoutData?.price * checkoutData?.amount + checkoutData?.shippingFee || 0} ETH
+            {(checkoutData?.price * checkoutData?.amount + checkoutData?.shippingFee).toFixed(4) || 0} ETH
           </Text>
         </CheckoutContent>
       </Checkout>

@@ -119,7 +119,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
       </Amount>
       <Price>
         <Status>{renderStatus(data.status)}</Status>
-        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
+        <PriceText>{(quantity * price + shippingFee).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>
   );
