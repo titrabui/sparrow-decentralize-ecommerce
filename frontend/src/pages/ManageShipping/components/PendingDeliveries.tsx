@@ -45,7 +45,6 @@ const PendingDeliveries: React.FC = () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 600px;
   background-color: #f4f8ff;
   border-top: 1px solid #dbdbdc;
 `;

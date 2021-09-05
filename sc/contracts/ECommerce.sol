@@ -309,10 +309,9 @@ contract ECommerce is Ownable, ReentrancyGuard {
 
     function shipperCancelOrder(uint256 orderId) external payable existOrder(orderId) {
         (,, address _shipper, OrderStatus _status,,,,, uint256 _deposit,) = getOrderInfo(orderId);
-        require(_shipper == _msgSender(), "Invalid shipper");
         require(_status != OrderStatus.CONFIRMED_PICKUP, "Order already picked up");
         require(_status == OrderStatus.READY_TO_PICKUP, "Order now is not ready to pickup");
-
+        require(_shipper == _msgSender(), "Invalid shipper");
         payable(_shipper).transfer(_deposit);
         orderBook[orderId].status = OrderStatus.READY_TO_PICKUP;
         emit ShipperCancelOrder(orderId, OrderStatus.READY_TO_PICKUP);
