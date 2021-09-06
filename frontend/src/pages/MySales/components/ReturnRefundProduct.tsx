@@ -24,11 +24,11 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
   const renderStatus = () => {
     switch (data.status) {
-      case ORDER_STATUS.REQUEST_REFUND.toString():
+      case ORDER_STATUS.REQUEST_REFUND:
         return <Status $color='#e86c13'>Wait for Confirmation</Status>;
-      case ORDER_STATUS.REJECT_REFUND.toString():
+      case ORDER_STATUS.REJECT_REFUND:
         return <Status $color='red'>Refund Reject</Status>;
-      case ORDER_STATUS.APPROVAL_REFUND.toString():
+      case ORDER_STATUS.APPROVAL_REFUND:
         return <Status $color='green'>Refund Confirmed</Status>;
       default:
         return '';
@@ -53,7 +53,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           });
 
           request.putData('/orders/update-order-status', {
-            id: orderId,
+            id: orderId.toString(),
             status: ORDER_STATUS.APPROVAL_REFUND
           });
         });
@@ -76,7 +76,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           });
 
           request.putData('/orders/update-order-status', {
-            id: orderId,
+            id: orderId.toString(),
             status: ORDER_STATUS.REJECT_REFUND
           });
         });

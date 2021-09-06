@@ -38,7 +38,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
           });
 
           request.putData('/orders/update-order-status', {
-            id: orderId,
+            id: orderId.toString(),
             status: ORDER_STATUS.REQUEST_REFUND,
             statusErrorType: reasonError
           });

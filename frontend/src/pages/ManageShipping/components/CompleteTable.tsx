@@ -1,8 +1,10 @@
 import { Button, Table } from 'antd';
+import useWallet from 'hooks/useWallet';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 
 interface ICompleteTableProps {
@@ -14,6 +16,7 @@ const CompleteTable: React.FC<ICompleteTableProps> = (props: ICompleteTableProps
   const { searchInput, isSearch, setIsSearch } = props;
   const [searchData, setSearchData] = useState([] as any);
   const [data, setData] = useState([] as any);
+  const { account, connector, library } = useWallet();
 
   useEffect(() => {
     const filterByFromData =
@@ -30,25 +33,56 @@ const CompleteTable: React.FC<ICompleteTableProps> = (props: ICompleteTableProps
   }, [data, searchInput, setIsSearch]);
 
   useEffect(() => {
-    const fetchOrderPending = async () => {
-      const result = await request.getData(`/orders/${ORDER_STATUS.RECEIVED}`, {});
-      if (result && result.status === 200) {
-        const ordersPending = [];
-        for (let i = 0; i < result.data.length; i += 1) {
-          const convertedOrdeDate = new Date(result.data[i].createdAt).toISOString().slice(0, 10);
-          ordersPending.push({
-            key: result.data[i].key,
+    const fetchOrderCompleted = async () => {
+      if (account) {
+        const contract = await getContract(connector);
+        const orders = await contract.methods.getAllOrders().call();
+        const ordersFiltered = orders.filter(
+          (item: any) =>
+            Number(item[4]) === ORDER_STATUS.RECEIVED ||
+            Number(item[4]) === ORDER_STATUS.REJECT_REFUND ||
+            Number(item[4]) === ORDER_STATUS.APPROVAL_REFUND
+        );
+
+        const promisesGetUsers = [];
+        const orderInfo = [];
+        for (let i = 0; i < ordersFiltered.length; i += 1) {
+          promisesGetUsers.push(getUser(ordersFiltered[i][0]));
+          const orderItem = {
+            id: ordersFiltered[i][0],
+            quantity: ordersFiltered[i][6],
+            price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether'),
+            status: ordersFiltered[i][4]
+          };
+          orderInfo.push(orderItem);
+        }
+
+        const ordersCompleted = [];
+        const users = await Promise.all(promisesGetUsers);
+        users.sort((a, b) => b.id - a.id);
+        for (let j = 0; j < users.length; j += 1) {
+          const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
+          ordersCompleted.push({
+            key: users[j].id,
             orderDate: convertedOrdeDate,
+            createdAt: users[j].createdAt,
             status: 'Completed',
-            orderId: result.data[i].id,
-            parcelType: 'California USA'
+            orderId: orderInfo[j].id,
+            parcelType: 'California USA',
+            quantity: orderInfo[j].quantity,
+            price: orderInfo[j].price
           });
         }
-        setData(ordersPending);
+        setData(ordersCompleted);
       }
     };
-    fetchOrderPending();
-  }, []);
+    fetchOrderCompleted();
+  }, [account, connector, library]);
+
+  const getUser = async (userId: number) => {
+    const response = await request.getData(`/orders/${userId}`, {});
+    return response.data[0];
+  };
 
   const columns = [
     {

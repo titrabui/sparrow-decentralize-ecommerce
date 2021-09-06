@@ -109,7 +109,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
           request
             .putData('/orders/update-order-status', {
-              id: orderId,
+              id: orderId.toString(),
               status: ORDER_STATUS.CONFIRMED_PICKUP
             })
             .then(() => {
@@ -138,7 +138,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
           request
             .putData('/orders/update-order-status', {
-              id: orderId,
+              id: orderId.toString(),
               status: ORDER_STATUS.READY_TO_PICKUP
             })
             .then(() => {

@@ -41,7 +41,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           });
           request
             .putData('/orders/update-order-status', {
-              id: orderId,
+              id: orderId.toString(),
               status: ORDER_STATUS.RECEIVED
             })
             .then(() => {
@@ -51,24 +51,14 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
     }
   };
 
-  const renderStatus = (status: string) => {
-    switch (status) {
-      case '0':
+  const renderStatus = () => {
+    switch (data.status) {
+      case ORDER_STATUS.PAID:
         return 'Wait for Seller to confirm';
-      case '1':
+      case ORDER_STATUS.READY_TO_PICKUP:
         return 'Ready to Pick Up';
-      case '2':
+      case ORDER_STATUS.CONFIRMED_PICKUP:
         return 'Confirmed Pick Up';
-      case '3':
-        return 'Shipped';
-      case '4':
-        return 'Received';
-      case '5':
-        return 'Request refund';
-      case '6':
-        return 'Approval refund';
-      case '7':
-        return 'Reject refund';
       default:
         return '';
     }
@@ -122,7 +112,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         )}
       </Amount>
       <Price>
-        <Status>{renderStatus(data.status)}</Status>
+        <Status>{renderStatus()}</Status>
         <PriceText>{(quantity * price + shippingFee).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>

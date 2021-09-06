@@ -39,7 +39,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           });
           request
             .putData('/orders/update-order-status', {
-              id: orderId,
+              id: orderId.toString(),
               status: ORDER_STATUS.READY_TO_PICKUP
             })
             .then(() => {
