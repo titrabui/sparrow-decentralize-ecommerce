@@ -86,13 +86,13 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
             Size
           </Text>
           <SizeButton>{data.size}ft</SizeButton>
-          <Text strong $color='black'>
+          {/* <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
             <Color className={data?.color || ''} /> {data.color}
-          </ColorButton>
+          </ColorButton> */}
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>

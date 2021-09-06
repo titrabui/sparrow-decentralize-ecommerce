@@ -95,13 +95,13 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
             Size
           </Text>
           <SizeButton>{data.size}</SizeButton>
-          <Text strong $color='black'>
+          {/* <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
             <Color /> {data.color}
-          </ColorButton>
+          </ColorButton> */}
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>

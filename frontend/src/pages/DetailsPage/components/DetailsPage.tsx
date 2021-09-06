@@ -46,7 +46,7 @@ const DetailsPage: React.FC = () => {
           <RenderTextList name='Product Code' value={container.code} />
           <RenderTextList name='Status' value={container.status} />
           <Price>ETH &nbsp; {container.price} </Price>
-          <ColorContainer>
+          {/* <ColorContainer>
             <StyledText>Color</StyledText>
             <ButtonColor
               color='#e86c13'
@@ -66,7 +66,7 @@ const DetailsPage: React.FC = () => {
               onClick={() => handleSelectColor('Violet')}
               active={data.color === 'Violet'}
             />
-          </ColorContainer>
+          </ColorContainer> */}
           <SizeContainer>
             <StyledText>Size</StyledText>
             <ButtonSize

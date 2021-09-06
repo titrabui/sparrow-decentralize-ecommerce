@@ -29,13 +29,13 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
             Size
           </Text>
           <SizeButton>{data.size}</SizeButton>
-          <Text strong $color='black'>
+          {/* <Text strong $color='black'>
             Color
           </Text>
           <ColorButton>
             {' '}
             <Color className={data?.color || ''} /> {data.color}
-          </ColorButton>
+          </ColorButton> */}
         </SizeAndColor>
         <Shipping>
           <ShippingTitle>Shipping Address:</ShippingTitle>
