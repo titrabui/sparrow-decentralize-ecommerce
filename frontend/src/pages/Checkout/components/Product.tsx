@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
 import { Checkbox } from 'antd';
 import p2 from 'assets/images/p2.png';
+import React from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
 import Input from 'ui/Input';
+import { Text } from 'ui/Typography';
 
 interface IProductProps {
   data: any;
@@ -52,7 +52,7 @@ const Product: React.FC<IProductProps> = (props: IProductProps) => {
         </AddPlusButton>
       </Amount>
       <Price>
-        <PriceText>{(data.price * data.amount).toFixed(2)} ETH</PriceText>
+        <PriceText>{(data.price * data.amount).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>
   );

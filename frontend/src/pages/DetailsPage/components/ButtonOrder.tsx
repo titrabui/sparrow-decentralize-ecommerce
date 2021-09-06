@@ -14,19 +14,24 @@ const ButtonOrder: React.FC<IButtonOrderProps> = (props: IButtonOrderProps) => {
   const { handleChangeAmount, container, data } = props;
   const { amount } = data;
 
-  const handleBuy = () => {
+  const handleBuy = (isShowNotification: boolean) => {
     localStorage.setItem('cart', JSON.stringify([{ ...container, ...data }]));
-    notification.success({
-      description: 'Product has been add to cart',
-      message: 'Success'
-    });
+    if (isShowNotification) {
+      notification.success({
+        description: 'Product has been add to cart',
+        message: 'Success'
+      });
+    }
   };
+
   const handleAdd = () => {
     handleChangeAmount(amount + 1);
   };
+
   const handleSub = () => {
     if (amount > 1) handleChangeAmount(amount - 1);
   };
+
   return (
     <Container>
       <StyleButton onClick={() => handleSub()}>
@@ -39,13 +44,13 @@ const ButtonOrder: React.FC<IButtonOrderProps> = (props: IButtonOrderProps) => {
         <StyleText $color='#000'>+</StyleText>
       </StyleButton>
       <Link to='/cart'>
-        <Buy onClick={handleBuy}>
+        <Buy onClick={() => handleBuy(false)}>
           <Text strong $color='#fff' $size='15px'>
             BUY
           </Text>
         </Buy>
       </Link>
-      <AddToCard onClick={handleBuy}>
+      <AddToCard onClick={() => handleBuy(true)}>
         <Text strong $color='#fff' $size='15px'>
           ADD TO CARD
         </Text>

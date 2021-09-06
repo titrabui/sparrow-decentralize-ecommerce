@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import Modal from 'ui/Modal';
-import Button from 'ui/Button';
-import styled from 'styled-components';
 import { Checkbox, Input, Radio } from 'antd';
-import { Text } from 'ui/Typography';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import Modal from 'ui/Modal';
+import { Text } from 'ui/Typography';
 
 const { TextArea } = Input;
 interface IModalProps {
@@ -40,7 +40,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
           <Text>Others</Text>
         </CheckBoxContainer>
         <StyledTextArea placeholder='Why are you requesting a refund?' disabled={!other} />
-        <StyledRadio value={1} />
+        <StyledRadio checked />
         <Text>
           I Agree with <Link to='/'>Term and Use</Link> and <Link to='/'>Refund Policy</Link>
         </Text>
