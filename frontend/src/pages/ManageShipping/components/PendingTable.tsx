@@ -136,10 +136,14 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
             message: 'Success'
           });
 
-          request.putData('/orders/update-order-status', {
-            id: orderId,
-            status: ORDER_STATUS.READY_TO_PICKUP
-          });
+          request
+            .putData('/orders/update-order-status', {
+              id: orderId,
+              status: ORDER_STATUS.READY_TO_PICKUP
+            })
+            .then(() => {
+              fetchOrderPending();
+            });
         });
     }
   };
