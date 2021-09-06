@@ -38,7 +38,9 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
       const contract = await getContract(connector);
       const orders = await contract.methods.getAllOrders().call();
       const ordersFiltered = orders.filter(
-        (item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP
+        (item: any) =>
+          Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP ||
+          Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP
       );
 
       const promisesGetUsers = [];
@@ -48,7 +50,8 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
         const orderItem = {
           id: ordersFiltered[i][0],
           quantity: ordersFiltered[i][6],
-          price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether')
+          price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether'),
+          status: ordersFiltered[i][4]
         };
         orderInfo.push(orderItem);
       }
@@ -85,7 +88,10 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
-    const amount = (record.price * record.quantity * SHIPPER_STAKE_PERCENT) / 100;
+    const amount = (
+      (parseFloat(record.price) * record.quantity * SHIPPER_STAKE_PERCENT) /
+      100
+    ).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
@@ -115,8 +121,8 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
   const handleCancelOrderPickedUp = async (event: any, record: any) => {
     event.preventDefault();
-    const orderId = record?.orderId;
-    const amount = (record.price * record.quantity * 20) / 100;
+    const orderId = record?.id;
+    const amount = ((record.price * record.quantity * 20) / 100).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
@@ -171,17 +177,30 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
     {
       title: 'Confirm Shipping',
       dataIndex: 'confirmShipping',
-      render: (record: any) => (
-        <div style={{ fontWeight: 'bold' }}>
-          <Link $color='#4cd038' href='http' onClick={(e) => handleShipperPickupOrder(e, record)}>
-            Confirm
-          </Link>
-          {' | '}
-          <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
-            Reject
-          </Link>
-        </div>
-      )
+      render: (record: any) => {
+        const { status } = record;
+        return (
+          <div style={{ fontWeight: 'bold' }}>
+            {status === ORDER_STATUS.READY_TO_PICKUP.toString() ? (
+              <Link
+                $color='#4cd038'
+                href='http'
+                onClick={(e) => handleShipperPickupOrder(e, record)}
+              >
+                Confirm
+              </Link>
+            ) : (
+              <Link
+                $color='#ff5e5e'
+                href='http'
+                onClick={(e) => handleCancelOrderPickedUp(e, record)}
+              >
+                Reject
+              </Link>
+            )}
+          </div>
+        );
+      }
     }
   ];
 

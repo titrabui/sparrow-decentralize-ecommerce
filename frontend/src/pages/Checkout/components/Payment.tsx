@@ -33,7 +33,7 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const handleComplete = async () => {
     if (type === 0) setCheckoutData({ ...checkoutData, billingAddress: renderAddress() });
     else setCheckoutData({ ...checkoutData, billingAddress });
-    const totalAmount = amount * price + shippingFee;
+    const totalAmount = (amount * price + shippingFee).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       const order = await contract.methods
@@ -118,10 +118,10 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
           to='/'
           onClick={(e) => {
             e.preventDefault();
-            setStep(1);
+            setStep(2);
           }}
         >
-          {'<'} Return to Customer Information
+          {'<'} Return to Shipping Information
         </Link>
         <Button $bgType='accent' onClick={handleComplete}>
           Completed Order

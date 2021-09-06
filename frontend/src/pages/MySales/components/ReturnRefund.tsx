@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
-import { ERROR_STATUS } from 'utils/constants';
+import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 const { Option } = Select;
@@ -60,6 +60,8 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
         const ordersFiltered = await orders.filter(
           (item: any) =>
             (item.status === ERROR_STATUS.REFUNDED_PRODUCT_ERROR ||
+              item.status === ORDER_STATUS.REQUEST_REFUND ||
+              item.status === ORDER_STATUS.REJECT_REFUND ||
               item.status === ERROR_STATUS.REFUNDED_SHIPPING_ERROR) &&
             item.id !== 0
         );

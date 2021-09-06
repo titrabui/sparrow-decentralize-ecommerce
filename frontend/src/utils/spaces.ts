@@ -19,7 +19,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP001',
     status: 'Available',
-    price: '10',
+    price: '0.01',
     img: img1
   },
   {
@@ -29,7 +29,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP002',
     status: 'Available',
-    price: '20',
+    price: '0.03',
     img: img2
   },
   {
@@ -39,7 +39,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP003',
     status: 'Available',
-    price: '35',
+    price: '0.01',
     img: img3
   },
   {
@@ -49,7 +49,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP004',
     status: 'Available',
-    price: '44',
+    price: '0.007',
     img: img4
   },
   {
@@ -59,7 +59,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP005',
     status: 'Available',
-    price: '45',
+    price: '0.01',
     img: img5
   },
   {
@@ -69,7 +69,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP006',
     status: 'Available',
-    price: '27',
+    price: '0.03',
     img: img6
   },
   {
@@ -79,7 +79,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP007',
     status: 'Available',
-    price: '32',
+    price: '0.003',
     img: img7
   },
   {
@@ -89,7 +89,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP008',
     status: 'Available',
-    price: '33',
+    price: '0.001',
     img: img8
   },
   {
@@ -99,7 +99,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP009',
     status: 'Available',
-    price: '21',
+    price: '0.002',
     img: img9
   },
   {
@@ -109,7 +109,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP010',
     status: 'Available',
-    price: '11',
+    price: '0.005',
     img: img10
   },
   {
@@ -129,7 +129,7 @@ const spaces = [
     brand: 'Napa',
     code: 'NP012',
     status: 'Available',
-    price: '17',
+    price: '0.006',
     img: img12
   }
 ];
