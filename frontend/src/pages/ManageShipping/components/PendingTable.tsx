@@ -1,8 +1,8 @@
-import { notification, Table } from 'antd';
+import { Button, notification, Table } from 'antd';
 import useWallet from 'hooks/useWallet';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'ui/Typography';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS, SHIPPER_STAKE_PERCENT } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
@@ -171,9 +171,9 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
       title: 'View More',
       dataIndex: 'viewMore',
       render: () => (
-        <Link $color='#40a9ff' href='http'>
-          View More
-        </Link>
+        <StyleButton>
+          <Text $color='#40a9ff'>View More</Text>
+        </StyleButton>
       )
     },
     {
@@ -184,21 +184,13 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
         return (
           <div style={{ fontWeight: 'bold' }}>
             {status === ORDER_STATUS.READY_TO_PICKUP.toString() ? (
-              <Link
-                $color='#4cd038'
-                href='http'
-                onClick={(e) => handleShipperPickupOrder(e, record)}
-              >
-                Confirm
-              </Link>
+              <StyleButton onClick={(e) => handleShipperPickupOrder(e, record)}>
+                <Text $color='#4cd038'>Confirm</Text>
+              </StyleButton>
             ) : (
-              <Link
-                $color='#ff5e5e'
-                href='http'
-                onClick={(e) => handleCancelOrderPickedUp(e, record)}
-              >
-                Reject
-              </Link>
+              <StyleButton onClick={(e) => handleCancelOrderPickedUp(e, record)}>
+                <Text $color='#ff5e5e'>Reject</Text>
+              </StyleButton>
             )}
           </div>
         );
@@ -231,6 +223,11 @@ const StyleTable = styled(Table)`
   .ant-table-thead > tr > th {
     font-weight: bold;
   }
+`;
+
+const StyleButton = styled(Button)`
+  font-weight: bold;
+  border: none;
 `;
 
 export default PendingTable;

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import Modal from 'ui/Modal';
-import Button from 'ui/Button';
-import styled from 'styled-components';
+import { notification, Radio, Space } from 'antd';
 import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
-import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
-import request from 'utils/request';
-import { Space, Radio, notification } from 'antd';
-import { Text } from 'ui/Typography';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import Modal from 'ui/Modal';
+import { Text } from 'ui/Typography';
+import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
+import request from 'utils/request';
 
 interface IModalProps {
   setOpenModal: any;
@@ -60,7 +60,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
             </Space>
           </Radio.Group>
         </CheckBoxContainer>
-        <StyledRadio value={1} />
+        <StyledRadio checked />
         <Text>
           I Agree with <Link to='/'>Term and Use</Link> and <Link to='/'>Refund Policy</Link>
         </Text>
@@ -74,9 +74,9 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
       {completed && (
         <StyledModal title='Request Completed!' visible onCancel={() => setCompleted(false)}>
           <br />
-          You order (Order ID: <Link to='/'>{orderId}</Link>) has been transfer to our
-          department to process. Please check the Refund status in{' '}
-          <Link to='/purchases'>My Purchases</Link> tab. We will check and get back to you soon.
+          You order (Order ID: <Link to='/'>{orderId}</Link>) has been transfer to our department to
+          process. Please check the Refund status in <Link to='/purchases'>My Purchases</Link> tab.
+          We will check and get back to you soon.
           <br />
           <br />
           We are very sorry about this! Thank you for shopping with us.
