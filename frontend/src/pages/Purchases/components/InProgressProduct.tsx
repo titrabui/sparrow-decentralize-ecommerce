@@ -13,10 +13,11 @@ import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
   data: any;
+  fetchOrder: Function;
 }
 
 const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgressProductProps) => {
-  const { data } = props;
+  const { data, fetchOrder } = props;
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
 
@@ -38,11 +39,14 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
             description: 'Order has been received successfully!',
             message: 'Success'
           });
-
-          request.putData('/orders/update-order-status', {
-            id: orderId,
-            status: ORDER_STATUS.RECEIVED
-          });
+          request
+            .putData('/orders/update-order-status', {
+              id: orderId,
+              status: ORDER_STATUS.RECEIVED
+            })
+            .then(() => {
+              fetchOrder();
+            });
         });
     }
   };

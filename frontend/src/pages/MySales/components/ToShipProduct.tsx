@@ -14,10 +14,11 @@ import RefundModal from './RefundModal';
 
 interface IToShipProductProps {
   data: any;
+  fetchOrder: Function;
 }
 
 const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps) => {
-  const { data } = props;
+  const { data, fetchOrder } = props;
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
   const { quantity, price, shippingFee } = data;
@@ -36,11 +37,14 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
             description: 'Order has been confirmed successfully!',
             message: 'Success'
           });
-
-          request.putData('/orders/update-order-status', {
-            id: orderId,
-            status: ORDER_STATUS.READY_TO_PICKUP
-          });
+          request
+            .putData('/orders/update-order-status', {
+              id: orderId,
+              status: ORDER_STATUS.READY_TO_PICKUP
+            })
+            .then(() => {
+              fetchOrder();
+            });
         });
     }
   };

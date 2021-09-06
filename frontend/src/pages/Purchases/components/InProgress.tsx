@@ -14,10 +14,11 @@ import InProgressProduct from './InProgressProduct';
 interface IInProgressProps {
   setTotal: (total: number) => void;
   orders: any;
+  fetchOrder: Function;
 }
 
 const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
-  const { setTotal, orders } = props;
+  const { setTotal, orders, fetchOrder } = props;
   const [data, setData] = useState([] as any);
 
   const [searchData, setSearchData] = useState([] as any);
@@ -99,7 +100,9 @@ const InProgress: React.FC<IInProgressProps> = (props: IInProgressProps) => {
       </CheckAll>
 
       {mapData?.length ? (
-        mapData.map((item: any) => <InProgressProduct data={item} key={item?.id} />)
+        mapData.map((item: any) => (
+          <InProgressProduct data={item} key={item?.id} fetchOrder={fetchOrder} />
+        ))
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

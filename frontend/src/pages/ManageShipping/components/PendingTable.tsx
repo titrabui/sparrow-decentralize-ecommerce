@@ -1,6 +1,6 @@
 import { notification, Table } from 'antd';
 import useWallet from 'hooks/useWallet';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'ui/Typography';
 import { ORDER_STATUS, SHIPPER_STAKE_PERCENT } from 'utils/constants';
@@ -33,59 +33,65 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
       setIsSearch(false);
   }, [data, searchInput, setIsSearch]);
 
-  useEffect(() => {
-    const fetchOrderPending = async () => {
-      if (account) {
-        const contract = await getContract(connector);
-        const orders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = orders.filter(
-          (item: any) => Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP || Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP
-        );
+  const fetchOrderPending = useCallback(async () => {
+    if (account) {
+      const contract = await getContract(connector);
+      const orders = await contract.methods.getAllOrders().call();
+      const ordersFiltered = orders.filter(
+        (item: any) =>
+          Number(item[4]) === ORDER_STATUS.READY_TO_PICKUP ||
+          Number(item[4]) === ORDER_STATUS.CONFIRMED_PICKUP
+      );
 
-        const promisesGetUsers = [];
-        const orderInfo = [];
-        for (let i = 0; i < ordersFiltered.length; i += 1) {
-          promisesGetUsers.push(getUser(ordersFiltered[i][0]));
-          const orderItem = {
-            id: ordersFiltered[i][0],
-            quantity: ordersFiltered[i][6],
-            price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether'),
-            status: ordersFiltered[i][4]
-          };
-          orderInfo.push(orderItem);
-        }
-
-        const ordersPending = [];
-        const users = await Promise.all(promisesGetUsers);
-        users.sort((a, b) => b.id - a.id);
-        for (let j = 0; j < users.length; j += 1) {
-          const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
-          ordersPending.push({
-            key: users[j].id,
-            orderDate: convertedOrdeDate,
-            createdAt: users[j].createdAt,
-            status: 'Ready to Pickup',
-            orderId: orderInfo[j].id,
-            parcelType: 'California USA',
-            quantity: orderInfo[j].quantity,
-            price: orderInfo[j].price,
-            confirmShipping: orderInfo[j]
-          });
-        }
-        setData(ordersPending);
+      const promisesGetUsers = [];
+      const orderInfo = [];
+      for (let i = 0; i < ordersFiltered.length; i += 1) {
+        promisesGetUsers.push(getUser(ordersFiltered[i][0]));
+        const orderItem = {
+          id: ordersFiltered[i][0],
+          quantity: ordersFiltered[i][6],
+          price: library?.utils?.fromWei(ordersFiltered[i][7], 'ether'),
+          status: ordersFiltered[i][4]
+        };
+        orderInfo.push(orderItem);
       }
-    };
-    fetchOrderPending();
+
+      const ordersPending = [];
+      const users = await Promise.all(promisesGetUsers);
+      users.sort((a, b) => b.id - a.id);
+      for (let j = 0; j < users.length; j += 1) {
+        const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
+        ordersPending.push({
+          key: users[j].id,
+          orderDate: convertedOrdeDate,
+          createdAt: users[j].createdAt,
+          status: 'Ready to Pickup',
+          orderId: orderInfo[j].id,
+          parcelType: 'California USA',
+          quantity: orderInfo[j].quantity,
+          price: orderInfo[j].price,
+          confirmShipping: orderInfo[j]
+        });
+      }
+      setData(ordersPending);
+    }
   }, [account, connector, library]);
+
+  useEffect(() => {
+    fetchOrderPending();
+  }, [fetchOrderPending]);
+
   const getUser = async (userId: number) => {
     const response = await request.getData(`/orders/${userId}`, {});
     return response.data[0];
   };
-
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
-    const amount = ((parseFloat(record.price) * record.quantity * SHIPPER_STAKE_PERCENT) / 100).toFixed(4);
+    const amount = (
+      (parseFloat(record.price) * record.quantity * SHIPPER_STAKE_PERCENT) /
+      100
+    ).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
@@ -101,10 +107,14 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
             message: 'Success'
           });
 
-          request.putData('/orders/update-order-status', {
-            id: orderId,
-            status: ORDER_STATUS.CONFIRMED_PICKUP
-          });
+          request
+            .putData('/orders/update-order-status', {
+              id: orderId,
+              status: ORDER_STATUS.CONFIRMED_PICKUP
+            })
+            .then(() => {
+              fetchOrderPending();
+            });
         });
     }
   };
@@ -168,22 +178,28 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
       title: 'Confirm Shipping',
       dataIndex: 'confirmShipping',
       render: (record: any) => {
-        const {status} = record;
+        const { status } = record;
         return (
           <div style={{ fontWeight: 'bold' }}>
-            {
-              status === ORDER_STATUS.READY_TO_PICKUP.toString() ? (
-                <Link $color='#4cd038' href='http' onClick={(e) => handleShipperPickupOrder(e, record)}>
-                  Confirm
-                </Link>
-              ) : (
-                <Link $color='#ff5e5e' href='http' onClick={(e) => handleCancelOrderPickedUp(e, record)}>
-                  Reject
-                </Link>
-              )
-            }
+            {status === ORDER_STATUS.READY_TO_PICKUP.toString() ? (
+              <Link
+                $color='#4cd038'
+                href='http'
+                onClick={(e) => handleShipperPickupOrder(e, record)}
+              >
+                Confirm
+              </Link>
+            ) : (
+              <Link
+                $color='#ff5e5e'
+                href='http'
+                onClick={(e) => handleCancelOrderPickedUp(e, record)}
+              >
+                Reject
+              </Link>
+            )}
           </div>
-        )
+        );
       }
     }
   ];
@@ -195,6 +211,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
         dataSource={isSearch ? searchData : data}
         scroll={{ y: 400 }}
         pagination={false}
+        rowKey='orderId'
       />
     </Container>
   );

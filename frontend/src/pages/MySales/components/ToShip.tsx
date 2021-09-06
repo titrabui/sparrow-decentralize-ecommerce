@@ -13,10 +13,11 @@ import ToShipProduct from './ToShipProduct';
 interface IToShipProps {
   setTotal: (total: number) => void;
   orders: any;
+  fetchOrder: Function;
 }
 
 const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
-  const { setTotal, orders } = props;
+  const { setTotal, orders, fetchOrder } = props;
   const [data, setData] = useState([] as any);
   const { account, connector } = useWallet();
   const [searchData, setSearchData] = useState([] as any);
@@ -75,7 +76,7 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
     <Container w='1200px' h='400px'>
       <FilterContainer>
         <Text>Order Date</Text>
-         <DatePicker
+        <DatePicker
           onChange={(e: any) => handleChangeSearch('from', e ? new Date(e._d).getTime() : '')}
         />
         <Text>to</Text>
@@ -86,7 +87,9 @@ const ToShip: React.FC<IToShipProps> = (props: IToShipProps) => {
       </FilterContainer>
 
       {mapData?.length ? (
-        mapData.map((item: any) => <ToShipProduct data={item} key={item?.id} />)
+        mapData.map((item: any) => (
+          <ToShipProduct data={item} key={item?.id} fetchOrder={fetchOrder} />
+        ))
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

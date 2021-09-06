@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Collapse } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Box from 'ui/Box';
 import MainContainer from 'ui/MainContainer';
@@ -22,21 +22,24 @@ const Purchases: React.FC = () => {
   const { account, connector } = useWallet();
   const sellerAddress =
     process.env.SELLER_ACCOUNT_ADDRESS || '0xBcd4042DE499D14e55001CcbB24a551F3b954096';
+
+  const fetchOrder = useCallback(async () => {
+    const contract = await getContract(connector);
+    const allOrders = await contract.methods.getAllOrders().call();
+    const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
+    const result = await request.getData(`/orders/buyers`, {});
+    const orderMapWithSC = result?.data?.filter((item: any) =>
+      ordersFiltered.some((order: any) => order[0] === item.id)
+    );
+    setOrdersBE(orderMapWithSC);
+  }, [connector]);
+
   useEffect(() => {
     if (account) {
-      const fetchOrderCreated = async () => {
-        const contract = await getContract(connector);
-        const allOrders = await contract.methods.getAllOrders().call();
-        const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
-        const result = await request.getData(`/orders/buyers`, {});
-        const orderMapWithSC = result?.data?.filter((item: any) =>
-          ordersFiltered.some((order: any) => order[0] === item.id)
-        );
-        setOrdersBE(orderMapWithSC);
-      };
-      fetchOrderCreated();
+      fetchOrder();
     }
-  }, [account, connector, sellerAddress]);
+  }, [account, fetchOrder]);
+
   return (
     <MainContainer mt='60px'>
       <PageName> Purchases</PageName>
@@ -44,7 +47,7 @@ const Purchases: React.FC = () => {
         <StyledCollapse defaultActiveKey={['1']}>
           <Panel header='In-Progress Order' key='1'>
             {' '}
-            <InProgress setTotal={setTotal} orders={ordersBE} />
+            <InProgress setTotal={setTotal} orders={ordersBE} fetchOrder={fetchOrder} />
           </Panel>
           <Panel header='Completed Order' key='2'>
             <Completed setTotal={setTotal} orders={ordersBE} />
