@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MainContainer from 'ui/MainContainer';
-import { v4 as uuidv4 } from 'uuid';
 import Left from './Left';
 import Right from './Right';
 
@@ -15,8 +14,7 @@ const Checkout: React.FC = () => {
       const parseCart = JSON.parse(cart);
       setCheckoutData({
         ...parseCart[0],
-        shippingFee: parseCart[0].shippingFee || 0,
-        orderId: uuidv4()
+        shippingFee: parseCart[0].shippingFee || 0
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
