@@ -212,7 +212,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
   return (
     <Container>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <StyleTable
         columns={columns}
         dataSource={isSearch ? searchData : data}

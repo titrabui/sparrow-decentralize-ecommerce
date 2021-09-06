@@ -24,6 +24,7 @@ const StyleText = styled(Text)`
   font-color: blue;
   font-weight: bold;
   margin-left: 30px;
+  border-radius: 10px;
 `;
 
 export default TransactionModal;

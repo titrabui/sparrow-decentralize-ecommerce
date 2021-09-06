@@ -55,7 +55,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   };
   return (
     <Container>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />

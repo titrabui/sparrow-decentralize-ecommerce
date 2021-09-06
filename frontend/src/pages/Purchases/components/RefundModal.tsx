@@ -57,7 +57,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
 
   return (
     <>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <StyledModal title='Refund Request' visible={visible} onCancel={() => setOpenModal(false)}>
         I would like to cancel my order (Order ID: {orderId}) because of *:
         <CheckBoxContainer>

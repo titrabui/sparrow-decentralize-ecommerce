@@ -71,7 +71,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   };
   return (
     <Container>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />

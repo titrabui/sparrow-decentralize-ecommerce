@@ -56,36 +56,37 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
         })
         .on('receipt', async () => {
           localStorage.removeItem('cart');
-          setIsModalVisible(false);
 
           notification.success({
             description: 'Order created',
             message: 'Success'
           });
-
-          request.postData('/orders/create', {
-            id: order.events.Ordered.returnValues.orderId,
-            buyer: account,
-            shippingAddress: renderAddress(),
-            billingAddress: type === 0 ? renderAddress() : billingAddress,
-            productId: id,
-            name,
-            quantity: amount,
-            price: Number(price),
-            shippingFee,
-            totalAmount,
-            status: ORDER_STATUS.PAID,
-            size,
-            color
-          });
-          setStep(4);
         });
+
+      request.postData('/orders/create', {
+        id: order.events.Ordered.returnValues.orderId,
+        buyer: account,
+        shippingAddress: renderAddress(),
+        billingAddress: type === 0 ? renderAddress() : billingAddress,
+        productId: id,
+        name,
+        quantity: amount,
+        price: Number(price),
+        shippingFee,
+        totalAmount,
+        status: ORDER_STATUS.PAID,
+        size,
+        color
+      });
+
+      setIsModalVisible(false);
+      setStep(4);
     }
   };
 
   return (
     <Container>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <Method>
         <Title>Billing Address</Title>
         <RadioContainer>

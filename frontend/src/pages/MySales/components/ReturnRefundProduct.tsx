@@ -95,7 +95,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
   return (
     <Container>
-      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
