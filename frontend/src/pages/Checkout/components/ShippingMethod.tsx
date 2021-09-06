@@ -28,17 +28,14 @@ const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodPr
   const handleSelectShippingMethod = (method: string) => {
     let shippingFee = 0;
     switch (method) {
-      case 'UPS Ground':
+      case 'Land Shipping':
         shippingFee = 0.001;
         break;
-      case 'UPS 3 Day Select':
+      case 'Sea Shipping':
         shippingFee = 0.002;
         break;
-      case 'UPS 2nd Day Air':
+      case 'Air Shipping':
         shippingFee = 0.003;
-        break;
-      case 'UPS Next Day Air':
-        shippingFee = 0.005;
         break;
       default:
         shippingFee = 0;
@@ -47,7 +44,7 @@ const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodPr
     setCheckoutData({ ...checkoutData, shippingFee, shippingMethod: method });
   };
 
-  if (!shippingMethod) handleSelectShippingMethod('UPS Ground');
+  if (!shippingMethod) handleSelectShippingMethod('Land Shipping');
 
   return (
     <Container>
@@ -62,47 +59,36 @@ const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodPr
         <Title>Shipping Method</Title>
         <RadioContainer>
           <Radio
-            checked={shippingMethod === 'UPS Ground'}
+            checked={shippingMethod === 'Land Shipping'}
             onClick={() => {
-              handleSelectShippingMethod('UPS Ground');
+              handleSelectShippingMethod('Land Shipping');
             }}
           >
-            UPS Ground
+            Land Shipping
           </Radio>
           <Text strong>0.001 ETH</Text>
         </RadioContainer>
         <RadioContainer>
           <Radio
-            checked={shippingMethod === 'UPS 3 Day Select'}
+            checked={shippingMethod === 'Sea Shipping'}
             onClick={() => {
-              handleSelectShippingMethod('UPS 3 Day Select');
+              handleSelectShippingMethod('Sea Shipping');
             }}
           >
-            UPS 3 Day Select
+            Sea Shipping
           </Radio>
           <Text strong>0.002 ETH</Text>
         </RadioContainer>
         <RadioContainer>
           <Radio
-            checked={shippingMethod === 'UPS 2nd Day Air'}
+            checked={shippingMethod === 'Air Shipping'}
             onClick={() => {
-              handleSelectShippingMethod('UPS 2nd Day Air');
+              handleSelectShippingMethod('Air Shipping');
             }}
           >
-            UPS 2nd Day Air
+            Air Shipping
           </Radio>
           <Text strong> 0.003 ETH</Text>
-        </RadioContainer>
-        <RadioContainer>
-          <Radio
-            checked={shippingMethod === 'UPS Next Day Air'}
-            onClick={() => {
-              handleSelectShippingMethod('UPS Next Day Air');
-            }}
-          >
-            UPS Next Day Air
-          </Radio>
-          <Text strong>0.005 ETH</Text>
         </RadioContainer>
       </Method>
 

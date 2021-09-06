@@ -1,5 +1,4 @@
-import { Radio } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Text } from './Typography';
 
@@ -15,12 +14,12 @@ export interface ContainerInfo {
 }
 
 const Card: React.FC<ContainerInfo> = (container: ContainerInfo) => {
-  const [value, setValue] = useState(1);
+  // const [value, setValue] = useState(1);
   const { name, detail, price, img } = container;
 
-  const onChange = (e: any) => {
-    setValue(e.target.value);
-  };
+  // const onChange = (e: any) => {
+  //   setValue(e.target.value);
+  // };
   
   return (
     <Container>
@@ -30,51 +29,51 @@ const Card: React.FC<ContainerInfo> = (container: ContainerInfo) => {
         <Detail>{detail} </Detail>
         <Price>ETH &nbsp; {price} </Price>
       </TextContainer>
-      <StyledRadio onChange={onChange} value={value}>
+      {/* <StyledRadio onChange={onChange} value={value}>
         <Radio value={1} className='purple' />
         <Radio value={2} className='gray' />
         <Radio value={3} className='orange' />
-      </StyledRadio>
+      </StyledRadio> */}
     </Container>
   );
 };
 
-const StyledRadio = styled(Radio.Group)`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  right: 15px;
-  .ant-radio-wrapper {
-    height: 27px;
-  }
-  .ant-radio-inner {
-    width: 20px;
-    height: 20px;
-    border-color: white;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-  }
-  .orange .ant-radio-inner {
-    background-color: #e86c13;
-  }
-  .purple .ant-radio-inner {
-    background-color: #7b61ff;
-  }
-  .gray .ant-radio-inner {
-    background-color: #ebebeb;
-  }
-  .ant-radio-inner::after {
-    display: none;
-  }
-  .ant-radio:hover .ant-radio-inner,
-  .ant-radio-input:focus + .ant-radio-inner {
-    border-color: white;
-    width: 24px;
-    height: 24px;
-  }
-`;
+// const StyledRadio = styled(Radio.Group)`
+//   display: flex;
+//   flex-direction: column;
+//   position: absolute;
+//   align-items: center;
+//   justify-content: center;
+//   width: 30px;
+//   right: 15px;
+//   .ant-radio-wrapper {
+//     height: 27px;
+//   }
+//   .ant-radio-inner {
+//     width: 20px;
+//     height: 20px;
+//     border-color: white;
+//     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+//   }
+//   .orange .ant-radio-inner {
+//     background-color: #e86c13;
+//   }
+//   .purple .ant-radio-inner {
+//     background-color: #7b61ff;
+//   }
+//   .gray .ant-radio-inner {
+//     background-color: #ebebeb;
+//   }
+//   .ant-radio-inner::after {
+//     display: none;
+//   }
+//   .ant-radio:hover .ant-radio-inner,
+//   .ant-radio-input:focus + .ant-radio-inner {
+//     border-color: white;
+//     width: 24px;
+//     height: 24px;
+//   }
+// `;
 
 const TextContainer = styled.div`
   position: absolute;
