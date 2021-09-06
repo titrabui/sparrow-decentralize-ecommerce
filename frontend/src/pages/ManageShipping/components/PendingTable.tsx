@@ -6,6 +6,7 @@ import { Text } from 'ui/Typography';
 import { ORDER_STATUS, SHIPPER_STAKE_PERCENT } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
+import TransactionModal from 'utils/TransactionModal';
 
 interface IPendingTableProps {
   searchInput: any;
@@ -85,6 +86,9 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
     const response = await request.getData(`/orders/${userId}`, {});
     return response.data[0];
   };
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const handleShipperPickupOrder = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = Number(record?.id);
@@ -101,7 +105,11 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
           type: '0x2',
           value: library && library.utils && library.utils.toWei(amount.toString(), 'ether')
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been picked up successfully. Please delivery to customer!',
             message: 'Success'
@@ -130,7 +138,11 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
           from: account,
           type: '0x2'
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'You are cancelled order successfully.!',
             message: 'Success'
@@ -200,6 +212,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
 
   return (
     <Container>
+      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
       <StyleTable
         columns={columns}
         dataSource={isSearch ? searchData : data}

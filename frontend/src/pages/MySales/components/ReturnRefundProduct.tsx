@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import p2 from 'assets/images/p2.png';
-import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
-import { ORDER_STATUS, ERROR_STATUS } from 'utils/constants';
-import request from 'utils/request';
+import useWallet from 'hooks/useWallet';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
+import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import getImage from 'utils/getImage';
+import request from 'utils/request';
+import TransactionModal from 'utils/TransactionModal';
 
 interface IReturnRefundProductProps {
   data: any;
@@ -37,6 +37,8 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
   const { quantity, price, shippingFee } = data;
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const handleConfirmRefundOrder = async (orderId: string) => {
     if (connector) {
       const contract = await getContract(connector);
@@ -46,7 +48,11 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           from: account,
           type: '0x2'
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been accepted request refund successfully!',
             message: 'Success'
@@ -69,7 +75,11 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           from: account,
           type: '0x2'
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false)
           notification.success({
             description: 'Order has been reject request refund successfully!',
             message: 'Success'
@@ -85,6 +95,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
 
   return (
     <Container>
+      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>

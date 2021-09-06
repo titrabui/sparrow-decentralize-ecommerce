@@ -1,16 +1,17 @@
+import { Checkbox, notification, Radio } from 'antd';
+import { SELLER_ACCOUNT_ADDRESS } from 'environment';
+import useWallet from 'hooks/useWallet';
 import React, { useState } from 'react';
-import Box from 'ui/Box';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Box from 'ui/Box';
 import Button from 'ui/Button';
 import Input from 'ui/Input';
 import { Text } from 'ui/Typography';
-import { Checkbox, notification, Radio } from 'antd';
-import useWallet from 'hooks/useWallet';
+import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
-import { ORDER_STATUS } from 'utils/constants';
-import { SELLER_ACCOUNT_ADDRESS } from 'environment';
+import TransactionModal from 'utils/TransactionModal';
 
 interface IPaymentProps {
   setStep: any;
@@ -27,8 +28,10 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const [type, setType] = useState(0);
   const [billingAddress, setBillingAddress] = useState('');
 
-  const renderAddress = () => `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${country ? `${country}` : ''
-    }`;
+  const renderAddress = () =>
+    `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${country ? `${country}` : ''}`;
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleComplete = async () => {
     if (type === 0) setCheckoutData({ ...checkoutData, billingAddress: renderAddress() });
@@ -48,36 +51,41 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
           type: '0x2',
           value: library?.utils?.toWei(totalAmount.toString(), 'ether')
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
           localStorage.removeItem('cart');
+          setIsModalVisible(false);
+
           notification.success({
             description: 'Order created',
             message: 'Success'
           });
+
+          request.postData('/orders/create', {
+            id: order.events.Ordered.returnValues.orderId,
+            buyer: account,
+            shippingAddress: renderAddress(),
+            billingAddress: type === 0 ? renderAddress() : billingAddress,
+            productId: id,
+            name,
+            quantity: amount,
+            price: Number(price),
+            shippingFee,
+            totalAmount,
+            status: ORDER_STATUS.PAID,
+            size,
+            color
+          });
+          setStep(4);
         });
-
-      request.postData('/orders/create', {
-        id: order.events.Ordered.returnValues.orderId,
-        buyer: account,
-        shippingAddress: renderAddress(),
-        billingAddress: type === 0 ? renderAddress() : billingAddress,
-        productId: id,
-        name,
-        quantity: amount,
-        price: Number(price),
-        shippingFee,
-        totalAmount,
-        status: ORDER_STATUS.PAID,
-        size,
-        color
-      });
     }
-
-    setStep(4);
   };
 
   return (
     <Container>
+      <TransactionModal status='transaction in progress...' visible={isModalVisible} />
       <Method>
         <Title>Billing Address</Title>
         <RadioContainer>
