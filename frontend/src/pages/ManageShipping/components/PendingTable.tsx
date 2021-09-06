@@ -122,15 +122,13 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
   const handleCancelOrderPickedUp = async (event: any, record: any) => {
     event.preventDefault();
     const orderId = record?.id;
-    const amount = ((record.price * record.quantity * 20) / 100).toFixed(4);
     if (connector) {
       const contract = await getContract(connector);
       await contract.methods
         .shipperCancelOrder(orderId)
         .send({
           from: account,
-          type: '0x2',
-          value: library && library.utils && library.utils.toWei(amount.toString(), 'ether')
+          type: '0x2'
         })
         .on('receipt', async () => {
           notification.success({
@@ -138,10 +136,14 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
             message: 'Success'
           });
 
-          request.putData('/orders/update-order-status', {
-            id: orderId,
-            status: ORDER_STATUS.READY_TO_PICKUP
-          });
+          request
+            .putData('/orders/update-order-status', {
+              id: orderId,
+              status: ORDER_STATUS.READY_TO_PICKUP
+            })
+            .then(() => {
+              fetchOrderPending();
+            });
         });
     }
   };

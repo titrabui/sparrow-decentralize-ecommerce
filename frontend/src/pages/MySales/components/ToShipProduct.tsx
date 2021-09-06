@@ -85,7 +85,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
       </Amount>
       <Price>
         <Status>Wait for seller to confirm</Status>
-        <PriceText>{quantity * price + shippingFee} ETH</PriceText>
+        <PriceText>{(quantity * price + shippingFee).toFixed(4)} ETH</PriceText>
       </Price>
     </Container>
   );
