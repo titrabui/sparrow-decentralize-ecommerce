@@ -1,9 +1,9 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
-import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
-import { useHistory } from 'react-router-dom';
+import { Text } from 'ui/Typography';
 
 interface IRightProps {
   total: number;
@@ -28,7 +28,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
         <SummaryContent>
           Subtotal :{' '}
           <Text strong $color='#4F4F4F' $size='18px'>
-            {total.toFixed(2)} ETH
+            {total.toFixed(4)} ETH
           </Text>
         </SummaryContent>
         <SummaryContent>
@@ -46,7 +46,7 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
           </Text>
           <Text strong $color='#4F4F4F' $size='18px'>
             {' '}
-            {total.toFixed(2)} ETH
+            {total.toFixed(4)} ETH
           </Text>
           {cart && <StyledButton onClick={handleCheckout}>CHECK OUT</StyledButton>}
         </CheckoutContent>

@@ -1,16 +1,17 @@
+import { Checkbox, notification, Radio } from 'antd';
+import { SELLER_ACCOUNT_ADDRESS } from 'environment';
+import useWallet from 'hooks/useWallet';
 import React, { useState } from 'react';
-import Box from 'ui/Box';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Box from 'ui/Box';
 import Button from 'ui/Button';
 import Input from 'ui/Input';
 import { Text } from 'ui/Typography';
-import { Checkbox, notification, Radio } from 'antd';
-import useWallet from 'hooks/useWallet';
+import { ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
-import { ORDER_STATUS } from 'utils/constants';
-import { SELLER_ACCOUNT_ADDRESS } from 'environment';
+import TransactionModal from 'utils/TransactionModal';
 
 interface IPaymentProps {
   setStep: any;
@@ -27,8 +28,10 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
   const [type, setType] = useState(0);
   const [billingAddress, setBillingAddress] = useState('');
 
-  const renderAddress = () => `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${country ? `${country}` : ''
-    }`;
+  const renderAddress = () =>
+    `${address ? `${address},` : ''} ${state ? `${state},` : ''} ${country ? `${country}` : ''}`;
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleComplete = async () => {
     if (type === 0) setCheckoutData({ ...checkoutData, billingAddress: renderAddress() });
@@ -48,8 +51,12 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
           type: '0x2',
           value: library?.utils?.toWei(totalAmount.toString(), 'ether')
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
           localStorage.removeItem('cart');
+
           notification.success({
             description: 'Order created',
             message: 'Success'
@@ -71,13 +78,15 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
         size,
         color
       });
-    }
 
-    setStep(4);
+      setIsModalVisible(false);
+      setStep(4);
+    }
   };
 
   return (
     <Container>
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <Method>
         <Title>Billing Address</Title>
         <RadioContainer>

@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import { Checkbox, notification } from 'antd';
+import { notification } from 'antd';
 import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
-import request from 'utils/request';
+import { getContract } from 'utils/getContract';
 import getImage from 'utils/getImage';
+import request from 'utils/request';
+import TransactionModal from 'utils/TransactionModal';
 import RefundModal from './RefundModal';
 
 interface IInProgressProductProps {
@@ -24,6 +25,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   const { quantity } = data;
   const price = data?.price;
   const shippingFee = data?.shippingFee;
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handelBuyerReceiveOrder = async (orderId: number) => {
     if (connector) {
@@ -34,7 +36,11 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           from: account,
           type: '0x2'
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been received successfully!',
             message: 'Success'
@@ -65,6 +71,7 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
   };
   return (
     <Container>
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />

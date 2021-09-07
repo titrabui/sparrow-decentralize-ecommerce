@@ -9,6 +9,7 @@ import { Text } from 'ui/Typography';
 import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
+import TransactionModal from 'utils/TransactionModal';
 
 interface IModalProps {
   setOpenModal: any;
@@ -19,8 +20,9 @@ interface IModalProps {
 const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
   const { setOpenModal, visible, orderId } = props;
   const [completed, setCompleted] = useState(false);
-  const [reasonError, setReasonError] = useState(ERROR_STATUS.REFUNDED_PRODUCT_ERROR)
+  const [reasonError, setReasonError] = useState(ERROR_STATUS.REFUNDED_PRODUCT_ERROR);
   const { account, connector } = useWallet();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSubmit = async () => {
     if (connector) {
@@ -31,7 +33,12 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
         .send({
           from: account,
           type: '0x2'
-        }).on('receipt', async () => {
+        })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
+        .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been request refund successfully!',
             message: 'Success'
@@ -50,6 +57,7 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
 
   return (
     <>
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <StyledModal title='Refund Request' visible={visible} onCancel={() => setOpenModal(false)}>
         I would like to cancel my order (Order ID: {orderId}) because of *:
         <CheckBoxContainer>

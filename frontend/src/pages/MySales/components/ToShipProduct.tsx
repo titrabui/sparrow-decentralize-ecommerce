@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import p2 from 'assets/images/p2.png';
-import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
+import useWallet from 'hooks/useWallet';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 import { ORDER_STATUS } from 'utils/constants';
+import { getContract } from 'utils/getContract';
 import getImage from 'utils/getImage';
 import request from 'utils/request';
+import TransactionModal from 'utils/TransactionModal';
 import RefundModal from './RefundModal';
 
 interface IToShipProductProps {
@@ -22,6 +22,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   const [openModal, setOpenModal] = useState(false);
   const { account, connector, library } = useWallet();
   const { quantity, price, shippingFee } = data;
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleConfirmOrder = async (orderId: string) => {
     if (connector) {
@@ -32,7 +33,11 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
           from: account,
           type: '0x2'
         })
+        .on('transactionHash', async () => {
+          setIsModalVisible(true);
+        })
         .on('receipt', async () => {
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been confirmed successfully!',
             message: 'Success'
@@ -50,6 +55,7 @@ const ToShipProduct: React.FC<IToShipProductProps> = (props: IToShipProductProps
   };
   return (
     <Container>
+      <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
       <RefundModal setOpenModal={setOpenModal} visible={openModal} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
