@@ -6,7 +6,8 @@
     "postinstall": "cd sc && yarn",
     "sc-compile": "cd sc && npx hardhat compile",
     "sc-node": "cd sc && npx hardhat node",
-    "sc-deploy": "cd sc && npx hardhat run --network localhost scripts/deploy.js",
+    "sc-deploy-local": "cd sc && npx hardhat run --network localhost scripts/deploy.js",
+    "sc-deploy-rinkeby": "cd sc && npx hardhat run scripts/deploy.js --network rinkeby",
     "start:web-dev": "cd frontend && yarn start",
     "start:server-dev": "cd backend && yarn start:dev"
   }
