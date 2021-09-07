@@ -40,8 +40,8 @@ const CommonHeader: React.FC = () => {
                 Shipping
               </Tab>
             )}
-            <Tab to={routesEnum.home}>About</Tab>
-            <Tab to={routesEnum.home}>Blog</Tab>
+            {/* <Tab to={routesEnum.home}>About</Tab>
+            <Tab to={routesEnum.home}>Blog</Tab> */}
           </TabContainer>
         </Col>
         <Col span={8}>
