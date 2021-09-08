@@ -17,3 +17,9 @@
 
 ## Start front end
 `yarn start:web-dev`
+
+#### Docker notes
+1. Run docker for Backend
+```
+ docker-compose up -d
+```

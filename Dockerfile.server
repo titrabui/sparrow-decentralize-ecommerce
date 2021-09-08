@@ -1,0 +1,11 @@
+FROM node:14-alpine
+
+# Install dependencies
+WORKDIR /backend
+COPY backend/package.json .
+RUN npm i
+
+# Build and run source
+COPY backend .
+RUN npm run build
+CMD ["npm","run", "start:prod"]
