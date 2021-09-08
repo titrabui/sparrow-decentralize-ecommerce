@@ -16,3 +16,5 @@ services:
       - backend/.env.dev.example
     restart:
       on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
