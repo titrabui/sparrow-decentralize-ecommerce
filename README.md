@@ -9,8 +9,11 @@
 ## Run node server local
 `yarn sc-node`
 
-## Deploy sc
+## Deploy sc on local network
 `yarn sc-deploy`
+
+## Deploy sc on rinkeby network
+`yarn sc-deploy-rinkeby`
 
 ## Start server
 `yarn start:server-dev`
