@@ -17,3 +17,13 @@
 
 ## Start front end
 `yarn start:web-dev`
+
+#### Docker notes
+1. Run docker for backend on production
+```
+ docker-compose up -d
+```
+2. Run docker on local
+```
+ docker-compose -f docker-compose.dev.yml up -d
+```

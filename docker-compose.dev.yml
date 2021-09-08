@@ -1,0 +1,18 @@
+version: "3.2"
+
+services:
+
+  backend:
+    image: build.backend.ecommerce
+    container_name: dapp_ecommerce_backend
+    ports:
+      - 3001:3001
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    volumes: 
+      - ./backend /backend
+    env_file:
+      - backend/.env.dev.example
+    restart:
+      on-failure
