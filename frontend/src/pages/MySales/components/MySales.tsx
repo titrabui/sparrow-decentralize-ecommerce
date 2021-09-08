@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import MainContainer from 'ui/MainContainer';
-import Box from 'ui/Box';
-import styled from 'styled-components';
 import { Collapse } from 'antd';
-import { Text } from 'ui/Typography';
+import { SELLER_ACCOUNT_ADDRESS } from 'environment';
 import useWallet from 'hooks/useWallet';
+import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Box from 'ui/Box';
+import MainContainer from 'ui/MainContainer';
+import { Text } from 'ui/Typography';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
-import { SELLER_ACCOUNT_ADDRESS } from 'environment';
-import ToShip from './ToShip';
-import Shipping from './Shipping';
-import ReturnRefund from './ReturnRefund';
 import Completed from './Completed';
+import ReturnRefund from './ReturnRefund';
+import Shipping from './Shipping';
+import ToShip from './ToShip';
 
 const { Panel } = Collapse;
 const MySales: React.FC = () => {
@@ -55,7 +55,7 @@ const MySales: React.FC = () => {
           </Panel>
           <Panel header='Return/Refund' key='4'>
             {' '}
-            <ReturnRefund setTotal={setTotal} orders={ordersBE} />
+            <ReturnRefund setTotal={setTotal} orders={ordersBE} fetchOrder={fetchOrder} />
           </Panel>
         </StyledCollapse>
       </StyledBox>

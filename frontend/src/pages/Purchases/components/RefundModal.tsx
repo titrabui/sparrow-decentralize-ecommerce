@@ -15,10 +15,11 @@ interface IModalProps {
   setOpenModal: any;
   visible: boolean;
   orderId: string;
+  fetchOrder: Function
 }
 
 const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
-  const { setOpenModal, visible, orderId } = props;
+  const { setOpenModal, visible, orderId, fetchOrder } = props;
   const [completed, setCompleted] = useState(false);
   const [reasonError, setReasonError] = useState(ERROR_STATUS.REFUNDED_PRODUCT_ERROR);
   const { account, connector } = useWallet();
@@ -49,7 +50,11 @@ const RefundModal: React.FC<IModalProps> = (props: IModalProps) => {
             status: ORDER_STATUS.REQUEST_REFUND,
             statusErrorType: reasonError
           });
+        })
+        .then(() => {
+          fetchOrder();
         });
+        
       setOpenModal(false);
       setCompleted(true);
     }

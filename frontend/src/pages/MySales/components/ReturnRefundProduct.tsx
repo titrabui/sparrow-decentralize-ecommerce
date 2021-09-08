@@ -13,12 +13,13 @@ import TransactionModal from 'utils/TransactionModal';
 
 interface IReturnRefundProductProps {
   data: any;
+  fetchOrder: Function;
 }
 
 const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
   props: IReturnRefundProductProps
 ) => {
-  const { data } = props;
+  const { data, fetchOrder } = props;
 
   const { account, connector } = useWallet();
 
@@ -62,6 +63,9 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
             id: orderId.toString(),
             status: ORDER_STATUS.APPROVAL_REFUND
           });
+        })
+        .then(() => {
+          fetchOrder();
         });
     }
   };
@@ -79,7 +83,7 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
           setIsModalVisible(true);
         })
         .on('receipt', async () => {
-          setIsModalVisible(false)
+          setIsModalVisible(false);
           notification.success({
             description: 'Order has been reject request refund successfully!',
             message: 'Success'
@@ -89,6 +93,9 @@ const ReturnRefundProduct: React.FC<IReturnRefundProductProps> = (
             id: orderId.toString(),
             status: ORDER_STATUS.REJECT_REFUND
           });
+        })
+        .then(() => {
+          fetchOrder();
         });
     }
   }
