@@ -69,10 +69,14 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
         return '';
     }
   };
+
+  // ** Only allow handler button when shipper confirm order */
+  const isShipperConfirm = data.status !== ORDER_STATUS.CONFIRMED_PICKUP
+  
   return (
     <Container>
       <TransactionModal status='The transaction is in processing...' visible={isModalVisible} />
-      <RefundModal setOpenModal={setOpenModal} visible={openModal} orderId={data.id} />
+      <RefundModal setOpenModal={setOpenModal} fetchOrder={fetchOrder} visible={openModal} orderId={data.id} />
       <ImageWrapper>
         <img src={getImage(data.productId)} alt='img' />
       </ImageWrapper>
@@ -109,10 +113,10 @@ const InProgressProduct: React.FC<IInProgressProductProps> = (props: IInProgress
           </>
         ) : (
           <>
-            <AddPlusButton $bgType='accent' onClick={() => handelBuyerReceiveOrder(data.id)}>
+            <AddPlusButton disabled={isShipperConfirm} $bgType='accent' onClick={() => handelBuyerReceiveOrder(data.id)}>
               Order Received
             </AddPlusButton>
-            <AddPlusButton $color='black' onClick={() => setOpenModal(true)}>
+            <AddPlusButton disabled={isShipperConfirm} $color='black' onClick={() => setOpenModal(true)}>
               Request Refund
             </AddPlusButton>
           </>
