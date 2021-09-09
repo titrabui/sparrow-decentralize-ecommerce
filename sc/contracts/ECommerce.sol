@@ -300,7 +300,8 @@ contract ECommerce is Ownable, ReentrancyGuard {
             // Step 2: Shipper receive deposit + ship Fee
             payable(_shipper).transfer(_deposit + _shippingFee);
         } else {
-            payable(_seller).transfer(_deposit + _shippingFee);
+            payable(_shipper).transfer(_shippingFee);
+            payable(_seller).transfer(_deposit);
             payable(_buyer).transfer(_amountForBuyer);
         }
         orderBook[orderId].status = OrderStatus.APPROVAL_REFUND;

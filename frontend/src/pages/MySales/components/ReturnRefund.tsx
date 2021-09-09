@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Text } from 'ui/Typography';
-import { ERROR_STATUS, ORDER_STATUS } from 'utils/constants';
+import { ORDER_STATUS } from 'utils/constants';
 import ReturnRefundProduct from './ReturnRefundProduct';
 
 const { Option } = Select;
@@ -15,10 +15,11 @@ const { Option } = Select;
 interface IReturnRefundProps {
   setTotal: (total: number) => void;
   orders: any;
+  fetchOrder: Function
 }
 
 const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) => {
-  const { setTotal, orders } = props;
+  const { setTotal, orders, fetchOrder } = props;
   const [data, setData] = useState([] as any);
 
   const { account } = useWallet();
@@ -99,7 +100,7 @@ const ReturnRefund: React.FC<IReturnRefundProps> = (props: IReturnRefundProps) =
       </FilterContainer>
 
       {mapData?.length ? (
-        mapData.map((item: any) => <ReturnRefundProduct data={item} key={item?.id} />)
+        mapData.map((item: any) => <ReturnRefundProduct data={item} fetchOrder={fetchOrder} key={item?.id} />)
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

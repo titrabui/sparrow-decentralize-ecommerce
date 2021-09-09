@@ -31,13 +31,13 @@ const Right: React.FC<IRightProps> = (props: IRightProps) => {
           </Text>
         </SummaryContent>
       </Summary>
-      <Address>
+      {/* <Address>
         <AddressTitle>Gift card or discount code</AddressTitle>
         <DiscountInput>
           <Input />
           <Button $color='black'>Apply</Button>
         </DiscountInput>
-      </Address>
+      </Address> */}
       <Checkout>
         <CheckoutContent>
           <Text strong $color='#4F4F4F'>

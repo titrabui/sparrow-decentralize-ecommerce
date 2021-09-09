@@ -75,7 +75,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <Form.Item
               style={{ width: '30%' }}
               name='company'
-              rules={[{ required: false, message: 'Please input your company!' }]}
+              rules={[{ required: false, message: 'Please input your Company!' }]}
             >
               <Input
                 placeholder='Company (optional)'
@@ -86,7 +86,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <StyleItem
               style={{ width: '50%' }}
               name='address'
-              rules={[{ required: true, message: 'Please input your address!' }]}
+              rules={[{ required: true, message: 'Please input your Address!' }]}
             >
               <Input
                 placeholder='Address'
@@ -97,7 +97,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <StyleItem
               style={{ width: '20%' }}
               name='apt'
-              rules={[{ required: false, message: 'Please input your apt!' }]}
+              rules={[{ required: false, message: 'Please input your Apt!' }]}
             >
               <Input
                 placeholder='Apt (optional)'
@@ -110,7 +110,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <Form.Item
               style={{ width: '40%' }}
               name='country'
-              rules={[{ required: true, message: 'Please select your country!' }]}
+              rules={[{ required: true, message: 'Please select your Country!' }]}
             >
               <Select
                 placeholder='Country'
@@ -132,7 +132,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <Form.Item
               style={{ width: '40%' }}
               name='state'
-              rules={[{ required: false, message: 'Please select your state!' }]}
+              rules={[{ required: false, message: 'Please select your State!' }]}
             >
               <Select
                 style={{ paddingLeft: '18px' }}
@@ -155,7 +155,7 @@ const CustomerInfo: React.FC<ICustomerInfoProps> = (props: ICustomerInfoProps) =
             <StyleItem
               style={{ width: '20%' }}
               name='zip'
-              rules={[{ required: false, message: 'Please input your zip!' }]}
+              rules={[{ required: false, message: 'Please input your Zip!' }]}
             >
               <Input
                 placeholder='Zip (optional)'

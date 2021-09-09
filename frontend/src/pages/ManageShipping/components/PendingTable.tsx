@@ -201,7 +201,7 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
               </StyleButton>
             ) : (
               <StyleButton onClick={(e) => handleCancelOrderPickedUp(e, record)}>
-                <Text $color='#ff5e5e'>Reject</Text>
+                <Text $color='#ff5e5e'>Cancel</Text>
               </StyleButton>
             )}
           </div>
