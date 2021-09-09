@@ -26,13 +26,13 @@ const Purchases: React.FC = () => {
   const fetchOrder = useCallback(async () => {
     const contract = await getContract(connector);
     const allOrders = await contract.methods.getAllOrders().call();
-    const ordersFiltered = allOrders.filter((item: any) => item[1] === SELLER_ACCOUNT_ADDRESS);
+    const ordersFiltered = allOrders.filter((item: any) => item.seller === SELLER_ACCOUNT_ADDRESS && item.buyer === account);
     const result = await request.getData(`/orders/buyers`, {});
     const orderMapWithSC = result?.data?.filter((item: any) =>
       ordersFiltered.some((order: any) => order[0] === item.id)
     );
     setOrdersBE(orderMapWithSC);
-  }, [connector]);
+  }, [connector, account]);
 
   useEffect(() => {
     if (account) {
