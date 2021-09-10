@@ -14,7 +14,7 @@ import img9 from 'assets/images/container/p9.png';
 const spaces = [
   {
     id: 1,
-    name: 'Container Cargo Intermodal',
+    name: 'Container Grey White',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP001',
@@ -24,7 +24,7 @@ const spaces = [
   },
   {
     id: 2,
-    name: 'Container 002',
+    name: 'Container Grey Black',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP002',
@@ -34,7 +34,7 @@ const spaces = [
   },
   {
     id: 3,
-    name: 'Container 003',
+    name: 'Container Brown',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP003',
@@ -44,7 +44,7 @@ const spaces = [
   },
   {
     id: 4,
-    name: 'Container 004',
+    name: 'Container Blue',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP004',
@@ -54,7 +54,7 @@ const spaces = [
   },
   {
     id: 5,
-    name: 'Container 005',
+    name: 'Container Grey',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP005',
@@ -64,7 +64,7 @@ const spaces = [
   },
   {
     id: 6,
-    name: 'Container Architectural 006',
+    name: 'Container Orange',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP006',
