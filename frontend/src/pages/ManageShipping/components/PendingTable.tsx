@@ -61,18 +61,20 @@ const PendingTable: React.FC<IPendingTableProps> = (props: IPendingTableProps) =
       const users = await Promise.all(promisesGetUsers);
       users.sort((a, b) => b.id - a.id);
       for (let j = 0; j < users.length; j += 1) {
-        const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
-        ordersPending.push({
-          key: users[j].id,
-          orderDate: convertedOrdeDate,
-          createdAt: users[j].createdAt,
-          status: 'Ready to Pickup',
-          orderId: orderInfo[j].id,
-          parcelType: 'California USA',
-          quantity: orderInfo[j].quantity,
-          price: orderInfo[j].price,
-          confirmShipping: orderInfo[j]
-        });
+        if (users[j]) {
+          const convertedOrdeDate = new Date(users[j].createdAt).toISOString().slice(0, 10);
+          ordersPending.push({
+            key: users[j].id,
+            orderDate: convertedOrdeDate,
+            createdAt: users[j].createdAt,
+            status: 'Ready to Pickup',
+            orderId: orderInfo[j].id,
+            parcelType: 'California USA',
+            quantity: orderInfo[j].quantity,
+            price: orderInfo[j].price,
+            confirmShipping: orderInfo[j]
+          });
+        }
       }
       setData(ordersPending);
     }
