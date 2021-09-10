@@ -1,5 +1,5 @@
 import { Radio } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Box from 'ui/Box';
@@ -44,7 +44,10 @@ const ShippingMethod: React.FC<IShippingMethodProps> = (props: IShippingMethodPr
     setCheckoutData({ ...checkoutData, shippingFee, shippingMethod: method });
   };
 
-  if (!shippingMethod) handleSelectShippingMethod('Land Shipping');
+  useEffect(() => {
+    if (!shippingMethod) handleSelectShippingMethod('Land Shipping');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shippingMethod]);
 
   return (
     <Container>

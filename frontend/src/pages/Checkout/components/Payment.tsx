@@ -63,7 +63,7 @@ const Payment: React.FC<IPaymentProps> = (props: IPaymentProps) => {
           });
         });
 
-      request.postData('/orders/create', {
+      await request.postData('/orders/create', {
         id: order.events.Ordered.returnValues.orderId,
         buyer: account,
         shippingAddress: renderAddress(),
