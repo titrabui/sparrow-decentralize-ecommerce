@@ -24,7 +24,7 @@ const spaces = [
   },
   {
     id: 2,
-    name: 'Summer Fighting 002',
+    name: 'Container 002',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP002',
@@ -34,7 +34,7 @@ const spaces = [
   },
   {
     id: 3,
-    name: 'Summer Fighting 003',
+    name: 'Container 003',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP003',
@@ -44,7 +44,7 @@ const spaces = [
   },
   {
     id: 4,
-    name: 'Summer Fighting 004',
+    name: 'Container 004',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP004',
@@ -54,7 +54,7 @@ const spaces = [
   },
   {
     id: 5,
-    name: 'Summer Fighting 005',
+    name: 'Container 005',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP005',
@@ -64,7 +64,7 @@ const spaces = [
   },
   {
     id: 6,
-    name: 'Container Architectural',
+    name: 'Container Architectural 006',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP006',
@@ -74,7 +74,7 @@ const spaces = [
   },
   {
     id: 7,
-    name: 'Summer Fighting 008',
+    name: 'Container 007',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP007',
@@ -84,7 +84,7 @@ const spaces = [
   },
   {
     id: 8,
-    name: 'Summer Fighting 009',
+    name: 'Container 008',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP008',
@@ -94,7 +94,7 @@ const spaces = [
   },
   {
     id: 9,
-    name: 'Summer Fighting 010',
+    name: 'Container 009',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP009',
@@ -104,7 +104,7 @@ const spaces = [
   },
   {
     id: 10,
-    name: 'Summer Fighting 011',
+    name: 'Container 010',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP010',
@@ -114,7 +114,7 @@ const spaces = [
   },
   {
     id: 11,
-    name: 'Summer Fighting 012',
+    name: 'Container 011',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP011',
@@ -124,7 +124,7 @@ const spaces = [
   },
   {
     id: 12,
-    name: 'Summer Fighting 001',
+    name: 'Container 012',
     detail: 'Detail Product...',
     brand: 'Napa',
     code: 'NP012',
